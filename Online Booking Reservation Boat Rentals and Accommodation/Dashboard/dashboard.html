@@ -1,0 +1,1436 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carles - Boat & Accommodation Booking Dashboard</title>
+    <link rel="stylesheet" href="/Online Booking Reservation Boat Rentals and Accommodation/Dashboard/dashboard.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <button class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+          </button>
+          <a href="#" class="logo">
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              class="logo-icon"
+            >
+              <path
+                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+              <path
+                d="M12 8V12L15 15"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+            <span class="logo-text">Carles</span>
+          </a>
+        </div>
+
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input
+            type="text"
+            placeholder="Search for boats, accommodations, or reservations..."
+            class="search-input"
+          />
+        </div>
+
+        <div class="header-right">
+          <button class="icon-button notification-button">
+            <i class="fas fa-bell"></i>
+            <span class="badge badge-red">3</span>
+          </button>
+
+          <button class="icon-button message-button">
+            <i class="fas fa-comment"></i>
+            <span class="badge badge-blue">2</span>
+          </button>
+
+          <div class="user-dropdown">
+            <button class="avatar-button" id="userDropdownToggle">
+              <div class="avatar">
+                <img
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=John"
+                  alt="User Avatar"
+                />
+              </div>
+            </button>
+            <div class="dropdown-menu" id="userDropdown">
+              <div class="dropdown-header">
+                <p class="dropdown-name">John Doe</p>
+                <p class="dropdown-email">john.doe@example.com</p>
+              </div>
+              <div class="dropdown-divider"></div>
+              <a href="#" class="dropdown-item"
+                ><i class="fas fa-user"></i> Profile</a
+              >
+              <a href="#" class="dropdown-item"
+                ><i class="fas fa-cog"></i> Settings</a
+              >
+              <div class="dropdown-divider"></div>
+              <a href="#" class="dropdown-item text-red">Log out</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+          <div class="sidebar-header">
+            <div class="sidebar-logo">
+              <i class="fas fa-ship text-blue"></i>
+              <span class="sidebar-logo-text">Carles</span>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+              <i class="fas fa-bars"></i>
+            </button>
+          </div>
+
+          <nav class="sidebar-nav">
+            <a href="#calendar" class="sidebar-link active" data-tab="calendar">
+              <i class="fas fa-calendar"></i>
+              <span>Calendar View</span>
+              <i class="fas fa-chevron-right sidebar-active-indicator"></i>
+            </a>
+            <a href="#boats" class="sidebar-link" data-tab="availability">
+              <i class="fas fa-ship"></i>
+              <span>Check Availability</span>
+            </a>
+            <a href="#new-booking" class="sidebar-link" data-tab="new-booking">
+              <i class="fas fa-plus-circle"></i>
+              <span>New Booking</span>
+            </a>
+            <a
+              href="#reservations"
+              class="sidebar-link"
+              data-tab="reservations"
+            >
+              <i class="fas fa-clipboard-list"></i>
+              <span>Reservations</span>
+            </a>
+          </nav>
+
+          <div class="sidebar-stats">
+            <h3 class="sidebar-stats-title">Quick Stats</h3>
+            <div class="stat-card bg-blue-light">
+              <div class="stat-card-content">
+                <span class="stat-label">Active Bookings</span>
+                <span class="stat-value text-blue">24</span>
+              </div>
+            </div>
+            <div class="stat-card bg-green-light">
+              <div class="stat-card-content">
+                <span class="stat-label">Available Boats</span>
+                <span class="stat-value text-green">12</span>
+              </div>
+            </div>
+            <div class="stat-card bg-purple-light">
+              <div class="stat-card-content">
+                <span class="stat-label">Available Rooms</span>
+                <span class="stat-value text-purple">8</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-footer">
+            <a href="#settings" class="sidebar-link">
+              <i class="fas fa-cog"></i>
+              <span>Settings</span>
+            </a>
+            <a href="#help" class="sidebar-link">
+              <i class="fas fa-question-circle"></i>
+              <span>Help & Support</span>
+            </a>
+            <div class="sidebar-divider"></div>
+            <button class="sidebar-link">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Logout</span>
+            </button>
+
+            <div class="user-profile">
+              <div class="user-avatar">
+                <span>JD</span>
+              </div>
+              <div class="user-info">
+                <p class="user-name">John Doe</p>
+                <p class="user-email">john.doe@example.com</p>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+          <div class="dashboard-header">
+            <h1 class="dashboard-title">Dashboard</h1>
+            <div class="dashboard-actions">
+              <button class="btn btn-outline btn-sm" id="toggleHelp">
+                <i class="fas fa-info-circle"></i>
+                <span>Show Help</span>
+              </button>
+              <button class="btn btn-outline btn-sm" id="showTutorial">
+                <i class="fas fa-question-circle"></i>
+                <span>Tutorial</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="tab-navigation">
+            <div class="tab-cards">
+              <div class="tab-card active" data-tab="calendar">
+                <div class="tab-card-icon bg-blue-light">
+                  <i class="fas fa-calendar"></i>
+                </div>
+                <div class="tab-card-content">
+                  <h3 class="tab-card-title">Calendar View</h3>
+                  <p class="tab-card-description">View all bookings</p>
+                </div>
+              </div>
+
+              <div class="tab-card" data-tab="availability">
+                <div class="tab-card-icon bg-gray-light">
+                  <i class="fas fa-ship"></i>
+                </div>
+                <div class="tab-card-content">
+                  <h3 class="tab-card-title">Check Availability</h3>
+                  <p class="tab-card-description">Find available options</p>
+                </div>
+              </div>
+
+              <div class="tab-card" data-tab="new-booking">
+                <div class="tab-card-icon bg-gray-light">
+                  <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="tab-card-content">
+                  <h3 class="tab-card-title">New Booking</h3>
+                  <p class="tab-card-description">Create a reservation</p>
+                </div>
+              </div>
+
+              <div class="tab-card" data-tab="reservations">
+                <div class="tab-card-icon bg-gray-light">
+                  <i class="fas fa-home"></i>
+                </div>
+                <div class="tab-card-content">
+                  <h3 class="tab-card-title">Reservations</h3>
+                  <p class="tab-card-description">Manage bookings</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Content -->
+          <div class="tab-content">
+            <!-- Calendar View Tab -->
+            <div class="tab-pane active" id="calendar-tab">
+              <div class="calendar-container">
+                <div class="calendar-filters">
+                  <div class="filter-tabs">
+                    <button class="filter-tab active">
+                      <i class="fas fa-calendar"></i> All Bookings
+                    </button>
+                    <button class="filter-tab">
+                      <i class="fas fa-ship"></i> Boat Rentals
+                    </button>
+                    <button class="filter-tab">
+                      <i class="fas fa-home"></i> Accommodations
+                    </button>
+                  </div>
+                  <div class="filter-badges">
+                    <span class="badge badge-secondary">Today</span>
+                    <span class="badge badge-outline">This Week</span>
+                    <span class="badge badge-outline">This Month</span>
+                  </div>
+                  <div class="filter-actions">
+                    <div class="filter-select">
+                      <i class="fas fa-filter"></i>
+                      <select>
+                        <option>All Types</option>
+                        <option>Yachts</option>
+                        <option>Sailboats</option>
+                        <option>Cabins</option>
+                        <option>Villas</option>
+                      </select>
+                    </div>
+                    <div class="date-range-picker">
+                      <button class="btn btn-outline">
+                        <i class="fas fa-calendar"></i>
+                        <span>Jun 15 - Jun 22</span>
+                      </button>
+                    </div>
+                    <button class="btn btn-icon btn-outline">
+                      <i class="fas fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="calendar-header">
+                  <div class="calendar-navigation">
+                    <button class="btn btn-icon btn-outline">
+                      <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <h2 class="calendar-title">June 2025</h2>
+                    <button class="btn btn-icon btn-outline">
+                      <i class="fas fa-chevron-right"></i>
+                    </button>
+                  </div>
+                  <div class="calendar-legend">
+                    <div class="legend-item">
+                      <span class="legend-color bg-blue"></span>
+                      <span class="legend-text">Boat Rentals</span>
+                    </div>
+                    <div class="legend-item">
+                      <span class="legend-color bg-purple"></span>
+                      <span class="legend-text">Accommodations</span>
+                    </div>
+                    <div class="legend-item">
+                      <span class="legend-color bg-yellow"></span>
+                      <span class="legend-text">Pending</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="calendar-grid">
+                  <div class="calendar-weekdays">
+                    <div class="weekday">Sun</div>
+                    <div class="weekday">Mon</div>
+                    <div class="weekday">Tue</div>
+                    <div class="weekday">Wed</div>
+                    <div class="weekday">Thu</div>
+                    <div class="weekday">Fri</div>
+                    <div class="weekday">Sat</div>
+                  </div>
+                  <div class="calendar-days">
+                    <!-- Previous month days -->
+                    <div class="calendar-day not-current-month">
+                      <span class="day-number">28</span>
+                    </div>
+                    <div class="calendar-day not-current-month">
+                      <span class="day-number">29</span>
+                    </div>
+                    <div class="calendar-day not-current-month">
+                      <span class="day-number">30</span>
+                    </div>
+                    <div class="calendar-day not-current-month">
+                      <span class="day-number">31</span>
+                    </div>
+
+                    <!-- Current month days -->
+                    <div class="calendar-day">
+                      <span class="day-number">1</span>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">2</span>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">3</span>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">4</span>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">5</span>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">6</span>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">7</span>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">8</span>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">9</span>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">10</span>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">11</span>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">12</span>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">13</span>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">14</span>
+                    </div>
+                    <div class="calendar-day today">
+                      <span class="day-number">15</span>
+                      <div class="event boat-event">Luxury Yacht 42ft</div>
+                      <div class="event accommodation-event">
+                        Beachfront Villa
+                      </div>
+                      <span class="more-events">+2</span>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">16</span>
+                      <div class="event boat-event">Luxury Yacht 42ft</div>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">17</span>
+                      <div class="event boat-event">Luxury Yacht 42ft</div>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">18</span>
+                      <div class="event accommodation-event">
+                        Beachfront Villa
+                      </div>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">19</span>
+                      <div class="event accommodation-event">
+                        Beachfront Villa
+                      </div>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">20</span>
+                      <div class="event boat-event pending-event">
+                        Speedboat 25ft
+                      </div>
+                      <div class="event accommodation-event">
+                        Beachfront Villa
+                      </div>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">21</span>
+                      <div class="event boat-event pending-event">
+                        Speedboat 25ft
+                      </div>
+                      <div class="event accommodation-event">
+                        Beachfront Villa
+                      </div>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">22</span>
+                      <div class="event accommodation-event">
+                        Beachfront Villa
+                      </div>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">23</span>
+                      <div class="event accommodation-event">
+                        Beachfront Villa
+                      </div>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">24</span>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">25</span>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">26</span>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">27</span>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">28</span>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">29</span>
+                    </div>
+                    <div class="calendar-day">
+                      <span class="day-number">30</span>
+                    </div>
+
+                    <!-- Next month days -->
+                    <div class="calendar-day not-current-month">
+                      <span class="day-number">1</span>
+                    </div>
+                    <div class="calendar-day not-current-month">
+                      <span class="day-number">2</span>
+                    </div>
+                    <div class="calendar-day not-current-month">
+                      <span class="day-number">3</span>
+                    </div>
+                    <div class="calendar-day not-current-month">
+                      <span class="day-number">4</span>
+                    </div>
+                    <div class="calendar-day not-current-month">
+                      <span class="day-number">5</span>
+                    </div>
+                    <div class="calendar-day not-current-month">
+                      <span class="day-number">6</span>
+                    </div>
+                    <div class="calendar-day not-current-month">
+                      <span class="day-number">7</span>
+                    </div>
+                    <div class="calendar-day not-current-month">
+                      <span class="day-number">8</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Availability Tab -->
+            <div class="tab-pane" id="availability-tab">
+              <div class="availability-container">
+                <div class="availability-header">
+                  <h2>Find Your Perfect Getaway</h2>
+                  <p>
+                    Discover available boats and accommodations for your dream
+                    vacation
+                  </p>
+                  <div class="availability-badges">
+                    <span class="badge badge-white"
+                      ><i class="fas fa-ship"></i> Premium Boats</span
+                    >
+                    <span class="badge badge-white"
+                      ><i class="fas fa-building"></i> Luxury
+                      Accommodations</span
+                    >
+                    <span class="badge badge-white"
+                      ><i class="fas fa-sun"></i> Beachfront Views</span
+                    >
+                  </div>
+                </div>
+
+                <div class="search-form">
+                  <div class="search-form-grid">
+                    <div class="form-group">
+                      <label><i class="fas fa-water"></i> Service Type</label>
+                      <div class="toggle-tabs">
+                        <button class="toggle-tab active">
+                          <i class="fas fa-ship"></i> Boats
+                        </button>
+                        <button class="toggle-tab">
+                          <i class="fas fa-building"></i> Stays
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label><i class="fas fa-calendar"></i> Dates</label>
+                      <button class="date-picker-button">
+                        <i class="fas fa-calendar"></i>
+                        <span>Jun 15 - Jun 22</span>
+                      </button>
+                    </div>
+
+                    <div class="form-group">
+                      <label><i class="fas fa-users"></i> Guests</label>
+                      <input
+                        type="number"
+                        value="4"
+                        min="1"
+                        class="form-control"
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label
+                        ><i class="fas fa-map-marker-alt"></i> Location</label
+                      >
+                      <select class="form-control">
+                        <option>All locations</option>
+                        <option>Marina Bay</option>
+                        <option>Sunset Harbor</option>
+                        <option>Ocean Bay</option>
+                        <option>Coastal Retreat</option>
+                        <option>Palm Beach</option>
+                        <option>Paradise Island</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="search-button-container">
+                    <button class="btn btn-primary btn-lg">
+                      <i class="fas fa-search"></i> Find Available Options
+                    </button>
+                  </div>
+                </div>
+
+                <div class="results-section">
+                  <div class="results-header">
+                    <h3>
+                      <i class="fas fa-umbrella-beach"></i> Available Boats
+                    </h3>
+                    <span class="badge badge-outline">3 found</span>
+                  </div>
+
+                  <div class="results-grid">
+                    <div class="result-card">
+                      <div class="result-image">
+                        <img
+                          src="https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=800&q=80"
+                          alt="Luxury Yacht 42ft"
+                        />
+                        <span class="badge badge-success">Available</span>
+                      </div>
+                      <div class="result-details">
+                        <div class="result-header">
+                          <h3>Luxury Yacht 42ft</h3>
+                          <button class="btn btn-icon btn-ghost">
+                            <i class="fas fa-heart"></i>
+                          </button>
+                        </div>
+                        <div class="result-rating">
+                          <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                          </div>
+                          <span>4.9</span>
+                        </div>
+                        <div class="result-info">
+                          <div>
+                            <i class="fas fa-users"></i> Capacity:
+                            <strong>8 guests</strong>
+                          </div>
+                          <div>
+                            <i class="fas fa-map-marker-alt"></i> Marina Bay
+                          </div>
+                        </div>
+                        <div class="result-features">
+                          <span class="badge badge-blue-light"
+                            >Captain included</span
+                          >
+                          <span class="badge badge-blue-light"
+                            >Snorkeling gear</span
+                          >
+                          <span class="badge badge-blue-light"
+                            >Premium sound system</span
+                          >
+                          <span class="badge badge-gray-light">+1 more</span>
+                        </div>
+                        <div class="result-footer">
+                          <div class="result-price">
+                            <span class="price">$450</span>
+                            <span class="price-period">/ day</span>
+                          </div>
+                          <button class="btn btn-primary">
+                            View Details <i class="fas fa-arrow-right"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="result-card">
+                      <div class="result-image">
+                        <img
+                          src="https://images.unsplash.com/photo-1605281317010-fe5ffe798166?w=800&q=80"
+                          alt="Premium Catamaran 38ft"
+                        />
+                        <span class="badge badge-success">Available</span>
+                      </div>
+                      <div class="result-details">
+                        <div class="result-header">
+                          <h3>Premium Catamaran 38ft</h3>
+                          <button class="btn btn-icon btn-ghost">
+                            <i class="fas fa-heart"></i>
+                          </button>
+                        </div>
+                        <div class="result-rating">
+                          <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                          </div>
+                          <span>4.7</span>
+                        </div>
+                        <div class="result-info">
+                          <div>
+                            <i class="fas fa-users"></i> Capacity:
+                            <strong>6 guests</strong>
+                          </div>
+                          <div>
+                            <i class="fas fa-map-marker-alt"></i> Marina Bay
+                          </div>
+                        </div>
+                        <div class="result-features">
+                          <span class="badge badge-blue-light"
+                            >Spacious deck</span
+                          >
+                          <span class="badge badge-blue-light"
+                            >Fishing equipment</span
+                          >
+                          <span class="badge badge-blue-light"
+                            >Bluetooth speakers</span
+                          >
+                        </div>
+                        <div class="result-footer">
+                          <div class="result-price">
+                            <span class="price">$380</span>
+                            <span class="price-period">/ day</span>
+                          </div>
+                          <button class="btn btn-primary">
+                            View Details <i class="fas fa-arrow-right"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="alternative-dates">
+                    <div class="alternative-dates-icon">
+                      <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="alternative-dates-content">
+                      <h3>Alternative Dates Available</h3>
+                      <p>
+                        Some options aren't available for your selected dates.
+                        Here are some alternatives with better availability:
+                      </p>
+                      <div class="alternative-dates-badges">
+                        <span class="badge badge-white">June 15 - June 18</span>
+                        <span class="badge badge-white">June 22 - June 25</span>
+                        <span class="badge badge-white">July 5 - July 8</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- New Booking Tab -->
+            <div class="tab-pane" id="new-booking-tab">
+              <div class="booking-container">
+                <div class="booking-header">
+                  <h2>Create New Booking</h2>
+                  <button class="btn btn-outline">Cancel</button>
+                </div>
+
+                <div class="booking-progress">
+                  <div class="progress-steps">
+                    <div class="progress-step active">
+                      <div class="step-number">1</div>
+                      <span class="step-label">Service</span>
+                    </div>
+                    <div class="progress-step">
+                      <div class="step-number">2</div>
+                      <span class="step-label">Dates</span>
+                    </div>
+                    <div class="progress-step">
+                      <div class="step-number">3</div>
+                      <span class="step-label">Amenities</span>
+                    </div>
+                    <div class="progress-step">
+                      <div class="step-number">4</div>
+                      <span class="step-label">Payment</span>
+                    </div>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width: 0%"></div>
+                  </div>
+                </div>
+
+                <div class="booking-steps">
+                  <!-- Step 1: Service Selection -->
+                  <div class="booking-step active" id="booking-step-1">
+                    <div class="step-header">
+                      <div class="step-number-circle">1</div>
+                      <h3>Select Service Type</h3>
+                    </div>
+
+                    <div class="service-selector">
+                      <div class="service-tabs">
+                        <button class="service-tab active" data-service="boat">
+                          <i class="fas fa-ship"></i> Boat Rental
+                        </button>
+                        <button
+                          class="service-tab"
+                          data-service="accommodation"
+                        >
+                          <i class="fas fa-building"></i> Accommodation
+                        </button>
+                      </div>
+
+                      <div class="service-options">
+                        <div class="service-option active" data-option="yacht">
+                          <input
+                            type="radio"
+                            name="service-option"
+                            id="option-yacht"
+                            checked
+                          />
+                          <label for="option-yacht">
+                            <div class="service-option-icon">
+                              <i class="fas fa-anchor"></i>
+                            </div>
+                            <h4>Luxury Yacht</h4>
+                            <p>
+                              Premium vessels with full amenities for the
+                              ultimate experience.
+                            </p>
+                          </label>
+                        </div>
+
+                        <div class="service-option" data-option="sailboat">
+                          <input
+                            type="radio"
+                            name="service-option"
+                            id="option-sailboat"
+                          />
+                          <label for="option-sailboat">
+                            <div class="service-option-icon">
+                              <i class="fas fa-sailboat"></i>
+                            </div>
+                            <h4>Sailboat</h4>
+                            <p>
+                              Classic sailing experience with various sizes
+                              available.
+                            </p>
+                          </label>
+                        </div>
+
+                        <div class="service-option" data-option="speedboat">
+                          <input
+                            type="radio"
+                            name="service-option"
+                            id="option-speedboat"
+                          />
+                          <label for="option-speedboat">
+                            <div class="service-option-icon">
+                              <i class="fas fa-ship"></i>
+                            </div>
+                            <h4>Speed Boat</h4>
+                            <p>
+                              Fast and agile boats perfect for day trips and
+                              water sports.
+                            </p>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="step-actions">
+                      <button class="btn btn-primary" id="next-to-step-2">
+                        Continue
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Step 2: Dates & Guests -->
+                  <div class="booking-step" id="booking-step-2">
+                    <div class="step-header">
+                      <div class="step-number-circle">2</div>
+                      <h3>Select Dates & Guests</h3>
+                    </div>
+
+                    <div class="dates-guests-form">
+                      <div class="form-grid">
+                        <div class="form-group">
+                          <label
+                            ><i class="fas fa-calendar"></i> Select Date
+                            Range</label
+                          >
+                          <button class="date-picker-button">
+                            <i class="fas fa-calendar"></i>
+                            <span>Jun 15 - Jun 18</span>
+                          </button>
+                        </div>
+
+                        <div class="form-group">
+                          <label
+                            ><i class="fas fa-users"></i> Number of
+                            Guests</label
+                          >
+                          <div class="input-with-badge">
+                            <input
+                              type="number"
+                              value="4"
+                              min="1"
+                              class="form-control"
+                            />
+                            <span class="badge badge-outline"
+                              >Max capacity varies by boat</span
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="step-actions">
+                      <button class="btn btn-outline" id="back-to-step-1">
+                        Back
+                      </button>
+                      <button class="btn btn-primary" id="next-to-step-3">
+                        Continue
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Step 3: Amenities -->
+                  <div class="booking-step" id="booking-step-3">
+                    <div class="step-header">
+                      <div class="step-number-circle">3</div>
+                      <h3>Select Amenities</h3>
+                    </div>
+
+                    <div class="amenities-selector">
+                      <div class="amenities-grid">
+                        <div class="amenity-card">
+                          <div class="amenity-checkbox">
+                            <input type="checkbox" id="amenity-fishing-gear" />
+                            <label for="amenity-fishing-gear"></label>
+                          </div>
+                          <div class="amenity-content">
+                            <div class="amenity-header">
+                              <label
+                                for="amenity-fishing-gear"
+                                class="amenity-name"
+                                >Fishing Gear</label
+                              >
+                              <i class="fas fa-info-circle"></i>
+                              <span class="badge badge-blue-light">$25</span>
+                            </div>
+                            <p class="amenity-description">
+                              Complete set of fishing equipment for up to 4
+                              people
+                            </p>
+                          </div>
+                        </div>
+
+                        <div class="amenity-card">
+                          <div class="amenity-checkbox">
+                            <input type="checkbox" id="amenity-life-jackets" />
+                            <label for="amenity-life-jackets"></label>
+                          </div>
+                          <div class="amenity-content">
+                            <div class="amenity-header">
+                              <label
+                                for="amenity-life-jackets"
+                                class="amenity-name"
+                                >Extra Life Jackets</label
+                              >
+                              <i class="fas fa-info-circle"></i>
+                              <span class="badge badge-blue-light">$10</span>
+                            </div>
+                            <p class="amenity-description">
+                              Additional life jackets beyond the standard
+                              included set
+                            </p>
+                          </div>
+                        </div>
+
+                        <div class="amenity-card">
+                          <div class="amenity-checkbox">
+                            <input type="checkbox" id="amenity-cooler" />
+                            <label for="amenity-cooler"></label>
+                          </div>
+                          <div class="amenity-content">
+                            <div class="amenity-header">
+                              <label for="amenity-cooler" class="amenity-name"
+                                >Cooler with Ice</label
+                              >
+                              <i class="fas fa-info-circle"></i>
+                              <span class="badge badge-blue-light">$15</span>
+                            </div>
+                            <p class="amenity-description">
+                              Large cooler with ice to keep your beverages cold
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="selected-amenities">
+                        <div class="selected-amenities-summary">
+                          <i class="fas fa-check text-green"></i>
+                          <span>0 amenities selected</span>
+                          <div class="additional-cost">Additional cost: $0</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="step-actions">
+                      <button class="btn btn-outline" id="back-to-step-2">
+                        Back
+                      </button>
+                      <button class="btn btn-primary" id="next-to-step-4">
+                        Continue
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Step 4: Review & Payment -->
+                  <div class="booking-step" id="booking-step-4">
+                    <div class="step-header">
+                      <div class="step-number-circle">4</div>
+                      <h3>Review & Payment</h3>
+                    </div>
+
+                    <div class="review-payment-grid">
+                      <div class="review-section">
+                        <div class="selected-service-card">
+                          <div class="selected-service-image">
+                            <img
+                              src="https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=800&q=80"
+                              alt="Luxury Yacht"
+                            />
+                            <span class="badge badge-success">Available</span>
+                          </div>
+                          <div class="selected-service-details">
+                            <div class="selected-service-header">
+                              <h3>Luxury Yacht</h3>
+                              <span class="badge badge-primary"
+                                >Boat Rental</span
+                              >
+                            </div>
+                            <div class="selected-service-info">
+                              <div>
+                                <i class="fas fa-calendar"></i> Jun 15 - Jun 18
+                              </div>
+                              <div><i class="fas fa-users"></i> 4 guests</div>
+                              <div>
+                                <i class="fas fa-map-marker-alt"></i> Marina Bay
+                              </div>
+                            </div>
+                            <div class="selected-amenities-tags">
+                              <span class="badge badge-blue-light"
+                                >Fishing Gear</span
+                              >
+                              <span class="badge badge-blue-light"
+                                >Cooler with Ice</span
+                              >
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="customer-info-card">
+                          <h4>
+                            <i class="fas fa-user"></i> Customer Information
+                          </h4>
+                          <div class="form-grid">
+                            <div class="form-group">
+                              <label>Full Name</label>
+                              <div class="input-with-icon">
+                                <i class="fas fa-user"></i>
+                                <input
+                                  type="text"
+                                  placeholder="John Doe"
+                                  class="form-control"
+                                />
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label>Email Address</label>
+                              <div class="input-with-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input
+                                  type="email"
+                                  placeholder="john.doe@example.com"
+                                  class="form-control"
+                                />
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label>Phone Number</label>
+                              <div class="input-with-icon">
+                                <i class="fas fa-phone"></i>
+                                <input
+                                  type="tel"
+                                  placeholder="+1 (555) 123-4567"
+                                  class="form-control"
+                                />
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label>Address</label>
+                              <div class="input-with-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <input
+                                  type="text"
+                                  placeholder="123 Main St"
+                                  class="form-control"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="pricing-summary-section">
+                        <div class="pricing-card">
+                          <div class="pricing-header">
+                            <h3>Pricing Summary</h3>
+                            <span class="badge badge-primary">Boat Rental</span>
+                          </div>
+                          <div class="pricing-content">
+                            <div class="service-name">Luxury Yacht</div>
+                            <div class="service-dates">
+                              Jun 15 - Jun 18 (3 days)
+                            </div>
+
+                            <div class="pricing-details">
+                              <div class="price-row">
+                                <span>Base price ($150 × 3 days)</span>
+                                <span>$450</span>
+                              </div>
+
+                              <div class="additional-services">
+                                <p>Additional Services:</p>
+                                <div class="price-row">
+                                  <div class="service-with-info">
+                                    <span>Fishing Gear</span>
+                                    <i class="fas fa-info-circle"></i>
+                                  </div>
+                                  <span>$25</span>
+                                </div>
+                                <div class="price-row">
+                                  <div class="service-with-info">
+                                    <span>Cooler with Ice</span>
+                                    <i class="fas fa-info-circle"></i>
+                                  </div>
+                                  <span>$15</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="pricing-divider"></div>
+
+                            <div class="price-row">
+                              <span>Subtotal</span>
+                              <span>$490</span>
+                            </div>
+
+                            <div class="price-row discount">
+                              <span>Discount (Early Bird)</span>
+                              <span>-$50</span>
+                            </div>
+
+                            <div class="price-row">
+                              <span>Tax</span>
+                              <span>$45</span>
+                            </div>
+
+                            <div class="pricing-divider"></div>
+
+                            <div class="price-row total">
+                              <span>Total</span>
+                              <span>$485</span>
+                            </div>
+                          </div>
+                          <div class="pricing-footer">
+                            <button class="btn btn-primary btn-block">
+                              <i class="fas fa-credit-card"></i> Proceed to
+                              Payment
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="step-actions">
+                      <button class="btn btn-outline" id="back-to-step-3">
+                        Back
+                      </button>
+                      <button class="btn btn-success" id="complete-booking">
+                        Complete Booking
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reservations Tab -->
+            <div class="tab-pane" id="reservations-tab">
+              <div class="reservations-container">
+                <div class="reservations-header">
+                  <div>
+                    <h2>Reservation Manager</h2>
+                    <p>View and manage all your bookings in one place</p>
+                  </div>
+                  <button class="btn btn-primary">
+                    <i class="fas fa-plus-circle"></i> Create New Booking
+                  </button>
+                </div>
+
+                <div class="reservations-tabs">
+                  <button class="reservation-tab active">
+                    <i class="fas fa-filter"></i> All
+                  </button>
+                  <button class="reservation-tab">
+                    <i class="fas fa-ship"></i> Boats
+                  </button>
+                  <button class="reservation-tab">
+                    <i class="fas fa-home"></i> Accommodations
+                  </button>
+                </div>
+
+                <div class="reservations-filters">
+                  <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input
+                      type="text"
+                      placeholder="Search reservations..."
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="filter-buttons">
+                    <div class="dropdown">
+                      <button class="btn btn-outline dropdown-toggle">
+                        <i class="fas fa-filter"></i> Status
+                        <i class="fas fa-chevron-down"></i>
+                      </button>
+                    </div>
+                    <div class="dropdown">
+                      <button class="btn btn-outline dropdown-toggle">
+                        <i class="fas fa-filter"></i> Type
+                        <i class="fas fa-chevron-down"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="reservations-table-container">
+                  <table class="reservations-table">
+                    <caption>
+                      List of all reservations
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th>Type</th>
+                        <th>Name</th>
+                        <th>Customer</th>
+                        <th>Dates</th>
+                        <th>Status</th>
+                        <th>Amount</th>
+                        <th class="text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <div class="cell-with-icon">
+                            <i class="fas fa-ship text-blue"></i>
+                            <span>Boat</span>
+                          </div>
+                        </td>
+                        <td class="font-medium">Luxury Yacht 42ft</td>
+                        <td>
+                          <div class="cell-with-icon">
+                            <i class="fas fa-user text-gray"></i>
+                            <span>John Smith</span>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="cell-with-icon">
+                            <i class="fas fa-calendar text-gray"></i>
+                            <span>Jul 15 - Jul 18</span>
+                          </div>
+                        </td>
+                        <td>
+                          <span class="badge badge-green-light">Confirmed</span>
+                        </td>
+                        <td>
+                          <div class="cell-with-icon">
+                            <i class="fas fa-dollar-sign text-gray"></i>
+                            <span>1,200.00</span>
+                          </div>
+                        </td>
+                        <td class="text-right">
+                          <button class="btn btn-icon btn-ghost">
+                            <i class="fas fa-ellipsis-h"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="cell-with-icon">
+                            <i class="fas fa-home text-purple"></i>
+                            <span>Accommodation</span>
+                          </div>
+                        </td>
+                        <td class="font-medium">Beachfront Villa</td>
+                        <td>
+                          <div class="cell-with-icon">
+                            <i class="fas fa-user text-gray"></i>
+                            <span>Sarah Johnson</span>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="cell-with-icon">
+                            <i class="fas fa-calendar text-gray"></i>
+                            <span>Aug 1 - Aug 7</span>
+                          </div>
+                        </td>
+                        <td>
+                          <span class="badge badge-yellow-light">Pending</span>
+                        </td>
+                        <td>
+                          <div class="cell-with-icon">
+                            <i class="fas fa-dollar-sign text-gray"></i>
+                            <span>2,100.00</span>
+                          </div>
+                        </td>
+                        <td class="text-right">
+                          <button class="btn btn-icon btn-ghost">
+                            <i class="fas fa-ellipsis-h"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <div class="cell-with-icon">
+                            <i class="fas fa-ship text-blue"></i>
+                            <span>Boat</span>
+                          </div>
+                        </td>
+                        <td class="font-medium">Speedboat 25ft</td>
+                        <td>
+                          <div class="cell-with-icon">
+                            <i class="fas fa-user text-gray"></i>
+                            <span>Michael Brown</span>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="cell-with-icon">
+                            <i class="fas fa-calendar text-gray"></i>
+                            <span>Jul 20 - Jul 21</span>
+                          </div>
+                        </td>
+                        <td>
+                          <span class="badge badge-green-light">Confirmed</span>
+                        </td>
+                        <td>
+                          <div class="cell-with-icon">
+                            <i class="fas fa-dollar-sign text-gray"></i>
+                            <span>450.00</span>
+                          </div>
+                        </td>
+                        <td class="text-right">
+                          <button class="btn btn-icon btn-ghost">
+                            <i class="fas fa-ellipsis-h"></i>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="pagination">
+                  <button class="pagination-prev" disabled>
+                    <i class="fas fa-chevron-left"></i> Previous
+                  </button>
+                  <button class="pagination-number active">1</button>
+                  <button class="pagination-number">2</button>
+                  <button class="pagination-number">3</button>
+                  <button class="pagination-next">
+                    Next <i class="fas fa-chevron-right"></i>
+                  </button>
+                </div>
+
+                <div class="reservation-actions">
+                  <div>
+                    <p class="selected-reservation-text">
+                      Select a reservation to perform actions
+                    </p>
+                  </div>
+                  <div class="action-buttons">
+                    <button class="btn btn-outline btn-sm" disabled>
+                      <i class="fas fa-eye"></i> View
+                    </button>
+                    <button class="btn btn-outline btn-sm" disabled>
+                      <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-outline btn-sm" disabled>
+                      <i class="fas fa-calendar"></i> Reschedule
+                    </button>
+                    <button class="btn btn-danger btn-sm" disabled>
+                      <i class="fas fa-trash"></i> Cancel Reservation
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      <!-- Tutorial Overlay -->
+      <div class="tutorial-overlay" id="tutorialOverlay" style="display: none">
+        <div class="tutorial-card">
+          <button class="tutorial-close" id="closeTutorial">
+            <i class="fas fa-times"></i>
+          </button>
+
+          <div class="tutorial-content">
+            <div class="tutorial-image">
+              <img
+                src="https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&q=80"
+                alt="Welcome to Carles!"
+              />
+            </div>
+
+            <div class="tutorial-text">
+              <h2>Welcome to Carles!</h2>
+              <p>
+                This quick tutorial will help you get started with our booking
+                dashboard. Let's explore the main features together.
+              </p>
+
+              <div class="tutorial-navigation">
+                <div class="tutorial-dots">
+                  <span class="tutorial-dot active"></span>
+                  <span class="tutorial-dot"></span>
+                  <span class="tutorial-dot"></span>
+                  <span class="tutorial-dot"></span>
+                  <span class="tutorial-dot"></span>
+                  <span class="tutorial-dot"></span>
+                </div>
+
+                <div class="tutorial-buttons">
+                  <button class="btn btn-primary" id="nextTutorial">
+                    Next <i class="fas fa-chevron-right"></i>
+                  </button>
+                </div>
+              </div>
+
+              <button class="btn btn-link" id="skipTutorial">
+                Skip tutorial
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Welcome Message -->
+      <div class="welcome-message" id="welcomeMessage" style="display: none">
+        <div class="welcome-header">
+          <h3 class="welcome-title">Welcome to SeaBooker!</h3>
+          <button class="welcome-close" id="closeWelcome">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <p class="welcome-text">
+          You can access the tutorial anytime by clicking the Tutorial button in
+          the top right.
+        </p>
+      </div>
+    </div>
+
+    <script src="/Online Booking Reservation Boat Rentals and Accommodation/Dashboard/dashboard.js"></script>
+  </body>
+</html>
