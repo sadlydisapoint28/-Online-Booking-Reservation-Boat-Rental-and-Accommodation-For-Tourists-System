@@ -1,2 +1,2 @@
-# Online Booking Reservation: Boat Rentals and Accommodation For Tourists System
+# Online Booking Reservation: Boat Rental and Accommodation For Tourists System
 Editable And Unfinished Code
