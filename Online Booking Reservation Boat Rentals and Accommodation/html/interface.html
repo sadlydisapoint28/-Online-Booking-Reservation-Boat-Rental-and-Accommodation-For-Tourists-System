@@ -3,196 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/interface.css">
-    <title>Carles Tourism</title>
+    <meta name="description" content="Carles Tourism - Your premier destination for boat rentals and accommodations in the beautiful Gigantes Islands of Iloilo, Philippines. Book your island adventure today!">
+    <meta name="keywords" content="Carles Tourism, Gigantes Islands, boat rentals, accommodations, island hopping, Philippines tourism, Iloilo tourism">
+    <meta name="author" content="Carles Tourism">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Carles Tourism - Boat Rentals and Accommodations">
+    <meta property="og:description" content="Experience the beauty of Carles waters with our premium boat rentals and island tours.">
+    <meta property="og:image" content="/Online Booking Reservation Boat Rentals and Accommodation/img/timbook-carles-tourism.png">
+    <meta property="og:url" content="https://carlestourism.com">
+    
+    <title>Carles Tourism - Boat Rentals and Accommodations</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/Online Booking Reservation Boat Rentals and Accommodation/img/favicon.png">
+    
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/interface.css">
 </head>
 <body>
-    <!-- Enhanced Navigation -->
-    <nav class="navbar">
-        <!-- Mobile Menu Button -->
-        <button class="mobile-menu-btn">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-
-        <!-- Left Navigation -->
-        <div class="nav-left">
-            <a href="#" class="nav-link">Home</a>
-            <a href="#" class="nav-link">Boat Rentals</a>
-            <a href="#" class="nav-link">Accommodations</a>
-        </div>
-
-        <!-- Center Logo -->
-        <div class="nav-center">
-            <img src="../img/timbook-carles-tourism.jpg" alt="Carles Logo" class="nav-logo">
-        </div>
-
-        <!-- Right Navigation -->
-        <div class="nav-right">
-            <div class="nav-links">
-                <a href="#" class="nav-link">About Us</a>
-                <a href="#" class="nav-link">Contact Us</a>
-            </div>
-            <div class="nav-buttons">
-                <button class="btn-book">Book Now</button>
-                <button class="btn-login">Login</button>
-            </div>
-        </div>
-    </nav>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-to-main">Skip to main content</a>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero" id="home" role="banner">
+        <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" 
+             class="hero-background" 
+             alt="Beach Background - Carles Tourism"
+             loading="lazy">
+        <div class="hero-overlay" aria-hidden="true"></div>
+        
+        <!-- Enhanced Navigation -->
+        <nav class="navbar" role="navigation" aria-label="Main navigation">
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn" 
+                    aria-label="Toggle menu"
+                    aria-expanded="false"
+                    aria-controls="nav-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <!-- Left Navigation -->
+            <div class="nav-left" id="nav-menu">
+                <a href="#home" class="nav-link" aria-current="page">Home</a>
+                <a href="#boat-rental" class="nav-link">Boat Rentals</a>
+                <a href="#accommodations" class="nav-link">Accommodations</a>
+            </div>
+
+            <!-- Center Logo -->
+            <div class="nav-center">
+                <a href="#home" aria-label="Carles Tourism Home">
+                    <img src="/Online Booking Reservation Boat Rentals and Accommodation/img/timbook-carles-tourism.png" 
+                         alt="Carles Tourism Logo" 
+                         class="nav-logo"
+                         width="150"
+                         height="50"
+                         loading="eager">
+                </a>
+            </div>
+
+            <!-- Right Navigation -->
+            <div class="nav-right">
+                <div class="nav-links">
+                    <a href="#about" class="nav-link">About Us</a>
+                    <a href="#contact" class="nav-link">Contact Us</a>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn-book" 
+                            aria-label="Book Now"
+                            onclick="window.location.href='#booking'">
+                        Book Now
+                    </button>
+                    <button class="btn-login" 
+                            aria-label="Login"
+                            onclick="window.location.href='../Loginup Admin/loginup_admin.php'">
+                        Login
+                    </button>
+                </div>
+            </div>
+        </nav>
+
         <div class="hero-content">
-            <h1>Your Adventure Awaits with Tourism</h1>
-            <p>Discover the beauty of Carles with our boat rentals and comfortable accommodations. Book your unforgettable experience today and create memories that will last a lifetime.</p>
-            <div class="search-container">
-                <div class="search-bar">
-                    <input type="text" placeholder="Search destinations, boats, or accommodations...">
-                    <button class="search-btn"><i class="fas fa-search"></i></button>
-                </div>
+            <div class="hero-logo">
+                <img src="/Online Booking Reservation Boat Rentals and Accommodation/img/carleslogomunicipality.png" 
+                     alt="Carles Municipality Logo" 
+                     class="municipality-logo"
+                     width="120"
+                     height="120"
+                     loading="eager">
             </div>
+            <h1>Freedom is just an<br>adventure away</h1>
+            <p>Experience the beauty of Carles waters with our premium boat rentals and island tours.</p>
             <div class="hero-buttons">
-                <button class="btn-primary">Boat Rentals</button>
-                <button class="btn-secondary">Accommodations</button>
-                <button class="btn-browse">Browse the Highlights <i class="fas fa-arrow-right"></i></button>
+                <a href="#booking" 
+                   class="hero-btn primary" 
+                   aria-label="Get Started - Book your adventure">
+                    GET STARTED
+                </a>
+                <a href="#about" 
+                   class="hero-btn secondary" 
+                   aria-label="Learn more about Carles Tourism">
+                    ABOUT US
+                </a>
             </div>
         </div>
     </section>
 
-    <!-- Discover Section -->
-    <section class="discover">
-        <h2>Discover Carles Tourism</h2>
-        <p>At Carles Tourism, we are committed to enhancing your travel experiences with our innovative booking platform. Our mission is to make vacations accessible and enjoyable for everyone.</p>
-        
-        <div class="features">
-            <div class="feature">
-                <i class="fas fa-star"></i>
-                <h3>Our Mission</h3>
-                <p>To enhance travel experiences by offering a user-friendly platform for booking boat rentals and accommodations, making vacations more accessible and enjoyable for all travelers.</p>
-            </div>
-            <div class="feature">
-                <i class="fas fa-thumbs-up"></i>
-                <h3>Our Values</h3>
-                <p>We prioritize customer satisfaction, continuously innovate our services, and operate with integrity. These values guide us in providing the best possible experience for our clients.</p>
-            </div>
-            <div class="feature">
-                <i class="fas fa-users"></i>
-                <h3>Meet Our Team</h3>
-                <p>Our dedicated team, led by Lhance Monter, is here to ensure you have a seamless booking experience. From technology to customer service, we are committed to your satisfaction.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Boat Rental Section -->
-    <section class="boat-rental">
-        <div class="section-content">
-            <h2>Discover Your Perfect <em>Boat Rental</em> for an Unforgettable Adventure</h2>
-            <p>At Carles Tourism, we offer a wide selection of boats for rent, from luxurious yachts to small fishing boats. Our easy online booking system makes it simple to find the perfect vessel for your next adventure. Explore our options today!</p>
-            <div class="rental-features">
-                <div class="feature">
-                    <h3>Variety</h3>
-                    <p>We offer a diverse range of boats to suit every need.</p>
-                </div>
-                <div class="feature">
-                    <h3>Booking</h3>
-                    <p>Our online booking process saves you time and effort.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Accommodation Section -->
-    <section class="accommodations">
-        <h2>Discover Your Perfect Stay with <em>Carles Tourism</em></h2>
-        <p>At Carles Tourism, we understand that finding the right accommodation is crucial for an unforgettable vacation. That's why we offer a diverse range of lodging options to suit every traveler's needs and preferences.</p>
-        
-        <div class="accommodation-options">
-            <div class="option">
-                <img src="img/beachfront.jpg" alt="Beachfront Cottages">
-                <h3>Beachfront Cottages</h3>
-                <p>Wake up to the sound of waves and enjoy breathtaking ocean views from our beachfront cottages. Perfect for families or couples seeking a romantic getaway.</p>
-                <button class="learn-more">Learn More</button>
-            </div>
-            <div class="option">
-                <img src="img/cityview.jpg" alt="City View Apartments">
-                <h3>City View Apartments</h3>
-                <p>Experience the vibrant city life from our modern apartments, equipped with all the amenities you need for a comfortable and convenient stay.</p>
-                <button class="learn-more">Learn More</button>
-            </div>
-            <div class="option">
-                <img src="img/cabin.jpg" alt="Secluded Cabins">
-                <h3>Secluded Cabins</h3>
-                <p>Escape to nature in our secluded cabins, surrounded by lush forests and tranquil landscapes. Perfect for those seeking peace and relaxation.</p>
-                <button class="learn-more">Learn More</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Destinations Section -->
-    <section class="destinations">
-        <h2>Discover the <em>Best Destinations</em> with Carles Tourism Today!</h2>
-        <p>Embark on unforgettable journeys with Carles Tourism. Explore breathtaking destinations, from pristine beaches to serene lakes.</p>
-        
-        <div class="destination-cards">
-            <div class="card">
-                <img src="img/isla.jpg" alt="Isla de Gigantes">
-                <h3>Isla de Gigantes: A Tropical Paradise</h3>
-                <p>Discover the untouched beauty of Isla de Gigantes. Explore hidden lagoons, swim in crystal-clear waters, and bask in the sun on pristine beaches.</p>
-                <button class="learn-more">Learn More</button>
-            </div>
-            <div class="card">
-                <img src="img/balay.jpg" alt="Balay Dako">
-                <h3>Balay Dako: A Cultural Gem</h3>
-                <p>Immerse yourself in the rich culture and heritage of Balay Dako. Explore traditional architecture and enjoy breathtaking views.</p>
-                <button class="learn-more">Learn More</button>
-            </div>
-            <div class="card">
-                <img src="img/manlot.jpg" alt="Manlot Island">
-                <h3>Manlot Island: A Secluded Escape</h3>
-                <p>Escape to the tranquil shores of Manlot Island. Relax on pristine beaches and soak up the sun in this secluded paradise.</p>
-                <button class="learn-more">Learn More</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="contact">
-        <h2>Get in Touch</h2>
-        <p>We'd love to hear from you! Reach out anytime.</p>
-        
-        <div class="contact-container">
-            <div class="contact-info">
-                <div class="info-item">
-                    <span class="icon">✉️</span>
-                    <p>Email: info@carlestourism.com</p>
-                </div>
-                <div class="info-item">
-                    <span class="icon">📞</span>
-                    <p>Phone: +1-555-123-4567</p>
-                </div>
-                <div class="info-item">
-                    <span class="icon">📍</span>
-                    <p>Address: 123 Ocean Drive, Miami, FL 33139, United States</p>
-                </div>
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Our Working Process Section -->
+        <section class="process" id="process" aria-labelledby="process-title">
+            <div class="section-header">
+                <span class="subtitle">Simple Steps</span>
+                <h2 id="process-title">How It Works</h2>
+                <p>Experience seamless service with our simple booking process</p>
             </div>
             
-            <form class="contact-form">
-                <input type="text" placeholder="Enter your name" required>
-                <input type="email" placeholder="Enter your email" required>
-                <textarea placeholder="Type your message" required></textarea>
-                <div class="terms-container">
-                    <div class="checkbox-wrapper">
-                        <input type="checkbox" id="terms" required>
-                        <label for="terms">I accept the Terms and Conditions</label>
+            <div class="process-container">
+                <div class="process-step" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="step-number" aria-hidden="true">01</div>
+                    <div class="step-icon">
+                        <i class="fas fa-search" aria-hidden="true"></i>
                     </div>
-                    <small class="terms-note">By checking this box, you agree to our Terms of Service and Privacy Policy.</small>
+                    <h3>Browse & Select</h3>
+                    <p>Explore our collection of boats and accommodations to find your perfect match</p>
                 </div>
-                <button type="submit" class="submit-btn">Submit</button>
-            </form>
-        </div>
-    </section>
+                
+                <div class="process-step" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="step-number" aria-hidden="true">02</div>
+                    <div class="step-icon">
+                        <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                    </div>
+                    <h3>Choose Dates</h3>
+                    <p>Select your preferred dates and check real-time availability</p>
+                </div>
+                
+                <div class="process-step" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="step-number" aria-hidden="true">03</div>
+                    <div class="step-icon">
+                        <i class="fas fa-credit-card" aria-hidden="true"></i>
+                    </div>
+                    <h3>Book & Pay</h3>
+                    <p>Complete your booking with our secure payment system</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section class="services" id="services">
+            <div class="section-header">
+                <span class="subtitle">What We Offer</span>
+                <h2>Our Services</h2>
+                <p>Discover our premium offerings for your perfect island experience</p>
+            </div>
+
+            <div class="services-grid">
+                <div class="service-card" data-aos="fade-up">
+                    <div class="service-icon">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <h3>Island Hopping</h3>
+                    <p>Guided tours of the stunning Gigantes Islands with experienced local guides, offering both day trips and multi-day adventures.</p>
+                    <a href="#" class="service-btn">Learn More</a>
+                </div>
+                
+                <div class="service-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h3>Accommodations</h3>
+                    <p>Comfortable and cozy accommodations ranging from budget-friendly options to premium beachfront cottages for all travelers.</p>
+                    <a href="#" class="service-btn">Learn More</a>
+                </div>
+                
+                <div class="service-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="service-icon">
+                        <i class="fas fa-ship"></i>
+                    </div>
+                    <h3>Boat Rentals</h3>
+                    <p>Safe and reliable boat rental services with experienced crew members for island hopping, fishing trips, and beach excursions.</p>
+                    <a href="#" class="service-btn">Learn More</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact-section" id="contact">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 contact-info" data-aos="fade-up">
+                        <span class="subtitle">Connect With Us</span>
+                        <h2>Get in Touch</h2>
+                        <p>Have questions about our island tours or boat rentals? We're here to help you plan your perfect adventure.</p>
+                        
+                        <div class="info-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h5>Our Location</h5>
+                                <p>Carles Port Terminal, Carles, Iloilo, Philippines 5019</p>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <i class="fas fa-phone-alt"></i>
+                            <div>
+                                <h5>Phone Number</h5>
+                                <p>+63 912 345 6789</p>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h5>Email Address</h5>
+                                <p>info@carlesislandtours.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <!-- Footer -->
     <footer>
@@ -200,24 +236,24 @@
             <div class="footer-section">
                 <h3>Explore</h3>
                 <ul>
-                    <li><a href="#">Boat Rentals</a></li>
-                    <li><a href="#">Accommodations</a></li>
-                    <li><a href="#">Explore Destinations</a></li>
+                    <li><a href="#boat-rental">Boat Rentals</a></li>
+                    <li><a href="#accommodations">Accommodations</a></li>
+                    <li><a href="#destinations">Explore Destinations</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h3>Company</h3>
                 <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Contact Us</a></li>
-                    <li><a href="#">Login</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                    <li><a href="../Loginup Admin/loginup_admin.php">Login</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h3>Support</h3>
                 <ul>
-                    <li><a href="#">Booking Process</a></li>
-                    <li><a href="#">Message Us</a></li>
+                    <li><a href="#process">Booking Process</a></li>
+                    <li><a href="#contact">Message Us</a></li>
                 </ul>
             </div>
             <div class="footer-section newsletter">
@@ -230,19 +266,67 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 Carles. All rights reserved.</p>
+            <p>&copy; 2025 Carles Tourism. All rights reserved.</p>
             <div class="footer-links">
                 <a href="#">Terms And Conditions</a>
                 <a href="#">Privacy Policy</a>
             </div>
             <div class="social-links">
-                <a href="#" class="social-icon">fb</a>
-                <a href="#" class="social-icon">ig</a>
-                <a href="#" class="social-icon">tw</a>
+                <a href="#" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
             </div>
         </div>
     </footer>
 
-    <script src="../javascript/interface.js"></script>
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            mirror: false
+        });
+
+        // Navbar scroll effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbar = document.querySelector('.navbar');
+            const menuToggle = document.querySelector('.mobile-menu-btn');
+            const navLeft = document.querySelector('.nav-left');
+            const navRight = document.querySelector('.nav-right');
+            const body = document.body;
+
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+
+            // Mobile menu toggle
+            menuToggle.addEventListener('click', function() {
+                const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+                menuToggle.setAttribute('aria-expanded', !isExpanded);
+                menuToggle.classList.toggle('active');
+                navLeft.classList.toggle('active');
+                navRight.classList.toggle('active');
+                body.classList.toggle('menu-active');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.navbar') && navLeft.classList.contains('active')) {
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                    menuToggle.classList.remove('active');
+                    navLeft.classList.remove('active');
+                    navRight.classList.remove('active');
+                    body.classList.remove('menu-active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

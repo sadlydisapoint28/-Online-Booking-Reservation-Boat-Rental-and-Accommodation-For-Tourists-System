@@ -1,0 +1,965 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carles: Boat & Accommodation Booking</title>
+    <link rel="stylesheet" href="userdashboard.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="container">
+        <div class="header-content">
+          <!-- Logo -->
+          <div class="logo">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="logo-icon"
+            >
+              <path
+                d="M2 12a5 5 0 0 0 5 5 8 8 0 0 1 5 2 8 8 0 0 1 5-2 5 5 0 0 0 5-5c0-8-7-9-10-3-3-6-10-5-10 3"
+              />
+            </svg>
+            <span class="logo-text">Carles</span>
+          </div>
+
+          <!-- Search Bar -->
+          <div class="search-bar">
+            <i class="fas fa-search search-icon"></i>
+            <input
+              type="search"
+              placeholder="Search destinations, boats, accommodations..."
+            />
+          </div>
+
+          <!-- Navigation -->
+          <nav class="main-nav">
+            <button class="nav-button">Boats</button>
+            <button class="nav-button">Accommodations</button>
+            <button class="nav-button">Destinations</button>
+            <button class="nav-button">Deals</button>
+            <div id="date-time" class="date-time">
+              <span class="time">12:00:00 PM</span>
+              <span class="date">Monday, January 1, 2023</span>
+            </div>
+          </nav>
+
+          <!-- User Actions -->
+          <div class="user-actions">
+            <button
+              id="theme-toggle"
+              class="icon-button"
+              aria-label="Toggle theme"
+            >
+              <i class="fas fa-moon moon-icon"></i>
+              <i class="fas fa-sun sun-icon hidden"></i>
+            </button>
+            <button class="icon-button notification-button">
+              <i class="fas fa-bell"></i>
+              <span class="notification-badge">3</span>
+            </button>
+            <button class="icon-button message-button">
+              <i class="fas fa-comment"></i>
+              <span class="notification-badge">2</span>
+            </button>
+            <div class="user-profile">
+              <img
+                src="https://api.dicebear.com/7.x/avataaars/svg?seed=travel"
+                alt="User Avatar"
+                class="avatar"
+              />
+              <div class="dropdown-menu">
+                <div class="dropdown-header">My Account</div>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">Profile</a>
+                <a href="#" class="dropdown-item">Bookings</a>
+                <a href="#" class="dropdown-item">Favorites</a>
+                <a href="#" class="dropdown-item">Settings</a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item">Log out</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mobile Menu Button -->
+          <button class="mobile-menu-button">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <!-- Featured Carousel -->
+      <section class="featured-carousel">
+        <div class="container">
+          <div class="section-header">
+            <h2>Featured Destinations</h2>
+            <a href="#" class="view-all"
+              >View all <i class="fas fa-arrow-right"></i
+            ></a>
+          </div>
+
+          <div class="carousel">
+            <button class="carousel-arrow carousel-prev">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="carousel-container">
+              <div class="carousel-track">
+                <!-- Carousel Items -->
+                <div class="carousel-item">
+                  <div class="featured-card">
+                    <img
+                      src="https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=1200&q=80"
+                      alt="Luxury Yacht Experience"
+                    />
+                    <div class="featured-card-overlay">
+                      <div class="featured-card-badges">
+                        <span class="badge badge-blue">Boat Rental</span>
+                        <span class="badge badge-yellow">★ 4.8</span>
+                      </div>
+                      <h3>Luxury Yacht Experience</h3>
+                      <p>Miami Beach, FL</p>
+                      <div class="featured-card-details">
+                        <p class="price">$299 <span>/ day</span></p>
+                        <p>Capacity: 12</p>
+                      </div>
+                      <button class="quick-book-button">Quick Book</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <div class="featured-card">
+                    <img
+                      src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=1200&q=80"
+                      alt="Beachfront Villa"
+                    />
+                    <div class="featured-card-overlay">
+                      <div class="featured-card-badges">
+                        <span class="badge badge-blue">Accommodation</span>
+                        <span class="badge badge-yellow">★ 4.9</span>
+                      </div>
+                      <h3>Beachfront Villa</h3>
+                      <p>Malibu, CA</p>
+                      <div class="featured-card-details">
+                        <p class="price">$450 <span>/ day</span></p>
+                        <p>Capacity: 8</p>
+                      </div>
+                      <button class="quick-book-button">Quick Book</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <div class="featured-card">
+                    <img
+                      src="https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=1200&q=80"
+                      alt="Sailboat Adventure"
+                    />
+                    <div class="featured-card-overlay">
+                      <div class="featured-card-badges">
+                        <span class="badge badge-blue">Boat Rental</span>
+                        <span class="badge badge-yellow">★ 4.7</span>
+                      </div>
+                      <h3>Sailboat Adventure</h3>
+                      <p>San Diego, CA</p>
+                      <div class="featured-card-details">
+                        <p class="price">$199 <span>/ day</span></p>
+                        <p>Capacity: 6</p>
+                      </div>
+                      <button class="quick-book-button">Quick Book</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="carousel-arrow carousel-next">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Listings Section -->
+      <section class="listings-section">
+        <div class="container">
+          <div class="section-header">
+            <h2>Explore Destinations</h2>
+            <div class="view-toggle">
+              <button class="view-toggle-button active" data-view="grid">
+                Grid View
+              </button>
+              <button class="view-toggle-button" data-view="map">
+                Map View
+              </button>
+            </div>
+          </div>
+
+          <div class="listings-container">
+            <!-- Filter Panel -->
+            <div class="filter-panel">
+              <div class="filter-header">
+                <div class="filter-title">
+                  <i class="fas fa-filter"></i>
+                  <h3>Filters</h3>
+                </div>
+                <button class="filter-toggle">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+
+              <div class="filter-content">
+                <div class="filter-group">
+                  <label>Property Type</label>
+                  <div class="select-wrapper">
+                    <select id="property-type">
+                      <option value="all">All Properties</option>
+                      <option value="boat">Boats</option>
+                      <option value="accommodation">Accommodations</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="filter-group">
+                  <div class="filter-group-header">
+                    <label>Price Range</label>
+                    <span class="price-range-display">$50 - $500</span>
+                  </div>
+                  <div class="range-slider">
+                    <input
+                      type="range"
+                      min="0"
+                      max="1000"
+                      value="50"
+                      class="slider"
+                      id="price-min"
+                    />
+                    <input
+                      type="range"
+                      min="0"
+                      max="1000"
+                      value="500"
+                      class="slider"
+                      id="price-max"
+                    />
+                  </div>
+                </div>
+
+                <div class="filter-group">
+                  <label>Location</label>
+                  <div class="select-wrapper">
+                    <select id="location">
+                      <option value="all">All Locations</option>
+                      <option value="miami">Miami, FL</option>
+                      <option value="keys">Florida Keys</option>
+                      <option value="bahamas">Bahamas</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="filter-group">
+                  <label>Dates</label>
+                  <div class="date-picker">
+                    <div class="date-input">
+                      <input type="date" id="check-in" />
+                      <label for="check-in">Check-in</label>
+                    </div>
+                    <div class="date-input">
+                      <input type="date" id="check-out" />
+                      <label for="check-out">Check-out</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="filter-actions">
+                  <button class="reset-button">Reset All</button>
+                  <button class="apply-button">Apply Filters</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Listings Content -->
+            <div class="listings-content">
+              <!-- Grid View -->
+              <div class="listings-grid view-active" id="grid-view">
+                <!-- Listing Card 1 -->
+                <div class="listing-card" data-id="boat-1">
+                  <div class="listing-image">
+                    <img
+                      src="https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=800&q=80"
+                      alt="Luxury Yacht Experience"
+                    />
+                    <button class="favorite-button">
+                      <i class="fas fa-heart"></i>
+                    </button>
+                    <div class="listing-price">
+                      <span>$299</span>
+                      <span class="price-unit">/hour</span>
+                    </div>
+                  </div>
+
+                  <div class="listing-header">
+                    <div class="listing-title-container">
+                      <h3 class="listing-title">Luxury Yacht Experience</h3>
+                      <div class="listing-rating">
+                        <i class="fas fa-star"></i>
+                        <span>4.8</span>
+                        <span class="review-count">(24)</span>
+                      </div>
+                    </div>
+                    <p class="listing-location">Miami Beach, FL</p>
+                  </div>
+
+                  <div class="listing-details">
+                    <div class="listing-detail">
+                      <i class="fas fa-users"></i>
+                      <span>8 people</span>
+                    </div>
+                    <div class="listing-divider"></div>
+                    <div class="listing-detail">
+                      <i class="fas fa-anchor"></i>
+                      <span>Boat</span>
+                    </div>
+                  </div>
+
+                  <div class="listing-amenities">
+                    <div class="amenity-tag">
+                      <i class="fas fa-anchor"></i>
+                      <span>Sundeck</span>
+                    </div>
+                    <div class="amenity-tag">
+                      <i class="fas fa-home"></i>
+                      <span>Cabin</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Listing Card 2 -->
+                <div class="listing-card" data-id="boat-2">
+                  <div class="listing-image">
+                    <img
+                      src="https://images.unsplash.com/photo-1605281317010-fe5ffe798166?w=800&q=80"
+                      alt="Speedboat Adventure"
+                    />
+                    <button class="favorite-button">
+                      <i class="fas fa-heart"></i>
+                    </button>
+                    <div class="listing-price">
+                      <span>$150</span>
+                      <span class="price-unit">/hour</span>
+                    </div>
+                  </div>
+
+                  <div class="listing-header">
+                    <div class="listing-title-container">
+                      <h3 class="listing-title">Speedboat Adventure</h3>
+                      <div class="listing-rating">
+                        <i class="fas fa-star"></i>
+                        <span>4.6</span>
+                        <span class="review-count">(18)</span>
+                      </div>
+                    </div>
+                    <p class="listing-location">Key West, FL</p>
+                  </div>
+
+                  <div class="listing-details">
+                    <div class="listing-detail">
+                      <i class="fas fa-users"></i>
+                      <span>6 people</span>
+                    </div>
+                    <div class="listing-divider"></div>
+                    <div class="listing-detail">
+                      <i class="fas fa-anchor"></i>
+                      <span>Boat</span>
+                    </div>
+                  </div>
+
+                  <div class="listing-amenities">
+                    <div class="amenity-tag">
+                      <i class="fas fa-tv"></i>
+                      <span>Stereo</span>
+                    </div>
+                    <div class="amenity-tag">
+                      <i class="fas fa-wind"></i>
+                      <span>Cooler</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Listing Card 3 -->
+                <div class="listing-card" data-id="accom-1">
+                  <div class="listing-image">
+                    <img
+                      src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80"
+                      alt="Beachfront Villa"
+                    />
+                    <button class="favorite-button">
+                      <i class="fas fa-heart"></i>
+                    </button>
+                    <div class="listing-price">
+                      <span>$450</span>
+                      <span class="price-unit">/night</span>
+                    </div>
+                  </div>
+
+                  <div class="listing-header">
+                    <div class="listing-title-container">
+                      <h3 class="listing-title">Beachfront Villa</h3>
+                      <div class="listing-rating">
+                        <i class="fas fa-star"></i>
+                        <span>4.9</span>
+                        <span class="review-count">(32)</span>
+                      </div>
+                    </div>
+                    <p class="listing-location">Naples, FL</p>
+                  </div>
+
+                  <div class="listing-details">
+                    <div class="listing-detail">
+                      <i class="fas fa-users"></i>
+                      <span>10 guests</span>
+                    </div>
+                    <div class="listing-divider"></div>
+                    <div class="listing-detail">
+                      <i class="fas fa-home"></i>
+                      <span>Accommodation</span>
+                    </div>
+                  </div>
+
+                  <div class="listing-amenities">
+                    <div class="amenity-tag">
+                      <i class="fas fa-swimming-pool"></i>
+                      <span>Pool</span>
+                    </div>
+                    <div class="amenity-tag">
+                      <i class="fas fa-wifi"></i>
+                      <span>WiFi</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- More listing cards can be added here -->
+              </div>
+
+              <!-- Map View -->
+              <div class="map-view" id="map-view">
+                <div class="map-container">
+                  <div class="map-placeholder">
+                    <p>Interactive Map</p>
+                    <p class="map-info">Map centered at: 25.7617, -80.1918</p>
+                    <p class="map-info">Zoom level: 13</p>
+                    <p class="map-info">Map type: standard</p>
+                  </div>
+
+                  <!-- Map Markers -->
+                  <div
+                    class="map-marker"
+                    data-id="1"
+                    style="left: 50%; top: 50%"
+                  >
+                    <div class="marker-icon marker-boat">
+                      <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                  </div>
+                  <div
+                    class="map-marker"
+                    data-id="2"
+                    style="left: 55%; top: 45%"
+                  >
+                    <div class="marker-icon marker-boat">
+                      <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                  </div>
+                  <div
+                    class="map-marker"
+                    data-id="3"
+                    style="left: 45%; top: 55%"
+                  >
+                    <div class="marker-icon marker-accommodation">
+                      <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Map Controls -->
+                <div class="map-search">
+                  <i class="fas fa-search"></i>
+                  <input type="text" placeholder="Search locations..." />
+                </div>
+
+                <div class="map-controls">
+                  <button class="map-control-button" id="zoom-in">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                  <button class="map-control-button" id="zoom-out">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button class="map-control-button" id="toggle-map-type">
+                    <i class="fas fa-layer-group"></i>
+                  </button>
+                  <button class="map-control-button" id="map-info">
+                    <i class="fas fa-info"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Booking Dialog -->
+    <div class="dialog-overlay" id="booking-dialog">
+      <div class="dialog">
+        <div class="dialog-header">
+          <h2>Book Your Experience</h2>
+          <p>Complete the form below to book your experience.</p>
+          <button class="dialog-close">&times;</button>
+        </div>
+
+        <div class="dialog-content">
+          <!-- Listing Preview -->
+          <div class="booking-preview">
+            <img
+              src="https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=800&q=80"
+              alt="Luxury Yacht Experience"
+            />
+            <div>
+              <h3>Luxury Yacht Experience</h3>
+              <p>$299/day</p>
+              <p id="selected-date">Select a date</p>
+            </div>
+          </div>
+
+          <!-- Booking Steps -->
+          <div class="booking-steps">
+            <!-- Step 1: Date Selection -->
+            <div class="booking-step active" id="step-1">
+              <h3>Select Date</h3>
+              <div class="calendar-container">
+                <div class="calendar" id="booking-calendar">
+                  <!-- Calendar will be generated by JavaScript -->
+                </div>
+              </div>
+              <div class="step-actions">
+                <button class="next-step-button">Continue to Details</button>
+              </div>
+            </div>
+
+            <!-- Step 2: Personal Details -->
+            <div class="booking-step" id="step-2">
+              <h3>Personal Details</h3>
+              <form id="personal-details-form" class="booking-form">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <div class="input-with-icon">
+                      <i class="fas fa-user"></i>
+                      <input
+                        type="text"
+                        id="name"
+                        placeholder="John Doe"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="email">Email</label>
+                    <div class="input-with-icon">
+                      <i class="fas fa-envelope"></i>
+                      <input
+                        type="email"
+                        id="email"
+                        placeholder="john@example.com"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <div class="input-with-icon">
+                      <i class="fas fa-phone"></i>
+                      <input
+                        type="tel"
+                        id="phone"
+                        placeholder="+1 (555) 123-4567"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="guests">Number of Guests</label>
+                    <select id="guests" required>
+                      <option value="1">1 Guest</option>
+                      <option value="2" selected>2 Guests</option>
+                      <option value="3">3 Guests</option>
+                      <option value="4">4 Guests</option>
+                      <option value="5">5 Guests</option>
+                      <option value="6+">6+ Guests</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="address">Address (Optional)</label>
+                  <div class="input-with-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <input
+                      type="text"
+                      id="address"
+                      placeholder="123 Main St, City, Country"
+                    />
+                  </div>
+                </div>
+
+                <div class="step-actions">
+                  <button type="button" class="back-step-button">Back</button>
+                  <button type="submit" class="next-step-button">
+                    Continue to Payment
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Step 3: Payment Information -->
+            <div class="booking-step" id="step-3">
+              <h3>Payment Information</h3>
+              <form id="payment-form" class="booking-form">
+                <div class="form-group">
+                  <label for="payment-method">Payment Method</label>
+                  <select id="payment-method" required>
+                    <option value="credit">Credit Card</option>
+                    <option value="paypal">PayPal</option>
+                    <option value="bank">Bank Transfer</option>
+                  </select>
+                </div>
+
+                <div id="credit-card-fields">
+                  <div class="form-group">
+                    <label for="card-number">Card Number</label>
+                    <div class="input-with-icon">
+                      <i class="fas fa-credit-card"></i>
+                      <input
+                        type="text"
+                        id="card-number"
+                        placeholder="4242 4242 4242 4242"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label for="card-expiry">Expiry Date</label>
+                      <input type="text" id="card-expiry" placeholder="MM/YY" />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="card-cvc">CVC</label>
+                      <input type="text" id="card-cvc" placeholder="123" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="booking-summary">
+                  <div class="summary-item">
+                    <span>Subtotal</span>
+                    <span>$299/day</span>
+                  </div>
+                  <div class="summary-item">
+                    <span>Service Fee</span>
+                    <span>$29</span>
+                  </div>
+                  <div class="summary-item total">
+                    <span>Total</span>
+                    <span>$328</span>
+                  </div>
+                </div>
+
+                <div class="step-actions">
+                  <button type="button" class="back-step-button">Back</button>
+                  <button type="submit" class="complete-booking-button">
+                    Complete Booking
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Booking Confirmation -->
+            <div class="booking-step" id="confirmation-step">
+              <div class="confirmation-content">
+                <div class="confirmation-icon">
+                  <i class="fas fa-check"></i>
+                </div>
+
+                <h3>Booking Confirmed!</h3>
+                <div class="confirmation-details">
+                  <p>
+                    Luxury Yacht Experience -
+                    <span id="confirmed-date">May 15, 2023</span>
+                  </p>
+                  <p>
+                    Confirmation sent to:
+                    <span id="confirmed-email">john@example.com</span>
+                  </p>
+                </div>
+
+                <button class="book-another-button">
+                  Book Another Experience
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Listing Detail View -->
+    <div class="detail-view" id="listing-detail-view">
+      <div class="detail-container">
+        <button class="back-button">
+          <i class="fas fa-chevron-left"></i>
+          Back to listings
+        </button>
+
+        <!-- Header -->
+        <div class="detail-header">
+          <h1>Luxury Yacht Experience</h1>
+          <div class="detail-subheader">
+            <div class="detail-location">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>Miami Beach, Florida</span>
+              <div class="detail-separator"></div>
+              <div class="detail-rating">
+                <i class="fas fa-star"></i>
+                <span>4.8 (24 reviews)</span>
+              </div>
+            </div>
+            <div class="detail-actions">
+              <button class="detail-action-button">
+                <i class="fas fa-share"></i>
+                Share
+              </button>
+              <button class="detail-action-button">
+                <i class="fas fa-heart"></i>
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Image Gallery -->
+        <div class="detail-gallery">
+          <div class="gallery-main">
+            <img
+              src="https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=800&q=80"
+              alt="Luxury Yacht"
+              id="gallery-main-image"
+            />
+            <button class="gallery-nav gallery-prev">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="gallery-nav gallery-next">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+          <div class="gallery-thumbnails">
+            <button class="gallery-thumbnail active" data-index="0">
+              <img
+                src="https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=800&q=80"
+                alt="Thumbnail 1"
+              />
+            </button>
+            <button class="gallery-thumbnail" data-index="1">
+              <img
+                src="https://images.unsplash.com/photo-1605281317010-fe5ffe798166?w=800&q=80"
+                alt="Thumbnail 2"
+              />
+            </button>
+            <button class="gallery-thumbnail" data-index="2">
+              <img
+                src="https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=800&q=80"
+                alt="Thumbnail 3"
+              />
+            </button>
+          </div>
+        </div>
+
+        <div class="detail-content">
+          <div class="detail-main">
+            <!-- Description -->
+            <div class="detail-section">
+              <h2>About this boat</h2>
+              <p>
+                Experience the ultimate luxury on this stunning yacht. Perfect
+                for day trips or overnight stays, this vessel offers comfort,
+                style, and unforgettable views of the coastline.
+              </p>
+
+              <div class="detail-features">
+                <h3>Key Features</h3>
+                <div class="features-grid">
+                  <div class="feature-item">
+                    <i class="fas fa-anchor"></i>
+                    <span>Docking Equipment</span>
+                  </div>
+                  <div class="feature-item">
+                    <i class="fas fa-users"></i>
+                    <span>Capacity for 8 people</span>
+                  </div>
+                  <div class="feature-item">
+                    <i class="fas fa-star"></i>
+                    <span>Premium Experience</span>
+                  </div>
+                  <div class="feature-item">
+                    <i class="fas fa-calendar"></i>
+                    <span>Available year-round</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reviews -->
+            <div class="detail-section">
+              <div class="section-header-with-rating">
+                <h2>Reviews</h2>
+                <div class="detail-rating">
+                  <i class="fas fa-star"></i>
+                  <span>4.8</span>
+                  <span class="review-count">(24 reviews)</span>
+                </div>
+              </div>
+
+              <div class="reviews-list">
+                <div class="review-item">
+                  <div class="review-header">
+                    <div>
+                      <h4>John D.</h4>
+                      <p class="review-date">2023-06-15</p>
+                    </div>
+                    <div class="review-rating">
+                      <i class="fas fa-star"></i>
+                      <span>5</span>
+                    </div>
+                  </div>
+                  <p class="review-comment">
+                    Amazing experience! The yacht was beautiful and the crew was
+                    professional.
+                  </p>
+                </div>
+
+                <div class="review-item">
+                  <div class="review-header">
+                    <div>
+                      <h4>Sarah M.</h4>
+                      <p class="review-date">2023-05-22</p>
+                    </div>
+                    <div class="review-rating">
+                      <i class="fas fa-star"></i>
+                      <span>4</span>
+                    </div>
+                  </div>
+                  <p class="review-comment">
+                    Great day on the water. Would definitely recommend!
+                  </p>
+                </div>
+              </div>
+
+              <button class="view-all-button">
+                View all 24 reviews <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+
+            <!-- Location -->
+            <div class="detail-section">
+              <h2>Location</h2>
+              <div class="location-map">
+                <!-- Map placeholder -->
+                <div class="map-placeholder">
+                  <p>Map view of Miami Beach, Florida</p>
+                </div>
+              </div>
+              <p class="location-address">
+                <i class="fas fa-map-marker-alt"></i>
+                Miami Beach, Florida
+              </p>
+            </div>
+          </div>
+
+          <!-- Booking Panel -->
+          <div class="booking-panel">
+            <div class="booking-panel-header">
+              <div class="booking-price">
+                <span class="price">$299</span>
+                <span class="price-unit">/ day</span>
+              </div>
+              <div class="detail-rating">
+                <i class="fas fa-star"></i>
+                <span>4.8 (24 reviews)</span>
+              </div>
+            </div>
+
+            <div class="availability-check">
+              <div class="availability-header">Quick availability check</div>
+              <div class="availability-dates">
+                <div class="date-input">
+                  <div class="date-label">Check-in</div>
+                  <div class="date-value">Select date</div>
+                </div>
+                <div class="date-input">
+                  <div class="date-label">Check-out</div>
+                  <div class="date-value">Select date</div>
+                </div>
+              </div>
+              <div class="guests-input">
+                <div class="guests-label">Guests</div>
+                <div class="guests-value">1 guest</div>
+              </div>
+            </div>
+
+            <button class="book-now-button">Book now</button>
+            <button class="check-availability-button">
+              Check availability
+            </button>
+
+            <p class="booking-note">You won't be charged yet</p>
+
+            <div class="price-breakdown">
+              <div class="price-item">
+                <span>$299 x 1 day</span>
+                <span>$299</span>
+              </div>
+              <div class="price-item">
+                <span>Service fee</span>
+                <span>$30</span>
+              </div>
+              <div class="price-item total">
+                <span>Total</span>
+                <span>$329</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="userdashboard.js"></script>
+
+  </body>
+</html>

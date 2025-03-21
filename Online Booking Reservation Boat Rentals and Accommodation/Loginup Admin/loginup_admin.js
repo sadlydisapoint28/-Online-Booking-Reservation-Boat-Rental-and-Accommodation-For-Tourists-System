@@ -1,28 +1,22 @@
 document.addEventListener("DOMContentLoaded", function () {
    // Elements
    const selectionView = document.getElementById("selection-view");
-   const userSignupView = document.getElementById("user-signup-view");
+   const userLoginView = document.getElementById("user-login-view");
    const adminLoginView = document.getElementById("admin-login-view");
- 
-   const userBtn = document.getElementById("user-btn");
+   const userLoginBtn = document.getElementById("user-login-btn");
    const adminBtn = document.getElementById("admin-btn");
-   const backToSelectionFromSignup = document.getElementById(
-     "back-to-selection-from-signup",
-   );
-   const backToSelectionFromAdmin = document.getElementById(
-     "back-to-selection-from-admin",
-   );
  
-   const userSignupForm = document.getElementById("user-signup-form");
-   const adminLoginForm = document.getElementById("admin-login-form");
-   const togglePasswordBtn = document.getElementById("toggle-password");
-   const adminPasswordInput = document.getElementById("admin-password");
+   // Check if we should show login form directly
+   const urlParams = new URLSearchParams(window.location.search);
+   if (urlParams.get('show') === 'login') {
+     showView(userLoginView);
+   }
  
    // View switching functions
    function showView(viewToShow) {
      // Hide all views
      selectionView.classList.add("hidden");
-     userSignupView.classList.add("hidden");
+     userLoginView.classList.add("hidden");
      adminLoginView.classList.add("hidden");
  
      // Show the requested view
@@ -31,110 +25,58 @@ document.addEventListener("DOMContentLoaded", function () {
    }
  
    // Event listeners for navigation
-   userBtn.addEventListener("click", function () {
-     showView(userSignupView);
-   });
+   if (userLoginBtn) {
+     userLoginBtn.addEventListener("click", function () {
+       showView(userLoginView);
+     });
+   }
  
-   adminBtn.addEventListener("click", function () {
-     showView(adminLoginView);
-   });
+   if (adminBtn) {
+     adminBtn.addEventListener("click", function () {
+       showView(adminLoginView);
+     });
+   }
  
-   backToSelectionFromSignup.addEventListener("click", function () {
-     showView(selectionView);
-   });
+   // Add back buttons to both login forms
+   const userLoginForm = document.querySelector("#user-login-view form");
+   const adminLoginForm = document.querySelector("#admin-login-view form");
  
-   backToSelectionFromAdmin.addEventListener("click", function () {
-     showView(selectionView);
-   });
+   // Add back buttons
+   const userBackBtn = document.createElement("button");
+   userBackBtn.type = "button";
+   userBackBtn.className = "mt-4 text-blue-600 hover:text-blue-800 underline flex items-center gap-2 mx-auto font-medium";
+   userBackBtn.innerHTML = '<i class="fas fa-arrow-left"></i> Back to selection';
+   userBackBtn.onclick = () => showView(selectionView);
+   userLoginForm.parentNode.appendChild(userBackBtn);
  
-   // Toggle password visibility
-   togglePasswordBtn.addEventListener("click", function () {
-     const type =
-       adminPasswordInput.getAttribute("type") === "password"
-         ? "text"
-         : "password";
-     adminPasswordInput.setAttribute("type", type);
- 
-     // Toggle eye icon
-     const eyeIcon = togglePasswordBtn.querySelector("i");
-     if (type === "password") {
-       eyeIcon.classList.remove("fa-eye-slash");
-       eyeIcon.classList.add("fa-eye");
-     } else {
-       eyeIcon.classList.remove("fa-eye");
-       eyeIcon.classList.add("fa-eye-slash");
-     }
-   });
+   const adminBackBtn = document.createElement("button");
+   adminBackBtn.type = "button";
+   adminBackBtn.className = "mt-4 text-indigo-600 hover:text-indigo-800 underline flex items-center gap-2 mx-auto font-medium";
+   adminBackBtn.innerHTML = '<i class="fas fa-arrow-left"></i> Back to selection';
+   adminBackBtn.onclick = () => showView(selectionView);
+   adminLoginForm.parentNode.appendChild(adminBackBtn);
  
    // Form submissions
-   userSignupForm.addEventListener("submit", function (e) {
+   userLoginForm.addEventListener("submit", function (e) {
      e.preventDefault();
-     const formData = new FormData(userSignupForm);
-     const userData = {
-       name: formData.get("name"),
-       email: formData.get("email"),
-       password: formData.get("password"),
-     };
- 
-     console.log("User signup submitted:", userData);
- 
-     // Simulate API call
-     simulateLoading(
-       userSignupForm.querySelector('button[type="submit"]'),
-       "Signing up...",
-       function () {
-         // Show success message
-         alert("Account created successfully! You can now log in.");
-         userSignupForm.reset();
-         // In a real app, you might redirect to login or dashboard
-       },
-     );
+     const submitBtn = this.querySelector('button[type="submit"]');
+     submitBtn.disabled = true;
+     submitBtn.textContent = "Logging in...";
+     
+     // Submit the form to loginup_admin.php
+     this.action = "loginup_admin.php";
+     this.submit();
    });
  
    adminLoginForm.addEventListener("submit", function (e) {
      e.preventDefault();
-     const formData = new FormData(adminLoginForm);
-     const adminData = {
-       username: formData.get("username"),
-       password: formData.get("password"),
-     };
- 
-     console.log("Admin login submitted:", adminData);
- 
-     // Simulate API call
-     simulateLoading(
-       adminLoginForm.querySelector('button[type="submit"]'),
-       "Authenticating...",
-       function () {
-         // Show error message (for demo purposes)
-         const errorDiv = document.createElement("div");
-         errorDiv.className =
-           "p-3 bg-red-100 border border-red-300 text-red-600 rounded-md text-sm mt-4";
-         errorDiv.textContent = "Invalid credentials. Please try again.";
- 
-         // Remove any existing error message
-         const existingError = adminLoginForm.querySelector(".error-message");
-         if (existingError) {
-           existingError.remove();
-         }
- 
-         adminLoginForm.insertBefore(errorDiv, adminLoginForm.firstChild);
-         // In a real app, you would validate credentials and redirect to admin dashboard if valid
-       },
-     );
+     const submitBtn = this.querySelector('button[type="submit"]');
+     submitBtn.disabled = true;
+     submitBtn.textContent = "Logging in...";
+     
+     // Submit the form to loginup_admin.php
+     this.action = "loginup_admin.php";
+     this.submit();
    });
- 
-   // Helper function to simulate loading state
-   function simulateLoading(button, loadingText, callback) {
-     const originalText = button.textContent;
-     button.disabled = true;
-     button.textContent = loadingText;
- 
-     setTimeout(function () {
-       button.disabled = false;
-       button.textContent = originalText;
-       if (callback) callback();
-     }, 1500);
-   }
  });
  

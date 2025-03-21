@@ -1,0 +1,192 @@
+/* Navigation Styles with Light/Dark Theme Support */
+:root {
+    /* Light Theme Variables */
+    --light-bg: #FFF5EE;
+    --light-bg-soft: #F7F0E9;
+    --light-text: #333333;
+    --light-text-soft: #5A5A5A;
+    --light-border: rgba(0, 0, 0, 0.07);
+    --light-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    --light-primary: #4BB1DA;
+    --light-primary-hover: #3A8FB7;
+    --light-secondary: #E6BE8A;
+    --light-secondary-hover: #D4AC6E;
+
+    /* Dark Theme Variables */
+    --dark-bg: #202124;
+    --dark-bg-soft: #2D2D30;
+    --dark-text: #E0E0E0;
+    --dark-text-soft: #B0B0B0;
+    --dark-border: rgba(255, 255, 255, 0.07);
+    --dark-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+    --dark-primary: #3A8FB7;
+    --dark-primary-hover: #2D7A9D;
+    --dark-secondary: #D4AC6E;
+    --dark-secondary-hover: #C09A5E;
+
+    /* Default Theme (Light) */
+    --bg: var(--light-bg);
+    --bg-soft: var(--light-bg-soft);
+    --text: var(--light-text);
+    --text-soft: var(--light-text-soft);
+    --border: var(--light-border);
+    --shadow: var(--light-shadow);
+    --primary: var(--light-primary);
+    --primary-hover: var(--light-primary-hover);
+    --secondary: var(--light-secondary);
+    --secondary-hover: var(--light-secondary-hover);
+}
+
+/* Dark Theme Class */
+.dark-theme {
+    --bg: var(--dark-bg);
+    --bg-soft: var(--dark-bg-soft);
+    --text: var(--dark-text);
+    --text-soft: var(--dark-text-soft);
+    --border: var(--dark-border);
+    --shadow: var(--dark-shadow);
+    --primary: var(--dark-primary);
+    --primary-hover: var(--dark-primary-hover);
+    --secondary: var(--dark-secondary);
+    --secondary-hover: var(--dark-secondary-hover);
+}
+
+/* Apply transition for smooth theme switching */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    z-index: 1000;
+    background-color: var(--bg);
+    box-shadow: var(--shadow);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.nav-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.nav-logo {
+    height: 50px;
+    transition: all 0.3s ease;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-link {
+    font-size: 0.95rem;
+    margin: 0 15px;
+    padding: 10px 0;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.nav-link:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 5px;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary);
+    transition: width 0.3s ease;
+}
+
+/* Special case for "About Us" - no underline */
+.nav-link[href="#about"]:after {
+    display: none;
+}
+
+.nav-link:hover:after,
+.nav-link.active:after {
+    width: 100%;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--primary);
+}
+
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.bar {
+    width: 25px;
+    height: 2px;
+    background-color: var(--text);
+    margin: 4px 0;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 992px) {
+    .menu-toggle {
+        display: flex;
+    }
+
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -300px;
+        height: 100vh;
+        width: 280px;
+        background-color: var(--bg);
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 80px;
+        transition: right 0.3s ease;
+        box-shadow: var(--shadow);
+    }
+
+    .nav-menu.active {
+        right: 0;
+    }
+
+    .nav-link {
+        margin: 10px 20px;
+        padding: 10px 0;
+        width: calc(100% - 40px);
+    }
+
+    .menu-toggle.active .bar:nth-child(1) {
+        transform: rotate(-45deg) translate(-5px, 5px);
+    }
+
+    .menu-toggle.active .bar:nth-child(2) {
+        opacity: 0;
+    }
+
+    .menu-toggle.active .bar:nth-child(3) {
+        transform: rotate(45deg) translate(-5px, -5px);
+    }
+}

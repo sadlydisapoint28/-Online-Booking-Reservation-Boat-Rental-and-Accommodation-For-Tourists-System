@@ -1,0 +1,1 @@
+define('BASE_URL', 'http://yourdomain.com/'); 

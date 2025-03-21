@@ -3,73 +3,225 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  }
-  
-  .font-body {
+}
+
+body {
     font-family: "Poppins", sans-serif;
-  }
-  
-  /* Card styling */
-  .card {
+    min-height: 100vh;
     display: flex;
-    flex-direction: column;
-    border-radius: 1rem;
-    transition: all 0.3s ease;
-  }
-  
-  .card:hover {
-    transform: translateY(-5px);
-  }
-  
-  .card-header,
-  .card-content,
-  .card-footer {
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    padding: 20px;
+}
+
+/* Main container */
+#main-container {
     width: 100%;
-  }
-  
-  /* Animation for view transitions */
-  .fade-in {
+    max-width: 1200px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+/* Card styles */
+.card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Card header */
+.card-header {
+    padding: 1.5rem;
+    background: linear-gradient(to right, #f8f9fa, #ffffff);
+}
+
+.card-header h3 {
+    font-size: 1.5rem;
+    color: #1e3c72;
+    margin-bottom: 0.5rem;
+}
+
+/* Card content */
+.card-content {
+    padding: 1.5rem;
+}
+
+.card-content ul {
+    list-style: none;
+}
+
+.card-content li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    color: #4a5568;
+}
+
+.card-content i {
+    color: #1e3c72;
+    font-size: 1.1rem;
+}
+
+/* Card footer */
+.card-footer {
+    padding: 1.5rem;
+    background: #f8f9fa;
+}
+
+/* Button styles */
+button, .btn {
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.btn-primary {
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(to right, #2a5298, #1e3c72);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: linear-gradient(to right, #4a5568, #2d3748);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(to right, #2d3748, #4a5568);
+    transform: translateY(-2px);
+}
+
+/* Form styles */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #4a5568;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: #1e3c72;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+}
+
+/* Message styles */
+.error-message {
+    background: #fff5f5;
+    color: #c53030;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.success-message {
+    background: #f0fff4;
+    color: #2f855a;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Back button */
+.back-button {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    color: #1e3c72;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    color: #2a5298;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+    
+    #main-container {
+        padding: 1rem;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .card-header h3 {
+        font-size: 1.25rem;
+    }
+}
+
+/* Animation classes */
+.fade-in {
     animation: fadeIn 0.5s ease-in-out;
-  }
-  
-  @keyframes fadeIn {
+}
+
+@keyframes fadeIn {
     from {
-      opacity: 0;
-      transform: translateY(10px);
+        opacity: 0;
+        transform: translateY(10px);
     }
     to {
-      opacity: 1;
-      transform: translateY(0);
+        opacity: 1;
+        transform: translateY(0);
     }
-  }
-  
-  /* Form styling */
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-  
-  /* Error message styling */
-  .error-message {
-    color: #e53e3e;
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  
-  /* Success message styling */
-  .success-message {
-    color: #38a169;
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  
-  /* Ocean background animations */
-  .ocean-bg {
+}
+
+/* Ocean background animations */
+.ocean-bg {
     position: fixed;
     top: 0;
     left: 0;
@@ -77,9 +229,9 @@
     height: 100%;
     overflow: hidden;
     z-index: 0;
-  }
-  
-  .wave {
+}
+
+.wave {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -88,97 +240,97 @@
     background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="%23FFFFFF"/><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="%23FFFFFF"/><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%23FFFFFF"/></svg>');
     background-size: 1200px 100px;
     animation: wave 10s linear infinite;
-  }
-  
-  .wave1 {
+}
+
+.wave1 {
     opacity: 0.3;
     animation-delay: 0s;
     bottom: 0;
-  }
-  
-  .wave2 {
+}
+
+.wave2 {
     opacity: 0.2;
     animation-delay: -5s;
     bottom: 10px;
     animation-duration: 15s;
-  }
-  
-  @keyframes wave {
+}
+
+@keyframes wave {
     0% {
-      background-position-x: 0;
+        background-position-x: 0;
     }
     100% {
-      background-position-x: 1200px;
+        background-position-x: 1200px;
     }
-  }
-  
-  .bubble {
+}
+
+.bubble {
     position: absolute;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(1px);
     animation: float 8s ease-in-out infinite;
-  }
-  
-  .bubble1 {
+}
+
+.bubble1 {
     width: 80px;
     height: 80px;
     left: 10%;
     bottom: 20%;
     animation-delay: 0s;
-  }
-  
-  .bubble2 {
+}
+
+.bubble2 {
     width: 50px;
     height: 50px;
     left: 20%;
     bottom: 40%;
     animation-delay: 2s;
-  }
-  
-  .bubble3 {
+}
+
+.bubble3 {
     width: 70px;
     height: 70px;
     right: 15%;
     bottom: 30%;
     animation-delay: 4s;
-  }
-  
-  .bubble4 {
+}
+
+.bubble4 {
     width: 40px;
     height: 40px;
     right: 25%;
     bottom: 60%;
     animation-delay: 6s;
-  }
-  
-  @keyframes float {
+}
+
+@keyframes float {
     0% {
-      transform: translateY(0) rotate(0);
+        transform: translateY(0) rotate(0);
     }
     50% {
-      transform: translateY(-100px) rotate(180deg);
+        transform: translateY(-100px) rotate(180deg);
     }
     100% {
-      transform: translateY(0) rotate(360deg);
+        transform: translateY(0) rotate(360deg);
     }
-  }
-  
-  /* Button hover effects */
-  button:hover {
+}
+
+/* Button hover effects */
+button:hover {
     transform: translateY(-2px);
     box-shadow:
-      0 10px 15px -3px rgba(0, 0, 0, 0.1),
-      0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  }
-  
-  /* Input focus effects */
-  input:focus {
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Input focus effects */
+input:focus {
     transform: translateY(-1px);
-  }
-  
-  /* Mix blend mode for image overlays */
-  .mix-blend-overlay {
+}
+
+/* Mix blend mode for image overlays */
+.mix-blend-overlay {
     mix-blend-mode: overlay;
-  }
+}
   
