@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carles Tourism - Boat Rental & Accommodation</title>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/interface.css">
+    <!-- Add Swiper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+</head>
+<body>
+    <!-- Header/Navigation -->
+    <header class="site-header">
+        <div class="container">
+            <nav class="main-nav">
+                <div class="logo">
+                    <a href="#"><img src="../../img/logo-white.png" alt="Your Logo"> YOUR LOGO</a>
+                </div>
+                <div class="nav-links">
+                    <ul>
+                        <li class="active"><a href="#">HOME</a></li>
+                        <li><a href="#">TOURS</a></li>
+                        <li><a href="#">EXPLORE</a></li>
+                        <li><a href="#">ABOUT US</a></li>
+                        <li><a href="#">CONTACT</a></li>
+                    </ul>
+                </div>
+                <div class="nav-right">
+                    <a href="#" class="search-btn"><i class="fas fa-search"></i></a>
+                    <div class="social-icons">
+                        <a href="#"><i class="fas fa-info-circle"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-slider swiper-container">
+            <div class="swiper-wrapper">
+                <!-- Slide 1 -->
+                <div class="swiper-slide" style="background-image: url('../../img/beach-sunset.jpg');">
+                    <div class="hero-content">
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <div class="col-lg-6">
+                                    <p class="travel-label">Travel website</p>
+                                    <h1 class="hero-title">NEVER STOP<br>EXPLORING THE<br>WORLD</h1>
+                                    <p class="hero-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+                                    <a href="#explore" class="btn btn-explore">LEARN MORE</a>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="destination-cards">
+                                        <div class="destination-card" data-category="BEACH">
+                                            <img src="../../img/beach.jpg" alt="Beach">
+                                            <div class="card-overlay"></div>
+                                            <h3>BEACH</h3>
+                                        </div>
+                                        <div class="destination-card" data-category="NATURE">
+                                            <img src="../../img/nature.jpg" alt="Nature">
+                                            <div class="card-overlay"></div>
+                                            <h3>NATURE</h3>
+                                        </div>
+                                        <div class="destination-card" data-category="HOTEL">
+                                            <img src="../../img/hotel.jpg" alt="Hotel">
+                                            <div class="card-overlay"></div>
+                                            <h3>HOTEL</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Slide 2 -->
+                <div class="swiper-slide" style="background-image: url('../../img/Gigantes Islands Eco-Tour.jpg');">
+                    <div class="hero-content">
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <div class="col-lg-6">
+                                    <p class="travel-label">Discover paradise</p>
+                                    <h1 class="hero-title">EXPLORE<br>GIGANTES<br>ISLANDS</h1>
+                                    <p class="hero-text">Experience the stunning beauty of Gigantes Islands with crystal clear waters, white sand beaches, and majestic limestone cliffs.</p>
+                                    <a href="#explore" class="btn btn-explore">VIEW PACKAGES</a>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="destination-cards">
+                                        <div class="destination-card" data-category="ISLAND">
+                                            <img src="../../img/gigantes.png" alt="Island">
+                                            <div class="card-overlay"></div>
+                                            <h3>ISLAND</h3>
+                                        </div>
+                                        <div class="destination-card" data-category="ADVENTURE">
+                                            <img src="../../img/beach.jpg" alt="Adventure">
+                                            <div class="card-overlay"></div>
+                                            <h3>ADVENTURE</h3>
+                                        </div>
+                                        <div class="destination-card" data-category="RELAX">
+                                            <img src="../../img/hotel.jpg" alt="Relax">
+                                            <div class="card-overlay"></div>
+                                            <h3>RELAX</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Navigation -->
+            <div class="swiper-navigation">
+                <div class="swiper-button-prev"><i class="fas fa-arrow-left"></i></div>
+                <div class="swiper-button-next"><i class="fas fa-arrow-right"></i></div>
+            </div>
+            <!-- Pagination -->
+            <div class="slide-number">01</div>
+        </div>
+    </section>
+
+    <!-- New Category Cards Section -->
+    <section class="category-section">
+        <div class="container">
+            <div class="section-title text-center">
+                <h2>Discover Our Categories</h2>
+                <p>Find your perfect destination</p>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="destination-card" data-category="RESORT">
+                        <img src="../../img/gigantes.png" alt="Resort">
+                        <div class="card-overlay"></div>
+                        <h3>RESORT</h3>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="destination-card" data-category="DIVING">
+                        <img src="../../img/Gigantes Islands Eco-Tour.jpg" alt="Diving">
+                        <div class="card-overlay"></div>
+                        <h3>DIVING</h3>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="destination-card" data-category="CUISINE">
+                        <img src="../../img/carleslogomunicipality.png" alt="Cuisine">
+                        <div class="card-overlay"></div>
+                        <h3>CUISINE</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Explore Section -->
+    <section id="explore" class="explore-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Explore Carles</h2>
+                <p>Choose your next adventure</p>
+            </div>
+            <div class="explore-grid">
+                <div class="explore-card">
+                    <img src="../../img/island-hopping.jpg" alt="Island Hopping">
+                    <div class="explore-content">
+                        <h3>Island Hopping</h3>
+                        <p>Visit multiple islands in one day</p>
+                        <a href="#" class="btn-explore">Explore</a>
+                    </div>
+                </div>
+                <div class="explore-card">
+                    <img src="../../img/diving.jpg" alt="Diving">
+                    <div class="explore-content">
+                        <h3>Diving</h3>
+                        <p>Discover underwater treasures</p>
+                        <a href="#" class="btn-explore">Explore</a>
+                    </div>
+                </div>
+                <div class="explore-card">
+                    <img src="../../img/camping.jpg" alt="Camping">
+                    <div class="explore-content">
+                        <h3>Camping</h3>
+                        <p>Sleep under the stars</p>
+                        <a href="#" class="btn-explore">Explore</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="../js/interface.js"></script>
+    <script>
+        // Initialize Swiper
+        var swiper = new Swiper('.hero-slider', {
+            effect: 'fade',
+            loop: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            on: {
+                slideChange: function () {
+                    // Update slide number display
+                    let currentSlide = this.realIndex + 1;
+                    document.querySelector('.slide-number').textContent = currentSlide.toString().padStart(2, '0');
+                }
+            },
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+            speed: 1000
+        });
+        
+        // Call the swiper enhancements function from our custom JS
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof enhanceSwiperFunctionality === 'function') {
+                enhanceSwiperFunctionality();
+            }
+        });
+    </script>
+</body>
+</html>

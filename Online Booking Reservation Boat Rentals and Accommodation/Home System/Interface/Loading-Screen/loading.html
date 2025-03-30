@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading - Carles Tourism</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e60c8;
+            --secondary: #38bdf8;
+            --dark-blue: #0c4a6e;
+            --light-blue: #e0f2fe;
+            --white: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .loading-container {
+            text-align: center;
+            color: var(--white);
+        }
+        
+        .logo {
+            margin-bottom: 1.5rem;
+        }
+        
+        .logo img {
+            height: 80px;
+            width: auto;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .loading-text {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+            opacity: 0.9;
+        }
+        
+        .ocean {
+            position: relative;
+            width: 300px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+        }
+        
+        .wave {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.4" d="M0,96L48,106.7C96,117,192,139,288,154.7C384,171,480,181,576,160C672,139,768,85,864,80C960,75,1056,117,1152,133.3C1248,149,1344,139,1392,133.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            bottom: 0;
+            left: 0;
+            animation: wave 3s ease-in-out infinite;
+        }
+        
+        .wave:nth-child(2) {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.6" d="M0,32L48,69.3C96,107,192,181,288,181.3C384,181,480,107,576,112C672,117,768,203,864,208C960,213,1056,139,1152,106.7C1248,75,1344,85,1392,90.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            animation: wave 4s 0.2s ease-in-out infinite;
+        }
+        
+        @keyframes wave {
+            0%, 100% {
+                transform: translateX(-20px);
+            }
+            50% {
+                transform: translateX(20px);
+            }
+        }
+        
+        .boat {
+            position: absolute;
+            font-size: 3rem;
+            color: var(--white);
+            left: 50%;
+            top: 15px;
+            transform: translateX(-50%);
+            animation: boatFloat 3s ease-in-out infinite;
+            text-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        @keyframes boatFloat {
+            0%, 100% {
+                transform: translateX(-50%) translateY(0) rotate(0deg);
+            }
+            25% {
+                transform: translateX(-50%) translateY(-5px) rotate(-2deg);
+            }
+            75% {
+                transform: translateX(-50%) translateY(-5px) rotate(2deg);
+            }
+            50% {
+                transform: translateX(-50%) translateY(-10px) rotate(0deg);
+            }
+        }
+        
+        .loading-progress {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 30px;
+            height: 8px;
+            width: 250px;
+            margin: 0 auto;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) inset;
+        }
+        
+        .progress-bar {
+            background: var(--white);
+            height: 100%;
+            width: 0;
+            border-radius: 30px;
+            animation: progress 3s forwards;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        @keyframes progress {
+            0% {
+                width: 0%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+        
+        .loading-footer {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-container">
+        <div class="logo">
+            <img src="../img/timbook-carles-tourism.png" alt="Carles Tourism Logo">
+        </div>
+        
+        <h1>TIMBOOK CARLES</h1>
+        <p class="loading-text">Naglo-load ang iyong adventure...</p>
+        
+        <div class="ocean">
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="boat">
+                <i class="fas fa-ship"></i>
+            </div>
+        </div>
+        
+        <div class="loading-progress">
+            <div class="progress-bar"></div>
+        </div>
+        
+        <p class="loading-footer">© 2025 Carles Tourism. All rights reserved.</p>
+    </div>
+    
+    <script>
+        // Redirect after loading completes
+        setTimeout(function() {
+            window.location.href = "../php/pages/interface.php?loaded=true";
+        }, 3500); // Redirect after 3.5 seconds
+    </script>
+</body>
+</html>

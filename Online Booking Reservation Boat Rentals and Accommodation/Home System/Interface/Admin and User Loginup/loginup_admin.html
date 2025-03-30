@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Type Selection</title>
+    <link rel="stylesheet" href="/Online Booking Reservation Boat Rentals and Accommodation/Loginup Admin/loginup_admin.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body
+    class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-blue-400 to-cyan-300 p-4 font-body"
+  >
+    <!-- Animated background elements -->
+    <div class="ocean-bg">
+      <div class="wave wave1"></div>
+      <div class="wave wave2"></div>
+      <div class="bubble bubble1"></div>
+      <div class="bubble bubble2"></div>
+      <div class="bubble bubble3"></div>
+      <div class="bubble bubble4"></div>
+    </div>
+
+    <div
+      class="w-full max-w-4xl bg-white bg-opacity-95 rounded-xl shadow-2xl overflow-hidden p-8 relative z-10 border border-blue-100"
+      id="main-container"
+    >
+      <!-- User Type Selection -->
+      <div id="selection-view" class="w-full">
+        <h2
+          class="text-4xl font-bold text-center mb-10 text-blue-800 tracking-tight"
+        >
+          Choose Your Experience
+        </h2>
+
+        <div class="grid md:grid-cols-2 gap-10">
+          <!-- User Card -->
+          <div
+            class="card overflow-hidden border-0 hover:transform hover:scale-105 transition-all duration-300 bg-white rounded-xl shadow-lg"
+          >
+            <div
+              class="h-56 bg-gradient-to-r from-blue-500 to-cyan-400 relative overflow-hidden"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&q=80"
+                alt="User experience"
+                class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-300"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-blue-900 to-transparent opacity-60"
+              ></div>
+              <i
+                class="fas fa-ship absolute bottom-6 right-6 text-white text-5xl drop-shadow-lg"
+              ></i>
+              <div class="absolute bottom-6 left-6 text-white">
+                <span
+                  class="bg-blue-600 text-xs uppercase tracking-wider py-1 px-2 rounded-full shadow-md"
+                  >For Customers</span
+                >
+              </div>
+            </div>
+            <div class="card-header p-6 bg-gradient-to-r from-blue-50 to-white">
+              <h3
+                class="text-2xl font-bold text-blue-700 flex items-center gap-3"
+              >
+                <i class="fas fa-user-circle text-blue-500"></i>
+                User Portal
+              </h3>
+              <p class="text-blue-600 mt-2 font-medium">
+                Book boats and accommodations for your perfect waterfront
+                vacation
+              </p>
+            </div>
+            <div class="card-content p-6">
+              <ul class="space-y-3 text-gray-600">
+                <li class="flex items-center gap-3">
+                  <i class="fas fa-anchor text-blue-500"></i>
+                  <span>Browse available boats and waterfront stays</span>
+                </li>
+                <li class="flex items-center gap-3">
+                  <i class="fas fa-calendar-alt text-blue-500"></i>
+                  <span>Easy booking with visual calendars</span>
+                </li>
+                <li class="flex items-center gap-3">
+                  <i class="fas fa-user-plus text-blue-500"></i>
+                  <span>Simple signup with minimal information</span>
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer p-6 pt-2">
+              <button
+                id="user-btn"
+                class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+              >
+                <i class="fas fa-sign-in-alt"></i>
+                Continue as User
+              </button>
+            </div>
+          </div>
+
+          <!-- Admin Card -->
+          <div
+            class="card overflow-hidden border-0 hover:transform hover:scale-105 transition-all duration-300 bg-white rounded-xl shadow-lg"
+          >
+            <div
+              class="h-56 bg-gradient-to-r from-indigo-700 to-purple-600 relative overflow-hidden"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1564069114553-7215e1ff1890?w=800&q=80"
+                alt="Admin dashboard"
+                class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-300"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-indigo-900 to-transparent opacity-60"
+              ></div>
+              <i
+                class="fas fa-building absolute bottom-6 right-6 text-white text-5xl drop-shadow-lg"
+              ></i>
+              <div class="absolute bottom-6 left-6 text-white">
+                <span
+                  class="bg-indigo-600 text-xs uppercase tracking-wider py-1 px-2 rounded-full shadow-md"
+                  >Staff Only</span
+                >
+              </div>
+            </div>
+            <div
+              class="card-header p-6 bg-gradient-to-r from-indigo-50 to-white"
+            >
+              <h3
+                class="text-2xl font-bold text-indigo-700 flex items-center gap-3"
+              >
+                <i class="fas fa-user-shield text-indigo-500"></i>
+                Administrator
+              </h3>
+              <p class="text-indigo-600 mt-2 font-medium">
+                Manage bookings, listings, and system settings
+              </p>
+            </div>
+            <div class="card-content p-6">
+              <ul class="space-y-3 text-gray-600">
+                <li class="flex items-center gap-3">
+                  <i class="fas fa-lock text-indigo-500"></i>
+                  <span>Secure admin portal access</span>
+                </li>
+                <li class="flex items-center gap-3">
+                  <i class="fas fa-edit text-indigo-500"></i>
+                  <span>Manage boat and accommodation listings</span>
+                </li>
+                <li class="flex items-center gap-3">
+                  <i class="fas fa-chart-line text-indigo-500"></i>
+                  <span>View and manage bookings and reports</span>
+                </li>
+              </ul>
+            </div>
+            <div class="card-footer p-6 pt-2">
+              <button
+                id="admin-btn"
+                class="w-full bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-700 hover:to-indigo-600 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+              >
+                <i class="fas fa-sign-in-alt"></i>
+                Continue as Administrator
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Signup Form -->
+      <div id="user-signup-view" class="hidden">
+        <div class="mb-8 text-center">
+          <h2 class="text-3xl font-bold text-blue-800 mb-3">
+            Create Your User Account
+          </h2>
+          <p class="text-blue-600 text-lg">
+            Sign up to start booking your ocean adventures
+          </p>
+        </div>
+        <form
+          id="user-signup-form"
+          class="space-y-5 max-w-md mx-auto bg-blue-50 p-8 rounded-xl shadow-md"
+        >
+          <div class="form-group">
+            <label class="block text-sm font-medium text-blue-700 mb-2"
+              >Full Name</label
+            >
+            <div class="relative">
+              <i class="fas fa-user absolute left-3 top-3 text-blue-400"></i>
+              <input
+                type="text"
+                name="name"
+                placeholder="John Doe"
+                class="w-full pl-10 px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="block text-sm font-medium text-blue-700 mb-2"
+              >Email</label
+            >
+            <div class="relative">
+              <i
+                class="fas fa-envelope absolute left-3 top-3 text-blue-400"
+              ></i>
+              <input
+                type="email"
+                name="email"
+                placeholder="you@example.com"
+                class="w-full pl-10 px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="block text-sm font-medium text-blue-700 mb-2"
+              >Password</label
+            >
+            <div class="relative">
+              <i class="fas fa-lock absolute left-3 top-3 text-blue-400"></i>
+              <input
+                type="password"
+                name="password"
+                placeholder="••••••••"
+                class="w-full pl-10 px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                required
+              />
+              <p class="text-xs text-blue-600 mt-2 flex items-center">
+                <i class="fas fa-info-circle mr-1"></i>
+                Password must be at least 8 characters long
+              </p>
+            </div>
+          </div>
+          <button
+            type="submit"
+            class="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg mt-4 flex items-center justify-center gap-2"
+          >
+            <i class="fas fa-user-plus"></i>
+            Create Account
+          </button>
+        </form>
+        <div class="mt-8 text-center">
+          <button
+            id="back-to-selection-from-signup"
+            class="text-blue-600 hover:text-blue-800 underline flex items-center gap-2 mx-auto font-medium"
+          >
+            <i class="fas fa-arrow-left"></i>
+            Back to selection
+          </button>
+        </div>
+      </div>
+
+      <!-- Admin Login Form -->
+      <div id="admin-login-view" class="hidden">
+        <div class="mb-8 text-center">
+          <h2 class="text-3xl font-bold text-indigo-800 mb-3">
+            Administrator Access
+          </h2>
+          <p class="text-indigo-600 text-lg">
+            Secure login for system administrators
+          </p>
+        </div>
+        <div class="flex justify-center">
+          <div
+            class="w-full max-w-md bg-gradient-to-b from-indigo-50 to-blue-50 p-8 rounded-xl shadow-lg border border-indigo-100"
+          >
+            <div class="flex justify-center mb-6">
+              <div
+                class="h-20 w-20 rounded-full bg-indigo-100 flex items-center justify-center shadow-inner"
+              >
+                <i class="fas fa-shield-alt text-indigo-600 text-4xl"></i>
+              </div>
+            </div>
+            <form id="admin-login-form" class="space-y-5">
+              <div class="form-group">
+                <label class="block text-sm font-medium text-indigo-700 mb-2"
+                  >Username</label
+                >
+                <div class="relative">
+                  <input
+                    type="text"
+                    name="username"
+                    placeholder="Enter your username"
+                    class="pl-10 w-full px-4 py-3 border border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+                    required
+                  />
+                  <i
+                    class="fas fa-user absolute left-3 top-3 text-indigo-400"
+                  ></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="block text-sm font-medium text-indigo-700 mb-2"
+                  >Password</label
+                >
+                <div class="relative">
+                  <input
+                    type="password"
+                    id="admin-password"
+                    name="password"
+                    placeholder="Enter your password"
+                    class="pl-10 pr-10 w-full px-4 py-3 border border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200"
+                    required
+                  />
+                  <i
+                    class="fas fa-lock absolute left-3 top-3 text-indigo-400"
+                  ></i>
+                  <button
+                    type="button"
+                    id="toggle-password"
+                    class="absolute right-3 top-3 text-indigo-400 hover:text-indigo-600 transition-colors duration-200"
+                  >
+                    <i class="fas fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+              <button
+                type="submit"
+                class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg mt-4 flex items-center justify-center gap-2"
+              >
+                <i class="fas fa-sign-in-alt"></i>
+                Login to Dashboard
+              </button>
+            </form>
+            <div class="mt-6 text-center border-t border-indigo-100 pt-6">
+              <p
+                class="text-sm text-indigo-600 flex items-center justify-center gap-2"
+              >
+                <i class="fas fa-lock"></i>
+                Secure access for authorized personnel only
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="mt-8 text-center">
+          <button
+            id="back-to-selection-from-admin"
+            class="text-indigo-600 hover:text-indigo-800 underline flex items-center gap-2 mx-auto font-medium"
+          >
+            <i class="fas fa-arrow-left"></i>
+            Back to selection
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="/Online Booking Reservation Boat Rentals and Accommodation/Loginup Admin/loginup_admin.js"></script>
+  </body>
+</html>
