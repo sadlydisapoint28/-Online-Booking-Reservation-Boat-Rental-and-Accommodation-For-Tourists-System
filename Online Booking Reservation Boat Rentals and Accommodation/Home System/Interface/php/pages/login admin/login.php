@@ -33,23 +33,42 @@ if ($security->isIPBlocked($clientIP)) {
         if (empty($email) || empty($password)) {
             $error = "Please fill in all fields";
         } else {
-            $result = $auth->loginAdmin($email, $password);
-            
-            if ($result['success']) {
-                $_SESSION['admin_logged_in'] = true;
-                $_SESSION['admin_id'] = $result['admin_id'];
-                $_SESSION['admin_name'] = $result['admin_name'];
-                $_SESSION['last_activity'] = time();
+            try {
+                // Debug information
+                error_log("Login attempt for email: " . $email);
                 
-                // Log successful login
-                $security->logLoginAttempt($clientIP, $email, true);
+                // Check if user exists and is an admin
+                $stmt = $pdo->prepare("SELECT user_id, full_name, password, user_type FROM users WHERE email = ? AND user_type = 'admin'");
+                $stmt->execute([$email]);
+                $user = $stmt->fetch();
                 
-                header('Location: ../admin/admin.php');
-                exit;
-            } else {
-                $error = $result['message'];
-                // Log failed login
-                $security->logLoginAttempt($clientIP, $email, false);
+                // Debug information
+                error_log("User found: " . ($user ? "Yes" : "No"));
+                if ($user) {
+                    error_log("Password verify result: " . (password_verify($password, $user['password']) ? "True" : "False"));
+                }
+
+                if ($user && password_verify($password, $user['password'])) {
+                    $_SESSION['admin_logged_in'] = true;
+                    $_SESSION['admin_id'] = $user['user_id'];
+                    $_SESSION['admin_name'] = $user['full_name'];
+                    $_SESSION['last_activity'] = time();
+                    
+                    // Log successful login
+                    $security->logLoginAttempt($clientIP, $email, true);
+                    
+                    error_log("Login successful, redirecting to dashboard");
+                    header('Location: ../../../Dashboards/User Dashboard/Admin Dashboard/admin/dashboard.php');
+                    exit;
+                } else {
+                    $error = "Invalid email or password";
+                    // Log failed login
+                    $security->logLoginAttempt($clientIP, $email, false);
+                    error_log("Login failed: Invalid credentials");
+                }
+            } catch (PDOException $e) {
+                $error = "Database error. Please try again later.";
+                error_log("Login error: " . $e->getMessage());
             }
         }
     }
@@ -174,7 +193,7 @@ $csrf_token = $security->generateCSRFToken();
                     </div>
                     <input type="email" name="email" id="email" required
                         class="input-field focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 pr-4 py-3 rounded-xl shadow-sm border-gray-200"
-                        placeholder="admin@example.com"
+                        placeholder="admin@admin.com"
                         autocomplete="email">
                 </div>
             </div>
@@ -186,9 +205,14 @@ $csrf_token = $security->generateCSRFToken();
                         <i class="fas fa-lock text-indigo-500"></i>
                     </div>
                     <input type="password" name="password" id="password" required
-                        class="input-field focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 pr-4 py-3 rounded-xl shadow-sm border-gray-200"
+                        class="input-field focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 pr-12 py-3 rounded-xl shadow-sm border-gray-200"
                         placeholder="••••••••"
                         autocomplete="current-password">
+                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                        <button type="button" id="togglePassword" class="text-indigo-500 hover:text-indigo-700 focus:outline-none">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -202,16 +226,13 @@ $csrf_token = $security->generateCSRFToken();
         </form>
 
         <div class="mt-8 text-center flex flex-col space-y-2">
-            <a href="../../pages/admin/create_admin.php" class="text-indigo-600 hover:text-indigo-500 flex justify-center items-center">
+            <button type="button" id="createAdminBtn" class="text-indigo-600 hover:text-indigo-500 flex justify-center items-center">
                 <i class="fas fa-user-plus mr-2"></i> Create Administrator Account
-            </a>
-            <a href="../../pages/interface.php" class="text-gray-600 hover:text-gray-500 flex justify-center items-center">
-                <i class="fas fa-arrow-left mr-2"></i> Back to Home
-            </a>
+            </button>
         </div>
 
         <div class="mt-8 pt-6 border-t border-gray-200 flex justify-between text-sm">
-            <a href="../interface.php" class="text-indigo-600 hover:text-indigo-800 flex items-center">
+            <a href="../../pages/interface.php" class="text-indigo-600 hover:text-indigo-800 flex items-center">
                 <i class="fas fa-arrow-left mr-1"></i>
                 Back to Home
             </a>
@@ -223,340 +244,360 @@ $csrf_token = $security->generateCSRFToken();
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            if (!email || !password) {
-                e.preventDefault();
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Please fill in all fields'
+        document.addEventListener('DOMContentLoaded', function() {
+            // Password visibility toggle
+            const togglePassword = document.getElementById('togglePassword');
+            const password = document.getElementById('password');
+            
+            if (togglePassword && password) {
+                togglePassword.addEventListener('click', function() {
+                    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                    password.setAttribute('type', type);
+                    
+                    const icon = this.querySelector('i');
+                    if (icon) {
+                        icon.classList.toggle('fa-eye');
+                        icon.classList.toggle('fa-eye-slash');
+                    }
                 });
             }
-        });
-        
-        // Create Admin Account button click handler
-        document.getElementById('createAdminBtn').addEventListener('click', function() {
-            Swal.fire({
-                title: 'Create Admin Account',
-                html:
-                    // Step indicators
-                    '<div class="step-indicators-row mb-4" style="display: flex; justify-content: space-between; align-items: center; position: relative;">' +
-                    '<div class="step active" data-step="1" style="display: flex; flex-direction: column; align-items: center; position: relative; z-index: 1; width: 33.333%;">' +
-                    '<div class="step-circle" style="width: 30px; height: 30px; border-radius: 50%; background-color: #2563eb; color: white; display: flex; justify-content: center; align-items: center; font-weight: bold; margin-bottom: 8px;">1</div>' +
-                    '<div class="step-label" style="font-size: 0.8rem; color: #2563eb; font-weight: 600;">Personal Info</div>' +
-                    '</div>' +
-                    '<div class="step" data-step="2" style="display: flex; flex-direction: column; align-items: center; position: relative; z-index: 1; width: 33.333%;">' +
-                    '<div class="step-circle" style="width: 30px; height: 30px; border-radius: 50%; background-color: #e5e7eb; color: #6b7280; display: flex; justify-content: center; align-items: center; font-weight: bold; margin-bottom: 8px;">2</div>' +
-                    '<div class="step-label" style="font-size: 0.8rem; color: #6b7280; font-weight: 500;">Contact Info</div>' +
-                    '</div>' +
-                    '<div class="step" data-step="3" style="display: flex; flex-direction: column; align-items: center; position: relative; z-index: 1; width: 33.333%;">' +
-                    '<div class="step-circle" style="width: 30px; height: 30px; border-radius: 50%; background-color: #e5e7eb; color: #6b7280; display: flex; justify-content: center; align-items: center; font-weight: bold; margin-bottom: 8px;">3</div>' +
-                    '<div class="step-label" style="font-size: 0.8rem; color: #6b7280; font-weight: 500;">Set Password</div>' +
-                    '</div>' +
-                    '</div>' +
-                    
-                    // Progress bar
-                    '<div class="progress-container mb-4" style="background-color: #e5e7eb; border-radius: 9999px; height: 8px; width: 100%; overflow: hidden;">' +
-                    '<div class="progress-bar" id="admin-progress" style="height: 100%; background-color: #2563eb; border-radius: 9999px; width: 33.33%; transition: width 0.3s ease;"></div>' +
-                    '</div>' +
 
-                    // Step 1 - Personal Info
-                    '<div id="admin-step1" class="admin-step active" style="display: block;">' +
-                    '<div class="mb-3">' +
-                    '<label for="admin-first-name" class="block text-sm font-medium text-gray-700 text-left mb-1">First Name</label>' +
-                    '<input id="admin-first-name" class="swal2-input" placeholder="Enter first name">' +
-                    '</div>' +
-                    '<div class="mb-3">' +
-                    '<label for="admin-last-name" class="block text-sm font-medium text-gray-700 text-left mb-1">Last Name</label>' +
-                    '<input id="admin-last-name" class="swal2-input" placeholder="Enter last name">' +
-                    '</div>' +
-                    '<div class="mb-3 grid grid-cols-2 gap-3">' +
-                    '<div>' +
-                    '<label for="admin-middle-initial" class="block text-sm font-medium text-gray-700 text-left mb-1">Middle Initial</label>' +
-                    '<input id="admin-middle-initial" class="swal2-input" placeholder="M" maxlength="1">' +
-                    '</div>' +
-                    '<div>' +
-                    '<label for="admin-suffix" class="block text-sm font-medium text-gray-700 text-left mb-1">Suffix</label>' +
-                    '<select id="admin-suffix" class="swal2-input">' +
-                    '<option value="">None</option>' +
-                    '<option value="Jr.">Jr.</option>' +
-                    '<option value="Sr.">Sr.</option>' +
-                    '<option value="I">I</option>' +
-                    '<option value="II">II</option>' +
-                    '<option value="III">III</option>' +
-                    '<option value="IV">IV</option>' +
-                    '<option value="V">V</option>' +
-                    '</select>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="mb-3">' +
-                    '<label for="admin-email" class="block text-sm font-medium text-gray-700 text-left mb-1">Email Address</label>' +
-                    '<input id="admin-email" class="swal2-input" placeholder="Enter email">' +
-                    '</div>' +
-                    '<div class="mb-3">' +
-                    '<label for="admin-gender" class="block text-sm font-medium text-gray-700 text-left mb-1">Gender</label>' +
-                    '<select id="admin-gender" class="swal2-input">' +
-                    '<option value="">Select Gender</option>' +
-                    '<option value="male">Male</option>' +
-                    '<option value="female">Female</option>' +
-                    '<option value="other">Other</option>' +
-                    '</select>' +
-                    '</div>' +
-                    '<div class="mb-3">' +
-                    '<label for="admin-nationality" class="block text-sm font-medium text-gray-700 text-left mb-1">Nationality</label>' +
-                    '<select id="admin-nationality" class="swal2-input">' +
-                    '<option value="">Select Nationality</option>' +
-                    '<option value="Filipino">Filipino</option>' +
-                    '<option value="American">American</option>' +
-                    '<option value="Chinese">Chinese</option>' +
-                    '<option value="Japanese">Japanese</option>' +
-                    '<option value="Korean">Korean</option>' +
-                    '<option value="Other">Other</option>' +
-                    '</select>' +
-                    '</div>' +
-                    '<div class="mb-3 text-right">' +
-                    '<button type="button" onclick="adminNextStep(1, 2)" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Next <i class="fas fa-arrow-right ml-1"></i></button>' +
-                    '</div>' +
-                    '</div>' +
+            // Form validation
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
 
-                    // Step 2 - Contact Info
-                    '<div id="admin-step2" class="admin-step" style="display: none;">' +
-                    '<div class="mb-3">' +
-                    '<label for="admin-age" class="block text-sm font-medium text-gray-700 text-left mb-1">Age</label>' +
-                    '<input id="admin-age" type="number" min="18" max="100" class="swal2-input" placeholder="Enter age (minimum 18)">' +
-                    '</div>' +
-                    '<div class="mb-3">' +
-                    '<label for="admin-address" class="block text-sm font-medium text-gray-700 text-left mb-1">Address</label>' +
-                    '<input id="admin-address" class="swal2-input" placeholder="Enter address">' +
-                    '</div>' +
-                    '<div class="mb-3">' +
-                    '<label for="admin-phone" class="block text-sm font-medium text-gray-700 text-left mb-1">Phone Number (Philippine format)</label>' +
-                    '<input id="admin-phone" class="swal2-input" placeholder="e.g. 09XXXXXXXXX or +63XXXXXXXXXX">' +
-                    '</div>' +
-                    '<div class="mb-3 flex justify-between">' +
-                    '<button type="button" onclick="adminPrevStep(2, 1)" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition"><i class="fas fa-arrow-left mr-1"></i> Previous</button>' +
-                    '<button type="button" onclick="adminNextStep(2, 3)" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Next <i class="fas fa-arrow-right ml-1"></i></button>' +
-                    '</div>' +
-                    '</div>' +
-
-                    // Step 3 - Set Password
-                    '<div id="admin-step3" class="admin-step" style="display: none;">' +
-                    '<div class="mb-3">' +
-                    '<label for="admin-password" class="block text-sm font-medium text-gray-700 text-left mb-1">Password</label>' +
-                    '<input id="admin-password" type="password" class="swal2-input" placeholder="Enter password">' +
-                    '</div>' +
-                    '<div class="mb-3">' +
-                    '<label for="admin-confirm-password" class="block text-sm font-medium text-gray-700 text-left mb-1">Confirm Password</label>' +
-                    '<input id="admin-confirm-password" type="password" class="swal2-input" placeholder="Confirm password">' +
-                    '</div>' +
-                    '<div class="mb-3 flex justify-between">' +
-                    '<button type="button" onclick="adminPrevStep(3, 2)" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition"><i class="fas fa-arrow-left mr-1"></i> Previous</button>' +
-                    '<button type="button" id="adminSubmitBtn" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"><i class="fas fa-check mr-1"></i> Create Account</button>' +
-                    '</div>' +
-                    '</div>',
-                showConfirmButton: false,
-                showCancelButton: true,
-                cancelButtonText: 'Close',
-                cancelButtonColor: '#ef4444',
-                didOpen: () => {
-                    // Add functions for step navigation
-                    window.adminNextStep = function(currentStep, nextStep) {
-                        const isValid = validateAdminStep(currentStep);
+                if (!email || !password) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Please fill in all fields'
+                    });
+                }
+            });
+            
+            // Create Admin Account button click handler
+            document.getElementById('createAdminBtn').addEventListener('click', function() {
+                Swal.fire({
+                    title: 'Create Admin Account',
+                    html:
+                        // Step indicators
+                        '<div class="step-indicators-row mb-4" style="display: flex; justify-content: space-between; align-items: center; position: relative;">' +
+                        '<div class="step active" data-step="1" style="display: flex; flex-direction: column; align-items: center; position: relative; z-index: 1; width: 33.333%;">' +
+                        '<div class="step-circle" style="width: 30px; height: 30px; border-radius: 50%; background-color: #2563eb; color: white; display: flex; justify-content: center; align-items: center; font-weight: bold; margin-bottom: 8px;">1</div>' +
+                        '<div class="step-label" style="font-size: 0.8rem; color: #2563eb; font-weight: 600;">Personal Info</div>' +
+                        '</div>' +
+                        '<div class="step" data-step="2" style="display: flex; flex-direction: column; align-items: center; position: relative; z-index: 1; width: 33.333%;">' +
+                        '<div class="step-circle" style="width: 30px; height: 30px; border-radius: 50%; background-color: #e5e7eb; color: #6b7280; display: flex; justify-content: center; align-items: center; font-weight: bold; margin-bottom: 8px;">2</div>' +
+                        '<div class="step-label" style="font-size: 0.8rem; color: #6b7280; font-weight: 500;">Contact Info</div>' +
+                        '</div>' +
+                        '<div class="step" data-step="3" style="display: flex; flex-direction: column; align-items: center; position: relative; z-index: 1; width: 33.333%;">' +
+                        '<div class="step-circle" style="width: 30px; height: 30px; border-radius: 50%; background-color: #e5e7eb; color: #6b7280; display: flex; justify-content: center; align-items: center; font-weight: bold; margin-bottom: 8px;">3</div>' +
+                        '<div class="step-label" style="font-size: 0.8rem; color: #6b7280; font-weight: 500;">Set Password</div>' +
+                        '</div>' +
+                        '</div>' +
                         
-                        if (isValid) {
+                        // Progress bar
+                        '<div class="progress-container mb-4" style="background-color: #e5e7eb; border-radius: 9999px; height: 8px; width: 100%; overflow: hidden;">' +
+                        '<div class="progress-bar" id="admin-progress" style="height: 100%; background-color: #2563eb; border-radius: 9999px; width: 33.33%; transition: width 0.3s ease;"></div>' +
+                        '</div>' +
+
+                        // Step 1 - Personal Info
+                        '<div id="admin-step1" class="admin-step active" style="display: block;">' +
+                        '<div class="mb-3">' +
+                        '<label for="admin-first-name" class="block text-sm font-medium text-gray-700 text-left mb-1">First Name</label>' +
+                        '<input id="admin-first-name" class="swal2-input" placeholder="Enter first name">' +
+                        '</div>' +
+                        '<div class="mb-3">' +
+                        '<label for="admin-last-name" class="block text-sm font-medium text-gray-700 text-left mb-1">Last Name</label>' +
+                        '<input id="admin-last-name" class="swal2-input" placeholder="Enter last name">' +
+                        '</div>' +
+                        '<div class="mb-3 grid grid-cols-2 gap-3">' +
+                        '<div>' +
+                        '<label for="admin-middle-initial" class="block text-sm font-medium text-gray-700 text-left mb-1">Middle Initial</label>' +
+                        '<input id="admin-middle-initial" class="swal2-input" placeholder="M" maxlength="1">' +
+                        '</div>' +
+                        '<div>' +
+                        '<label for="admin-suffix" class="block text-sm font-medium text-gray-700 text-left mb-1">Suffix</label>' +
+                        '<select id="admin-suffix" class="swal2-input">' +
+                        '<option value="">None</option>' +
+                        '<option value="Jr.">Jr.</option>' +
+                        '<option value="Sr.">Sr.</option>' +
+                        '<option value="I">I</option>' +
+                        '<option value="II">II</option>' +
+                        '<option value="III">III</option>' +
+                        '<option value="IV">IV</option>' +
+                        '<option value="V">V</option>' +
+                        '</select>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="mb-3">' +
+                        '<label for="admin-email" class="block text-sm font-medium text-gray-700 text-left mb-1">Email Address</label>' +
+                        '<input id="admin-email" class="swal2-input" placeholder="Enter email">' +
+                        '</div>' +
+                        '<div class="mb-3">' +
+                        '<label for="admin-gender" class="block text-sm font-medium text-gray-700 text-left mb-1">Gender</label>' +
+                        '<select id="admin-gender" class="swal2-input">' +
+                        '<option value="">Select Gender</option>' +
+                        '<option value="male">Male</option>' +
+                        '<option value="female">Female</option>' +
+                        '<option value="other">Other</option>' +
+                        '</select>' +
+                        '</div>' +
+                        '<div class="mb-3">' +
+                        '<label for="admin-nationality" class="block text-sm font-medium text-gray-700 text-left mb-1">Nationality</label>' +
+                        '<select id="admin-nationality" class="swal2-input">' +
+                        '<option value="">Select Nationality</option>' +
+                        '<option value="Filipino">Filipino</option>' +
+                        '<option value="American">American</option>' +
+                        '<option value="Chinese">Chinese</option>' +
+                        '<option value="Japanese">Japanese</option>' +
+                        '<option value="Korean">Korean</option>' +
+                        '<option value="Other">Other</option>' +
+                        '</select>' +
+                        '</div>' +
+                        '<div class="mb-3 text-right">' +
+                        '<button type="button" onclick="adminNextStep(1, 2)" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Next <i class="fas fa-arrow-right ml-1"></i></button>' +
+                        '</div>' +
+                        '</div>' +
+
+                        // Step 2 - Contact Info
+                        '<div id="admin-step2" class="admin-step" style="display: none;">' +
+                        '<div class="mb-3">' +
+                        '<label for="admin-age" class="block text-sm font-medium text-gray-700 text-left mb-1">Age</label>' +
+                        '<input id="admin-age" type="number" min="18" max="100" class="swal2-input" placeholder="Enter age (minimum 18)">' +
+                        '</div>' +
+                        '<div class="mb-3">' +
+                        '<label for="admin-address" class="block text-sm font-medium text-gray-700 text-left mb-1">Address</label>' +
+                        '<input id="admin-address" class="swal2-input" placeholder="Enter address">' +
+                        '</div>' +
+                        '<div class="mb-3">' +
+                        '<label for="admin-phone" class="block text-sm font-medium text-gray-700 text-left mb-1">Phone Number (Philippine format)</label>' +
+                        '<input id="admin-phone" class="swal2-input" placeholder="e.g. 09XXXXXXXXX or +63XXXXXXXXXX">' +
+                        '</div>' +
+                        '<div class="mb-3 flex justify-between">' +
+                        '<button type="button" onclick="adminPrevStep(2, 1)" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition"><i class="fas fa-arrow-left mr-1"></i> Previous</button>' +
+                        '<button type="button" onclick="adminNextStep(2, 3)" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Next <i class="fas fa-arrow-right ml-1"></i></button>' +
+                        '</div>' +
+                        '</div>' +
+
+                        // Step 3 - Set Password
+                        '<div id="admin-step3" class="admin-step" style="display: none;">' +
+                        '<div class="mb-3">' +
+                        '<label for="admin-password" class="block text-sm font-medium text-gray-700 text-left mb-1">Password</label>' +
+                        '<input id="admin-password" type="password" class="swal2-input" placeholder="Enter password">' +
+                        '</div>' +
+                        '<div class="mb-3">' +
+                        '<label for="admin-confirm-password" class="block text-sm font-medium text-gray-700 text-left mb-1">Confirm Password</label>' +
+                        '<input id="admin-confirm-password" type="password" class="swal2-input" placeholder="Confirm password">' +
+                        '</div>' +
+                        '<div class="mb-3 flex justify-between">' +
+                        '<button type="button" onclick="adminPrevStep(3, 2)" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition"><i class="fas fa-arrow-left mr-1"></i> Previous</button>' +
+                        '<button type="button" id="adminSubmitBtn" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"><i class="fas fa-check mr-1"></i> Create Account</button>' +
+                        '</div>' +
+                        '</div>',
+                    showConfirmButton: false,
+                    showCancelButton: true,
+                    cancelButtonText: 'Close',
+                    cancelButtonColor: '#ef4444',
+                    didOpen: () => {
+                        // Add functions for step navigation
+                        window.adminNextStep = function(currentStep, nextStep) {
+                            const isValid = validateAdminStep(currentStep);
+                            
+                            if (isValid) {
+                                document.getElementById('admin-step' + currentStep).style.display = 'none';
+                                document.getElementById('admin-step' + nextStep).style.display = 'block';
+                                
+                                // Update step indicators
+                                document.querySelector(`.step[data-step="${currentStep}"]`).classList.add('completed');
+                                document.querySelector(`.step[data-step="${currentStep}"] .step-circle`).style.backgroundColor = '#10b981';
+                                document.querySelector(`.step[data-step="${currentStep}"] .step-circle`).style.color = 'white';
+                                document.querySelector(`.step[data-step="${currentStep}"] .step-label`).style.color = '#10b981';
+                                
+                                document.querySelector(`.step[data-step="${nextStep}"]`).classList.add('active');
+                                document.querySelector(`.step[data-step="${nextStep}"] .step-circle`).style.backgroundColor = '#2563eb';
+                                document.querySelector(`.step[data-step="${nextStep}"] .step-circle`).style.color = 'white';
+                                document.querySelector(`.step[data-step="${nextStep}"] .step-label`).style.color = '#2563eb';
+                                document.querySelector(`.step[data-step="${nextStep}"] .step-label`).style.fontWeight = '600';
+                                
+                                // Update progress bar
+                                const progressBar = document.getElementById('admin-progress');
+                                switch(nextStep) {
+                                    case 2:
+                                        progressBar.style.width = '66.66%';
+                                        break;
+                                    case 3:
+                                        progressBar.style.width = '100%';
+                                        break;
+                                }
+                            }
+                        };
+                        
+                        window.adminPrevStep = function(currentStep, prevStep) {
                             document.getElementById('admin-step' + currentStep).style.display = 'none';
-                            document.getElementById('admin-step' + nextStep).style.display = 'block';
+                            document.getElementById('admin-step' + prevStep).style.display = 'block';
                             
                             // Update step indicators
-                            document.querySelector(`.step[data-step="${currentStep}"]`).classList.add('completed');
-                            document.querySelector(`.step[data-step="${currentStep}"] .step-circle`).style.backgroundColor = '#10b981';
-                            document.querySelector(`.step[data-step="${currentStep}"] .step-circle`).style.color = 'white';
-                            document.querySelector(`.step[data-step="${currentStep}"] .step-label`).style.color = '#10b981';
-                            
-                            document.querySelector(`.step[data-step="${nextStep}"]`).classList.add('active');
-                            document.querySelector(`.step[data-step="${nextStep}"] .step-circle`).style.backgroundColor = '#2563eb';
-                            document.querySelector(`.step[data-step="${nextStep}"] .step-circle`).style.color = 'white';
-                            document.querySelector(`.step[data-step="${nextStep}"] .step-label`).style.color = '#2563eb';
-                            document.querySelector(`.step[data-step="${nextStep}"] .step-label`).style.fontWeight = '600';
+                            document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('active');
+                            document.querySelector(`.step[data-step="${currentStep}"] .step-circle`).style.backgroundColor = '#e5e7eb';
+                            document.querySelector(`.step[data-step="${currentStep}"] .step-circle`).style.color = '#6b7280';
+                            document.querySelector(`.step[data-step="${currentStep}"] .step-label`).style.color = '#6b7280';
+                            document.querySelector(`.step[data-step="${currentStep}"] .step-label`).style.fontWeight = '500';
                             
                             // Update progress bar
                             const progressBar = document.getElementById('admin-progress');
-                            switch(nextStep) {
+                            switch(prevStep) {
+                                case 1:
+                                    progressBar.style.width = '33.33%';
+                                    break;
                                 case 2:
                                     progressBar.style.width = '66.66%';
                                     break;
-                                case 3:
-                                    progressBar.style.width = '100%';
+                            }
+                        };
+                        
+                        window.validateAdminStep = function(step) {
+                            let isValid = true;
+                            
+                            switch(step) {
+                                case 1:
+                                    // Validate personal info
+                                    const first_name = document.getElementById('admin-first-name').value;
+                                    const last_name = document.getElementById('admin-last-name').value;
+                                    const middle_initial = document.getElementById('admin-middle-initial').value;
+                                    const suffix = document.getElementById('admin-suffix').value;
+                                    const email = document.getElementById('admin-email').value;
+                                    const gender = document.getElementById('admin-gender').value;
+                                    const nationality = document.getElementById('admin-nationality').value;
+                                    
+                                    if (!first_name || !last_name || !email || !gender || !nationality) {
+                                        Swal.showValidationMessage('Please fill in all required fields in this step');
+                                        isValid = false;
+                                    }
+                                    
+                                    if (email && !email.includes('@')) {
+                                        Swal.showValidationMessage('Please enter a valid email address');
+                                        isValid = false;
+                                    }
+                                    break;
+                                    
+                                case 2:
+                                    // Validate contact info
+                                    const age = document.getElementById('admin-age').value;
+                                    const address = document.getElementById('admin-address').value;
+                                    const phone = document.getElementById('admin-phone').value;
+                                    
+                                    if (!age || !address || !phone) {
+                                        Swal.showValidationMessage('Please fill in all fields in this step');
+                                        isValid = false;
+                                    }
+                                    
+                                    if (age && (age < 18 || age > 100)) {
+                                        Swal.showValidationMessage('Admin must be at least 18 years old');
+                                        isValid = false;
+                                    }
+                                    
+                                    const phoneRegex = /^(\+63|09)\d{9,10}$/;
+                                    if (phone && !phoneRegex.test(phone)) {
+                                        Swal.showValidationMessage('Please enter a valid Philippine phone number format (09XXXXXXXXX or +63XXXXXXXXXX)');
+                                        isValid = false;
+                                    }
                                     break;
                             }
-                        }
-                    };
-                    
-                    window.adminPrevStep = function(currentStep, prevStep) {
-                        document.getElementById('admin-step' + currentStep).style.display = 'none';
-                        document.getElementById('admin-step' + prevStep).style.display = 'block';
-                        
-                        // Update step indicators
-                        document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('active');
-                        document.querySelector(`.step[data-step="${currentStep}"] .step-circle`).style.backgroundColor = '#e5e7eb';
-                        document.querySelector(`.step[data-step="${currentStep}"] .step-circle`).style.color = '#6b7280';
-                        document.querySelector(`.step[data-step="${currentStep}"] .step-label`).style.color = '#6b7280';
-                        document.querySelector(`.step[data-step="${currentStep}"] .step-label`).style.fontWeight = '500';
-                        
-                        // Update progress bar
-                        const progressBar = document.getElementById('admin-progress');
-                        switch(prevStep) {
-                            case 1:
-                                progressBar.style.width = '33.33%';
-                                break;
-                            case 2:
-                                progressBar.style.width = '66.66%';
-                                break;
-                        }
-                    };
-                    
-                    window.validateAdminStep = function(step) {
-                        let isValid = true;
-                        
-                        switch(step) {
-                            case 1:
-                                // Validate personal info
-                                const first_name = document.getElementById('admin-first-name').value;
-                                const last_name = document.getElementById('admin-last-name').value;
-                                const middle_initial = document.getElementById('admin-middle-initial').value;
-                                const suffix = document.getElementById('admin-suffix').value;
-                                const email = document.getElementById('admin-email').value;
-                                const gender = document.getElementById('admin-gender').value;
-                                const nationality = document.getElementById('admin-nationality').value;
-                                
-                                if (!first_name || !last_name || !email || !gender || !nationality) {
-                                    Swal.showValidationMessage('Please fill in all required fields in this step');
-                                    isValid = false;
-                                }
-                                
-                                if (email && !email.includes('@')) {
-                                    Swal.showValidationMessage('Please enter a valid email address');
-                                    isValid = false;
-                                }
-                                break;
-                                
-                            case 2:
-                                // Validate contact info
-                                const age = document.getElementById('admin-age').value;
-                                const address = document.getElementById('admin-address').value;
-                                const phone = document.getElementById('admin-phone').value;
-                                
-                                if (!age || !address || !phone) {
-                                    Swal.showValidationMessage('Please fill in all fields in this step');
-                                    isValid = false;
-                                }
-                                
-                                if (age && (age < 18 || age > 100)) {
-                                    Swal.showValidationMessage('Admin must be at least 18 years old');
-                                    isValid = false;
-                                }
-                                
-                                const phoneRegex = /^(\+63|09)\d{9,10}$/;
-                                if (phone && !phoneRegex.test(phone)) {
-                                    Swal.showValidationMessage('Please enter a valid Philippine phone number format (09XXXXXXXXX or +63XXXXXXXXXX)');
-                                    isValid = false;
-                                }
-                                break;
+                            
+                            return isValid;
                         }
                         
-                        return isValid;
-                    }
-                    
-                    // Handle form submission when the "Create Account" button is clicked
-                    document.getElementById('adminSubmitBtn').addEventListener('click', function() {
-                        // Gather all data from all steps
-                        const first_name = document.getElementById('admin-first-name').value;
-                        const last_name = document.getElementById('admin-last-name').value;
-                        const middle_initial = document.getElementById('admin-middle-initial').value;
-                        const suffix = document.getElementById('admin-suffix').value;
-                        
-                        // Combine name parts into full_name for display
-                        let full_name = first_name;
-                        if (middle_initial) {
-                            full_name += ' ' + middle_initial + '.';
-                        }
-                        full_name += ' ' + last_name;
-                        if (suffix) {
-                            full_name += ' ' + suffix;
-                        }
-                        
-                        const email = document.getElementById('admin-email').value;
-                        const gender = document.getElementById('admin-gender').value;
-                        const nationality = document.getElementById('admin-nationality').value;
-                        const age = document.getElementById('admin-age').value;
-                        const address = document.getElementById('admin-address').value;
-                        const phone_number = document.getElementById('admin-phone').value;
-                        const password = document.getElementById('admin-password').value;
-                        const confirmPassword = document.getElementById('admin-confirm-password').value;
-                        
-                        // Validate password fields
-                        if (!password || !confirmPassword) {
-                            Swal.showValidationMessage('Please enter and confirm your password');
-                            return;
-                        }
-                        
-                        if (password !== confirmPassword) {
-                            Swal.showValidationMessage('Passwords do not match');
-                            return;
-                        }
-                        
-                        // Send data to server
-                        fetch('create_admin.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                name: full_name,
-                                first_name: first_name,
-                                last_name: last_name,
-                                middle_initial: middle_initial,
-                                suffix: suffix,
-                                email: email,
-                                gender: gender,
-                                nationality: nationality,
-                                address: address,
-                                age: age,
-                                phone_number: phone_number,
-                                password: password
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                Swal.close();
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: 'Admin account created successfully',
-                                    icon: 'success',
-                                    confirmButtonColor: '#4caf50'
-                                });
-                            } else {
-                                Swal.showValidationMessage(data.message || 'Failed to create admin account');
+                        // Handle form submission when the "Create Account" button is clicked
+                        document.getElementById('adminSubmitBtn').addEventListener('click', function() {
+                            // Gather all data from all steps
+                            const first_name = document.getElementById('admin-first-name').value;
+                            const last_name = document.getElementById('admin-last-name').value;
+                            const middle_initial = document.getElementById('admin-middle-initial').value;
+                            const suffix = document.getElementById('admin-suffix').value;
+                            
+                            // Combine name parts into full_name for display
+                            let full_name = first_name;
+                            if (middle_initial) {
+                                full_name += ' ' + middle_initial + '.';
                             }
-                        })
-                        .catch(error => {
-                            Swal.showValidationMessage('Error: ' + error.message);
+                            full_name += ' ' + last_name;
+                            if (suffix) {
+                                full_name += ' ' + suffix;
+                            }
+                            
+                            const email = document.getElementById('admin-email').value;
+                            const gender = document.getElementById('admin-gender').value;
+                            const nationality = document.getElementById('admin-nationality').value;
+                            const age = document.getElementById('admin-age').value;
+                            const address = document.getElementById('admin-address').value;
+                            const phone_number = document.getElementById('admin-phone').value;
+                            const password = document.getElementById('admin-password').value;
+                            const confirmPassword = document.getElementById('admin-confirm-password').value;
+                            
+                            // Validate password fields
+                            if (!password || !confirmPassword) {
+                                Swal.showValidationMessage('Please enter and confirm your password');
+                                return;
+                            }
+                            
+                            if (password !== confirmPassword) {
+                                Swal.showValidationMessage('Passwords do not match');
+                                return;
+                            }
+                            
+                            // Send data to server
+                            fetch('create_admin.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    name: full_name,
+                                    first_name: first_name,
+                                    last_name: last_name,
+                                    middle_initial: middle_initial,
+                                    suffix: suffix,
+                                    email: email,
+                                    gender: gender,
+                                    nationality: nationality,
+                                    address: address,
+                                    age: age,
+                                    phone_number: phone_number,
+                                    password: password
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.close();
+                                    Swal.fire({
+                                        title: 'Success!',
+                                        text: 'Admin account created successfully',
+                                        icon: 'success',
+                                        confirmButtonColor: '#4caf50'
+                                    });
+                                } else {
+                                    Swal.showValidationMessage(data.message || 'Failed to create admin account');
+                                }
+                            })
+                            .catch(error => {
+                                Swal.showValidationMessage('Error: ' + error.message);
+                            });
                         });
-                    });
-                }
-            }).then((result) => {
-                if (result.isConfirmed && result.value.success) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'Admin account created successfully',
-                        icon: 'success',
-                        confirmButtonColor: '#4caf50'
-                    });
-                }
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed && result.value.success) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Admin account created successfully',
+                            icon: 'success',
+                            confirmButtonColor: '#4caf50'
+                        });
+                    }
+                });
             });
         });
     </script>

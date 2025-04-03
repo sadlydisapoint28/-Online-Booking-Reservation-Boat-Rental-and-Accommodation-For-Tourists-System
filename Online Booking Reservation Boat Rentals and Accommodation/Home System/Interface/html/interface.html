@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carles Tourism - Boat Rental & Accommodation</title>
+    <title>TIMBOOK CARLES - Discover the Beauty of Carles</title>
     <!-- Inter Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
@@ -16,103 +16,16 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
 </head>
 <body>
-    <!-- Header/Navigation -->
-    <header class="site-header">
-        <div class="container">
-            <nav class="main-nav">
-                <div class="logo">
-                    <a href="#"><img src="../../img/logo-white.png" alt="Your Logo"> YOUR LOGO</a>
-                </div>
-                <div class="nav-links">
-                    <ul>
-                        <li class="active"><a href="#">HOME</a></li>
-                        <li><a href="#">TOURS</a></li>
-                        <li><a href="#">EXPLORE</a></li>
-                        <li><a href="#">ABOUT US</a></li>
-                        <li><a href="#">CONTACT</a></li>
-                    </ul>
-                </div>
-                <div class="nav-right">
-                    <a href="#" class="search-btn"><i class="fas fa-search"></i></a>
-                    <div class="social-icons">
-                        <a href="#"><i class="fas fa-info-circle"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="hero-slider swiper-container">
-            <div class="swiper-wrapper">
-                <!-- Slide 1 -->
+                <!-- Single Slide -->
                 <div class="swiper-slide" style="background-image: url('../../img/beach-sunset.jpg');">
                     <div class="hero-content">
                         <div class="container">
                             <div class="row align-items-center">
                                 <div class="col-lg-6">
-                                    <p class="travel-label">Travel website</p>
-                                    <h1 class="hero-title">NEVER STOP<br>EXPLORING THE<br>WORLD</h1>
-                                    <p class="hero-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                                    <a href="#explore" class="btn btn-explore">LEARN MORE</a>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="destination-cards">
-                                        <div class="destination-card" data-category="BEACH">
-                                            <img src="../../img/beach.jpg" alt="Beach">
-                                            <div class="card-overlay"></div>
-                                            <h3>BEACH</h3>
-                                        </div>
-                                        <div class="destination-card" data-category="NATURE">
-                                            <img src="../../img/nature.jpg" alt="Nature">
-                                            <div class="card-overlay"></div>
-                                            <h3>NATURE</h3>
-                                        </div>
-                                        <div class="destination-card" data-category="HOTEL">
-                                            <img src="../../img/hotel.jpg" alt="Hotel">
-                                            <div class="card-overlay"></div>
-                                            <h3>HOTEL</h3>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Slide 2 -->
-                <div class="swiper-slide" style="background-image: url('../../img/Gigantes Islands Eco-Tour.jpg');">
-                    <div class="hero-content">
-                        <div class="container">
-                            <div class="row align-items-center">
-                                <div class="col-lg-6">
-                                    <p class="travel-label">Discover paradise</p>
-                                    <h1 class="hero-title">EXPLORE<br>GIGANTES<br>ISLANDS</h1>
-                                    <p class="hero-text">Experience the stunning beauty of Gigantes Islands with crystal clear waters, white sand beaches, and majestic limestone cliffs.</p>
-                                    <a href="#explore" class="btn btn-explore">VIEW PACKAGES</a>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="destination-cards">
-                                        <div class="destination-card" data-category="ISLAND">
-                                            <img src="../../img/gigantes.png" alt="Island">
-                                            <div class="card-overlay"></div>
-                                            <h3>ISLAND</h3>
-                                        </div>
-                                        <div class="destination-card" data-category="ADVENTURE">
-                                            <img src="../../img/beach.jpg" alt="Adventure">
-                                            <div class="card-overlay"></div>
-                                            <h3>ADVENTURE</h3>
-                                        </div>
-                                        <div class="destination-card" data-category="RELAX">
-                                            <img src="../../img/hotel.jpg" alt="Relax">
-                                            <div class="card-overlay"></div>
-                                            <h3>RELAX</h3>
-                                        </div>
-                                    </div>
+                                    <p class="travel-label">Discover Paradise</p>
+                                    <h1 class="hero-title">DISCOVER THE<br>BEAUTY OF<br>CARLES</h1>
+                                    <p class="hero-text">Journey to the stunning islands of Gigantes, home to pristine white sand beaches, majestic limestone cliffs, and crystal-clear blue waters. Hop on a boat and experience the true beauty of the Philippines.</p>
+                                    <a href="#islands" class="btn btn-explore">EXPLORE ISLANDS</a>
                                 </div>
                             </div>
                         </div>
@@ -129,70 +42,133 @@
         </div>
     </section>
 
-    <!-- New Category Cards Section -->
-    <section class="category-section">
+    <!-- Islands Section -->
+    <section id="islands" class="islands-section">
         <div class="container">
-            <div class="section-title text-center">
-                <h2>Discover Our Categories</h2>
-                <p>Find your perfect destination</p>
+            <div class="section-title">
+                <h2>Discover Our Islands</h2>
+                <p>Experience the beauty of Carles</p>
             </div>
-            <div class="row">
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="destination-card" data-category="RESORT">
-                        <img src="../../img/gigantes.png" alt="Resort">
-                        <div class="card-overlay"></div>
-                        <h3>RESORT</h3>
+            <div class="islands-grid">
+                <div class="island-card">
+                    <img src="../../img/gigantes-norte.jpg" alt="Isla Gigantes Norte">
+                    <div class="island-content">
+                        <h3>GIGANTES NORTE</h3>
+                        <p>Beautiful white sand beaches and limestone formations</p>
+                        <a href="#" class="btn-explore">VIEW</a>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="destination-card" data-category="DIVING">
-                        <img src="../../img/Gigantes Islands Eco-Tour.jpg" alt="Diving">
-                        <div class="card-overlay"></div>
-                        <h3>DIVING</h3>
+                <div class="island-card">
+                    <img src="../../img/gigantes-sur.jpg" alt="Isla Gigantes Sur">
+                    <div class="island-content">
+                        <h3>GIGANTES SUR</h3>
+                        <p>Discover Tangway beach and crystal clear waters</p>
+                        <a href="#" class="btn-explore">VIEW</a>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="destination-card" data-category="CUISINE">
-                        <img src="../../img/carleslogomunicipality.png" alt="Cuisine">
-                        <div class="card-overlay"></div>
-                        <h3>CUISINE</h3>
+                <div class="island-card">
+                    <img src="../../img/sicogon.jpg" alt="Sicogon Island">
+                    <div class="island-content">
+                        <h3>SICOGON</h3>
+                        <p>Expansive beach paradise and luxury resorts</p>
+                        <a href="#" class="btn-explore">VIEW</a>
+                    </div>
+                </div>
+                <div class="island-card">
+                    <img src="../../img/calagnaan.jpg" alt="Calagnaan Island">
+                    <div class="island-content">
+                        <h3>CALAGNAAN</h3>
+                        <p>Hidden beaches and pristine natural landscapes</p>
+                        <a href="#" class="btn-explore">VIEW</a>
+                    </div>
+                </div>
+                <div class="island-card">
+                    <img src="../../img/bantigue.jpg" alt="Bantigue Island">
+                    <div class="island-content">
+                        <h3>BANTIGUE</h3>
+                        <p>Amazing sandbar and crystal clear waters</p>
+                        <a href="#" class="btn-explore">VIEW</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Explore Section -->
-    <section id="explore" class="explore-section">
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works-section">
         <div class="container">
             <div class="section-title">
-                <h2>Explore Carles</h2>
-                <p>Choose your next adventure</p>
+                <h2>How We Work</h2>
+                <p>Easy booking process for a hassle-free vacation</p>
             </div>
-            <div class="explore-grid">
-                <div class="explore-card">
-                    <img src="../../img/island-hopping.jpg" alt="Island Hopping">
-                    <div class="explore-content">
-                        <h3>Island Hopping</h3>
-                        <p>Visit multiple islands in one day</p>
-                        <a href="#" class="btn-explore">Explore</a>
-                    </div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">01</div>
+                    <h3>Choose Your Package</h3>
+                    <p>Browse through our boat rentals and accommodations to find the perfect option for your trip.</p>
                 </div>
-                <div class="explore-card">
-                    <img src="../../img/diving.jpg" alt="Diving">
-                    <div class="explore-content">
-                        <h3>Diving</h3>
-                        <p>Discover underwater treasures</p>
-                        <a href="#" class="btn-explore">Explore</a>
-                    </div>
+                <div class="step-card">
+                    <div class="step-number">02</div>
+                    <h3>Select Your Dates</h3>
+                    <p>Choose your preferred dates from our availability calendar to plan your visit.</p>
                 </div>
-                <div class="explore-card">
-                    <img src="../../img/camping.jpg" alt="Camping">
-                    <div class="explore-content">
-                        <h3>Camping</h3>
-                        <p>Sleep under the stars</p>
-                        <a href="#" class="btn-explore">Explore</a>
-                    </div>
+                <div class="step-card">
+                    <div class="step-number">03</div>
+                    <h3>Secure Your Booking</h3>
+                    <p>Make a 50% advance payment to confirm your reservation with us.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">04</div>
+                    <h3>Enjoy Your Trip</h3>
+                    <p>Arrive at the designated location and enjoy your island adventure!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Policies Section -->
+    <section id="policies" class="policies-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Booking & Safety Information</h2>
+                <p>Important information for your trip</p>
+            </div>
+            <div class="policies-grid">
+                <div class="policy-card">
+                    <h3>Booking Policies</h3>
+                    <ul>
+                        <li>Reservations must be made at least 3 days in advance</li>
+                        <li>50% advance payment required to confirm booking</li>
+                        <li>Full payment must be completed before the trip</li>
+                        <li>Valid ID required during check-in</li>
+                    </ul>
+                </div>
+                <div class="policy-card">
+                    <h3>Cancellation Policy</h3>
+                    <ul>
+                        <li>Free cancellation up to 7 days before scheduled trip</li>
+                        <li>50% refund for cancellations 3-7 days before the trip</li>
+                        <li>No refund for cancellations less than 3 days before the trip</li>
+                        <li>Full refund if cancelled due to severe weather conditions</li>
+                    </ul>
+                </div>
+                <div class="policy-card">
+                    <h3>Safety Guidelines</h3>
+                    <ul>
+                        <li>Life jackets provided and must be worn during boat trips</li>
+                        <li>Follow guide instructions at all times</li>
+                        <li>Children under 12 must be accompanied by adults</li>
+                        <li>Trips may be rescheduled due to inclement weather</li>
+                    </ul>
+                </div>
+                <div class="policy-card">
+                    <h3>Payment Methods</h3>
+                    <ul>
+                        <li>Online payment via credit/debit cards</li>
+                        <li>Bank transfers to our official account</li>
+                        <li>GCash, PayMaya, and other e-wallets accepted</li>
+                        <li>Cash payment available for walk-in bookings</li>
+                    </ul>
                 </div>
             </div>
         </div>

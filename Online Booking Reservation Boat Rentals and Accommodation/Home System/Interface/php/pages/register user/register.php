@@ -57,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email_address = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
         $confirm_password = $_POST['confirm_password'] ?? '';
-        $phone_number = $_POST['phone_number'] ?? '';
         $date_of_birth = $_POST['date_of_birth'] ?? '';
         $age = $_POST['age'] ?? '';
         $gender = $_POST['gender'] ?? '';
@@ -104,8 +103,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user_type = isset($_POST['request_admin']) && $_POST['request_admin'] == 'yes' ? 'admin_pending' : 'customer';
 
         // Insert user into database with verification token
-        $stmt = $pdo->prepare("INSERT INTO users (full_name, email, password, phone_number, date_of_birth, age, gender, nationality, address, drink_preference, user_type, verification_token, verification_expires, is_verified) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)");
-        $stmt->execute([$full_name, $email_address, $hashed_password, $phone_number, $date_of_birth, $age, $gender, $nationality, $address, $drink_preference, $user_type, $verification_token, $verification_expires]);
+        $stmt = $pdo->prepare("INSERT INTO users (full_name, email, password, date_of_birth, age, gender, nationality, address, drink_preference, user_type, verification_token, verification_expires, is_verified) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)");
+        $stmt->execute([$full_name, $email_address, $hashed_password, $date_of_birth, $age, $gender, $nationality, $address, $drink_preference, $user_type, $verification_token, $verification_expires]);
 
         // Get user ID
         $user_id = $pdo->lastInsertId();
@@ -186,15 +185,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Check if this is a direct form submission or AJAX
         if (isset($_POST['form_submitted']) && $_POST['form_submitted'] === 'true') {
             // Direct form submission - redirect with success message
-            $_SESSION['success_message'] = 'Registration successful! Please check your email to verify your account.';
-            header("Location: register.php?form_submitted=true&success=" . urlencode('Please check your email to verify your account.'));
+            $_SESSION['user_id'] = $user_id;
+            $_SESSION['user_type'] = $user_type;
+            $_SESSION['full_name'] = $full_name;
+            $_SESSION['email'] = $email_address;
+            $_SESSION['success_message'] = 'Registration successful! Welcome to Carles Tourism.';
+            header("Location: ../../../Dashboards/User Dashboard/userdashboard.php");
             exit;
         } else {
             // AJAX submission - return JSON
+            $_SESSION['user_id'] = $user_id;
+            $_SESSION['user_type'] = $user_type;
+            $_SESSION['full_name'] = $full_name;
+            $_SESSION['email'] = $email_address;
         header('Content-Type: application/json');
         echo json_encode([
             'success' => true, 
-            'message' => 'Registration successful! Please check your email to verify your account.'
+                'message' => 'Registration successful! Welcome to Carles Tourism.'
         ]);
         exit;
         }
@@ -252,69 +259,36 @@ $csrf_token = $security->generateCSRFToken();
         body {
             font-family: 'Quicksand', sans-serif;
             background-color: #f1f8fc;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%2393c5fd' fill-opacity='0.1'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             margin: 0;
-            padding: 0;
+            padding: 20px;
             min-height: 100vh;
-            overflow-x: hidden;
         }
         .register-wrapper {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 10px;
-            z-index: 1000;
-            overflow-y: auto;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
         }
-        .register-card {  
-            background: linear-gradient(145deg, #ffffff, #f8fbff);
-            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.2);
-            border-radius: 20px;
-            overflow: hidden;
+        .register-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 25px;
             position: relative;
-            border: 1px solid #e0e7ff;
-            margin-top: 10px;
-            max-height: 90vh;
-            overflow-y: auto;
-            max-width: 95%;
         }
         .card-accent {
             position: absolute;
             height: 100%;
-            width: 12px;
+            width: 8px;
             left: 0;
             top: 0;
-            background: linear-gradient(to bottom, #4f46e5, #818cf8, #93c5fd);
+            background: linear-gradient(to bottom, #3b82f6, #60a5fa);
+            border-radius: 15px 0 0 15px;
         }
         .step-indicators-row {
             display: flex;
             justify-content: space-between;
+            margin: 0 0 20px 0;
             position: relative;
-            margin: 0.75rem 0 1.25rem;
-            background-color: #f0f5ff;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.15);
-            padding: 15px 20px;
-            z-index: 5;
-            border: 2px solid #c7d2fe;
-            opacity: 1;
-        }
-        .step-indicators-row::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 15%;
-            right: 15%;
-            height: 4px;
-            background-color: #cbd5e1;
-            transform: translateY(-50%);
-            z-index: 0;
-            border-radius: 2px;
         }
         .step {
             display: flex;
@@ -322,276 +296,198 @@ $csrf_token = $security->generateCSRFToken();
             align-items: center;
             position: relative;
             z-index: 1;
-            width: 33.333%;
+            width: 50%;
         }
         .step-circle {
-            width: 55px;
-            height: 55px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            font-size: 1.35rem;
-            position: relative;
-            transition: all 0.5s ease;
-            margin-bottom: 0.5rem;
+            background: #60a5fa;
             color: white;
-            background-color: #818cf8;
-            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
-            border: 3px solid #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
         .step.active .step-circle {
-            background-color: #4f46e5;
-            transform: scale(1.15);
-            box-shadow: 0 0 20px rgba(79, 70, 229, 0.5);
+            background: #3b82f6;
         }
         .step.completed .step-circle {
-            background-color: #10b981;
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
-        }
-        .step-circle::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 3px solid transparent;
-            top: 0;
-            left: 0;
-            transition: all 0.5s ease;
-        }
-        .step.active .step-circle::after {
-            border-color: #4f46e5;
-            transform: scale(1.2);
-            opacity: 0.5;
-        }
-        .step.completed .step-circle::after {
-            border-color: #10b981;
-            transform: scale(1.2);
-            opacity: 0.5;
+            background: #10b981;
         }
         .step-label {
-            font-size: 0.95rem;
-            font-weight: 700;
+            font-size: 0.8rem;
+            font-weight: 600;
             color: #4b5563;
-            transition: all 0.3s ease;
-            text-align: center;
-            margin-top: 5px;
-        }
-        .step.active .step-label {
-            color: #4338ca;
-            font-weight: 800;
-            transform: scale(1.05);
-            text-shadow: 0 1px 2px rgba(79, 70, 229, 0.2);
-        }
-        .step.completed .step-label {
-            color: #059669;
-            font-weight: 700;
-        }
-        .progress-container {
-            height: 8px;
-            background-color: #e2e8f0;
-            border-radius: 8px;
-            overflow: hidden;
-            margin: 0 20px 1.25rem 20px;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-            border: 1px solid #d1d5db;
-        }
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(to right, #6366f1, #818cf8);
-            border-radius: 8px;
-            transition: width 0.5s ease;
-            box-shadow: 0 1px 3px rgba(99, 102, 241, 0.4);
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4); }
-            70% { box-shadow: 0 0 0 6px rgba(79, 70, 229, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
         }
         .form-step {
             display: none;
-            animation: fadeIn 0.5s;
-            padding: 0.5rem 0.5rem;
+            padding: 15px;
         }
         .form-step.active {
             display: block;
         }
         .input-field {
-            position: relative;
-            margin-bottom: 0.85rem;
+            margin-bottom: 15px;
         }
         .input-field label {
             display: block;
-            margin-bottom: 0.3rem;
+            margin-bottom: 5px;
             font-weight: 600;
             color: #4b5563;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
         }
-        .input-field input, 
-        .input-field select, 
+        .input-field input,
+        .input-field select,
         .input-field textarea {
             width: 100%;
-            padding: 0.6rem 1rem 0.6rem 2.5rem;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            font-family: 'Quicksand', sans-serif;
+            padding: 8px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
             font-size: 0.9rem;
-            background-color: #fff;
+        }
+        .input-field input:focus,
+        .input-field select:focus,
+        .input-field textarea:focus {
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+        .btn-prev,
+        .btn-next,
+        .btn-submit {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
             transition: all 0.2s;
         }
-        .input-field input:focus, 
-        .input-field select:focus, 
-        .input-field textarea:focus {
-            border-color: #6366f1;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-            outline: none;
-        }
-        .input-icon {
-            position: absolute;
-            top: 2.15rem;
-            left: 0.9rem;
-            color: #6366f1;
-            font-size: 0.9rem;
-        }
-        .btn-prev, .btn-next {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.5rem 1rem;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.875rem;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
         .btn-prev {
-            background-color: #f3f4f6;
+            background: #f3f4f6;
             color: #4b5563;
             border: 1px solid #e5e7eb;
         }
-        .btn-prev:hover {
-            background-color: #e5e7eb;
-        }
         .btn-next {
-            background-color: #6366f1;
+            background: #3b82f6;
             color: white;
-        }
-        .btn-next:hover {
-            background-color: #4f46e5;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(99, 102, 241, 0.25);
         }
         .btn-submit {
-            background: linear-gradient(to right, #10b981, #059669);
+            background: #10b981;
             color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.925rem;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+        }
+        .btn-prev:hover {
+            background: #e5e7eb;
+        }
+        .btn-next:hover {
+            background: #2563eb;
         }
         .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            background: #059669;
         }
         .step-title {
-            color: #4f46e5;
-            font-weight: 700;
+            color: #3b82f6;
+            font-weight: 600;
             font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+        .grid {
+            display: grid;
+            gap: 15px;
+        }
+        .grid-cols-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .flex {
+            display: flex;
+        }
+        .justify-between {
+            justify-content: space-between;
+        }
+        .justify-end {
+            justify-content: flex-end;
+        }
+        .mt-4 {
+            margin-top: 1rem;
+        }
+        .mb-4 {
             margin-bottom: 1rem;
-            position: relative;
-            display: inline-block;
         }
-        .step-title::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 70%;
-            height: 3px;
-            background: linear-gradient(to right, #6366f1, #818cf8);
-            border-radius: 2px;
+        .text-center {
+            text-align: center;
         }
-        .decoration-dot {
-            position: absolute;
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(129, 140, 248, 0.1) 0%, rgba(79, 70, 229, 0.05) 50%, transparent 70%);
-            z-index: -1;
-        }
-        .dot-1 {
-            top: -75px;
-            right: -75px;
-        }
-        .dot-2 {
-            bottom: -75px;
-            left: -75px;
-        }
-        .link-muted {
-            color: #64748b;
+        .text-sm {
             font-size: 0.875rem;
-            transition: color 0.3s;
         }
-        .link-muted:hover {
-            color: #4f46e5;
-        }
-        .link-divider {
-            color: #cbd5e1;
-        }
-        .text-center.mb-4 {
-            margin-bottom: 1rem;
-        }
-        .text-xl {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #4338ca;
-        }
-        .text-indigo-500 {
-            color: #6366f1;
-        }
-        .space-y-5 {
-            margin-top: 0;
-        }
-        .p-8 {
-            padding: 1.5rem;
+        .text-gray-500 {
+            color: #6b7280;
         }
         #error-message {
-            background-color: #fee2e2;
+            background: #fee2e2;
             border-left: 4px solid #ef4444;
             color: #b91c1c;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
         }
-        .flex.justify-end, .flex.justify-between {
-            margin-top: 1.25rem;
+        .progress-container {
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            margin: 10px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background: #3b82f6;
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+        @media (max-width: 768px) {
+            .register-wrapper {
+                padding: 10px;
+            }
+            .register-card {
+                padding: 15px;
+            }
+            .grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+            .step-label {
+                font-size: 0.7rem;
+            }
+        }
+        .input-field.error input,
+        .input-field.error select,
+        .input-field.error textarea {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+        }
+        .error-message {
+            color: #ef4444;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        .input-field.error .error-message {
+            display: block;
         }
     </style>
 </head>
 <body class="min-h-screen">
     <div class="register-wrapper">
-        <div class="register-card w-full max-w-2xl p-8 relative">
+        <div class="register-card">
             <div class="card-accent"></div>
-            <div class="decoration-dot dot-1"></div>
-            <div class="decoration-dot dot-2"></div>
             
-            <div class="text-center mb-4">
-                <h2 class="text-xl font-bold text-gray-800">Join Carles Tourism</h2>
-                <p class="text-indigo-500 text-sm mt-1">Create your account</p>
+            <!-- Updated Header with Logo -->
+            <div class="text-center mb-6">
+                <img src="../../../img/timbook-carles-tourism.png" alt="Carles Tourism Logo" class="h-24 mx-auto mb-2">
+                <h1 class="text-3xl font-bold text-blue-800">Welcome to Carles Tourism</h1>
+                <p class="text-blue-600">Experience the beauty of Carles, Iloilo</p>
             </div>
 
-            <div id="error-message" class="hidden bg-red-50 border-l-4 border-red-500 text-red-600 p-4 rounded-md mb-6" role="alert">
+            <div id="error-message" role="alert">
                 <div class="flex">
                     <div class="flex-shrink-0">
                         <i class="fas fa-exclamation-circle"></i>
@@ -610,519 +506,523 @@ $csrf_token = $security->generateCSRFToken();
                 </div>
                 <div class="step" data-step="2">
                     <div class="step-circle">2</div>
-                    <div class="step-label">Boat Details</div>
-            </div>
-                <div class="step" data-step="3">
-                    <div class="step-circle">3</div>
                     <div class="step-label">Set Password</div>
             </div>
-            </div>
-            
+        </div>
+
             <!-- Progress Bar -->
             <div class="progress-container">
-                <div class="progress-bar" id="registration-progress" style="width: 33.33%"></div>
+                <div class="progress-bar" id="registration-progress" style="width: 50%"></div>
             </div>
 
-            <form id="registerForm" method="POST" action="" class="space-y-5">
+            <form id="registerForm" method="POST" action="">
                 <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
                 
                 <!-- Step 1: Personal Information -->
                 <div class="form-step active" id="step1">
                     <h3 class="step-title">Personal Information</h3>
                     
-                    <div class="input-field">
-                        <label for="first_name">First Name</label>
-                        <i class="fas fa-user input-icon"></i>
-                        <input type="text" name="first_name" id="first_name" required placeholder="Enter your first name">
-        </div>
-
-                    <div class="input-field">
-                        <label for="last_name">Last Name</label>
-                        <i class="fas fa-user input-icon"></i>
-                        <input type="text" name="last_name" id="last_name" required placeholder="Enter your last name">
-            </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="input-field">
+                            <label for="first_name">First Name</label>
+                            <input type="text" name="first_name" id="first_name" required placeholder="Enter your first name" pattern="[A-Za-z ]+" oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')">
+                        </div>
+                        <div class="input-field">
+                            <label for="last_name">Last Name</label>
+                            <input type="text" name="last_name" id="last_name" required placeholder="Enter your last name" pattern="[A-Za-z ]+" oninput="this.value = this.value.replace(/[^A-Za-z ]/g, '')">
+                        </div>
+                    </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div class="input-field">
                             <label for="middle_initial">Middle Initial</label>
-                            <i class="fas fa-signature input-icon"></i>
-                            <input type="text" name="middle_initial" id="middle_initial" maxlength="1" placeholder="M">
-                </div>
-
+                            <input type="text" name="middle_initial" id="middle_initial" maxlength="1" placeholder="M" pattern="[A-Za-z]" oninput="this.value = this.value.replace(/[^A-Za-z]/g, '')">
+                        </div>
                         <div class="input-field">
                             <label for="suffix">Suffix</label>
-                            <i class="fas fa-id-card input-icon"></i>
-                            <select name="suffix" id="suffix">
-                                <option value="">None</option>
-                                <option value="Jr.">Jr.</option>
-                                <option value="Sr.">Sr.</option>
-                                <option value="I">I</option>
-                                <option value="II">II</option>
+                            <select name="suffix" id="suffix" class="w-full h-10 border rounded-md bg-white px-2">
+                                <option value="None">None</option>
+                                <option value="Jr">Jr.</option>
+                                <option value="Sr">Sr.</option>
                                 <option value="III">III</option>
                                 <option value="IV">IV</option>
-                                <option value="V">V</option>
+                                <option value="Other">Other</option>
                             </select>
-                        </div>
-                    </div>
+                            <input type="text" id="other_suffix" name="other_suffix" placeholder="Please specify your suffix" class="w-full h-10 border rounded-md mt-2 px-2 hidden">
+                </div>
+            </div>
 
                     <div class="input-field">
                         <label for="email">Email Address</label>
-                        <i class="fas fa-envelope input-icon"></i>
-                        <input type="email" name="email" id="email" required placeholder="email@example.com">
+                        <input type="email" name="email" id="email" required placeholder="example@email.com">
                     </div>
 
                     <div class="input-field">
-                        <label for="phone_number">Phone Number (Philippine format)</label>
-                        <i class="fas fa-mobile-alt input-icon"></i>
-                        <div class="flex items-center">
-                            <select id="phone_prefix" class="w-24 h-10 pl-2 pr-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        <label for="phone_number">Phone Number</label>
+                        <div class="flex items-center gap-1">
+                            <select id="phone_prefix" class="w-16 h-10 border rounded-md bg-white px-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="09">09</option>
                                 <option value="+63">+63</option>
                             </select>
-                            <input type="text" name="phone_number" id="phone_number_input" class="flex-1 h-10 pl-3 border border-gray-300 rounded-r-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="9123456789" maxlength="10" pattern="[0-9]{9,10}" required>
-                            <input type="hidden" id="full_phone_number" name="phone_number">
+                            <input type="number" 
+                                   name="phone_number" 
+                                   id="phone_number_input" 
+                                   class="w-48 h-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   maxlength="9" 
+                                   required 
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, ''); if(this.value.length > 9) this.value = this.value.slice(0,9);"
+                                   onkeypress="return (event.charCode >= 48 && event.charCode <= 57)">
                         </div>
-                        <p class="text-xs text-gray-500 mt-1">Format: 09XXXXXXXXX or +63XXXXXXXXXX</p>
                     </div>
 
-                    <div class="input-field">
-                        <label for="date_of_birth">Date of Birth</label>
-                        <i class="fas fa-calendar input-icon"></i>
-                        <input type="date" name="date_of_birth" id="date_of_birth" required>
-                    </div>
-
-                    <div class="input-field">
-                        <label for="age">Age</label>
-                        <i class="fas fa-birthday-cake input-icon"></i>
-                        <input type="number" name="age" id="age" required min="18" max="100" placeholder="Your current age">
-            </div>
-
-                    <div class="input-field">
-                        <label for="drink_preference">SelectDrink</label>
-                        <i class="fas fa-glass-martini-alt input-icon"></i>
-                        <select name="drink_preference" id="drink_preference">
-                            <option value="">Select Drink Preference</option>
-                            <option value="gin">Gin  joke lang Tubig</option>
-                            <option value="tanduay">Tanduay</option>
-                            <option value="emperador">Emperador</option>
-                            <option value="red_horse">Red Horse</option>
-                            <option value="san_miguel">San Miguel</option>
-                            <option value="none">None</option>
-                        </select>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="input-field">
+                            <label for="date_of_birth">Date of Birth</label>
+                            <input type="date" 
+                                   name="date_of_birth" 
+                                   id="date_of_birth" 
+                                   required 
+                                   class="w-full h-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="input-field">
+                            <label for="age">Age</label>
+                            <input type="number" 
+                                   name="age" 
+                                   id="age" 
+                                   min="18" 
+                                   max="100" 
+                                   class="w-full h-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
-
-                    <div class="input-field">
-                        <label for="gender">Gender</label>
-                        <i class="fas fa-venus-mars input-icon"></i>
-                        <select name="gender" id="gender" required>
-                            <option value="">Select Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="non_binary">Non-binary</option>
-                            <option value="other">Other</option>
-                            <option value="prefer_not_to_say">Prefer not to say</option>
-                            <option value="crossaint">Crossaint</option>
-                            <option value="email">Email</option>
-                            <option value="mechanic">Mechanic</option>
-                            <option value="wallmart_bag">Wallmart Bag</option>
-                        </select>
-                    </div>
-
-                    <div class="input-field">
-                        <label for="nationality">Nationality</label>
-                        <i class="fas fa-globe input-icon"></i>
-                        <select name="nationality" id="nationality" required>
-                            <option value="">Select Nationality</option>
-                            <option value="Filipino">Filipino</option>
-                            <option value="American">American</option>
-                            <option value="Chinese">Chinese</option>
-                            <option value="Japanese">Japanese</option>
-                            <option value="Korean">Korean</option>
-                            <option value="British">British</option>
-                            <option value="Australian">Australian</option>
-                            <option value="Canadian">Canadian</option>
-                            <option value="Other">Other</option>
-                            </select>
-                        </div>
-
-                    <div class="input-field">
-                        <label for="address">Address</label>
-                        <i class="fas fa-home input-icon"></i>
-                        <input type="text" name="address" id="address" required placeholder="123 Main St, City, Province">
-                    </div>
-
-                    <div class="flex justify-end mt-6">
-                        <button type="button" class="btn-next" onclick="nextStep(1, 2)">
-                            Continue to Boat Details <i class="fas fa-arrow-right ml-2"></i>
-                        </button>
-                        </div>
-                    </div>
-                
-                <!-- Step 2: Boat Information -->
-                <div class="form-step" id="step2">
-                    <h3 class="step-title">Boat Information (Optional)</h3>
-                    
-                    <div class="input-field">
-                        <label for="boat_type">Boat Type</label>
-                        <i class="fas fa-ship input-icon"></i>
-                        <select name="boat_type" id="boat_type">
-                            <option value="">Select Boat Type</option>
-                            <option value="speedboat">Speedboat</option>
-                            <option value="yacht">Yacht</option>
-                            <option value="fishing_boat">Fishing Boat</option>
-                            <option value="pontoon">Pontoon</option>
-                            <option value="sailboat">Sailboat</option>
-                            <option value="other">Other</option>
-                        </select>
             </div>
 
-                    <div class="input-field">
-                        <label for="boat_name">Boat Name</label>
-                        <i class="fas fa-tag input-icon"></i>
-                        <input type="text" name="boat_name" id="boat_name" placeholder="e.g. Sea Breeze, Island Explorer">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="input-field">
+                            <label for="gender">Gender</label>
+                            <select name="gender" id="gender" required class="w-full h-10 border rounded-md bg-white px-2">
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <input type="text" id="other_gender" name="other_gender" placeholder="Please specify your gender" class="w-full h-10 border rounded-md mt-2 px-2 hidden">
+                </div>
+                        <div class="input-field">
+                            <label for="nationality">Nationality</label>
+                            <select name="nationality" id="nationality" required class="w-full h-10 border rounded-md bg-white px-2">
+                                <option value="">Select Nationality</option>
+                                <option value="Filipino">Filipino</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <input type="text" id="other_nationality" name="other_nationality" placeholder="Please specify your nationality" class="w-full h-10 border rounded-md mt-2 px-2 hidden">
+                        </div>
                             </div>
 
                     <div class="input-field">
-                        <label for="boat_capacity">Boat Capacity (Number of People)</label>
-                        <i class="fas fa-users input-icon"></i>
-                        <input type="number" name="boat_capacity" id="boat_capacity" min="1" max="100" placeholder="e.g. 10">
+                        <label for="address">Address</label>
+                        <textarea name="address" id="address" required placeholder="Enter your complete address" class="w-full h-20 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 p-2"></textarea>
                     </div>
 
-                    <div class="input-field">
-                        <label for="boat_description">Boat Description</label>
-                        <i class="fas fa-align-left input-icon"></i>
-                        <textarea name="boat_description" id="boat_description" rows="3" placeholder="Describe your boat and its features" class="pt-3"></textarea>
-                </div>
-
-                    <div class="flex justify-between mt-6">
-                        <button type="button" class="btn-prev" onclick="prevStep(2, 1)">
-                            <i class="fas fa-arrow-left mr-2"></i> Back to Personal Info
-                    </button>
-                        <button type="button" class="btn-next" onclick="nextStep(2, 3)">
+                    <div class="flex justify-end mt-4">
+                        <button type="button" class="btn-next">
                             Continue to Set Password <i class="fas fa-arrow-right ml-2"></i>
-                    </button>
-                </div>
-            </div>
+                                </button>
+                        </div>
+                    </div>
 
-                <!-- Step 3: Set Password -->
-                <div class="form-step" id="step3">
+                <!-- Step 2: Set Password -->
+                <div class="form-step" id="step2">
                     <h3 class="step-title">Set Password</h3>
                     
                     <div class="input-field">
                         <label for="password">Password</label>
-                        <i class="fas fa-lock input-icon"></i>
-                        <input type="password" name="password" id="password" required placeholder="Create a strong password">
-    </div>
+                        <input type="password" name="password" id="password" required placeholder="Enter at least 8 characters">
+                    </div>
 
                     <div class="input-field">
                         <label for="confirm_password">Confirm Password</label>
-                        <i class="fas fa-lock input-icon"></i>
-                        <input type="password" name="confirm_password" id="confirm_password" required placeholder="Confirm your password">
-            </div>
-            
-                    <div class="mb-6">
-                        <div class="flex items-center">
-                            <input type="checkbox" id="request_admin" name="request_admin" value="yes" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                            <label for="request_admin" class="ml-2 block text-sm text-gray-700">
-                                Request Admin Access
-                        </label>
+                        <input type="password" name="confirm_password" id="confirm_password" required placeholder="Re-enter your password">
                 </div>
-                        <p class="text-xs text-gray-500 mt-1">Check this if you want to request administrator privileges. An existing admin will need to approve your request. <strong>Note: The system is limited to a maximum of 3 admin accounts.</strong></p>
-            </div>
-            
-                    <div class="flex justify-between mt-6">
-                        <button type="button" class="btn-prev" onclick="prevStep(3, 2)">
-                            <i class="fas fa-arrow-left mr-2"></i> Back to Boat Details
+
+                    <div class="input-field">
+                        <label class="flex items-center">
+                            <input type="checkbox" id="request_admin" name="request_admin" value="yes" class="mr-2">
+                            <span>Request Admin Access</span>
+                        </label>
+                        <p class="text-sm text-gray-500 mt-1">Note: Limited to 3 admin accounts. Requires approval.</p>
+                </div>
+
+                    <div class="flex justify-between mt-4">
+                        <button type="button" class="btn-prev">
+                            <i class="fas fa-arrow-left mr-2"></i> Back
                     </button>
-                        <button type="submit" id="submit-btn" class="btn-submit">
+                        <button type="submit" class="btn-submit">
                             <i class="fas fa-user-plus mr-2"></i> Complete Registration
                     </button>
                 </div>
             </div>
         </form>
 
-            <div class="mt-8 text-center flex justify-center space-x-4">
-                <a href="../interface.php" class="link-muted flex items-center">
-                    <i class="fas fa-arrow-left mr-1"></i>
-                    Back to Home
+            <div class="mt-4 text-center">
+                <a href="../interface.php" class="text-sm text-gray-500 hover:text-indigo-500">
+                    <i class="fas fa-arrow-left mr-1"></i> Back to Home
                 </a>
-                <span class="link-divider">|</span>
-                <a href="../login user/login.php" class="link-muted flex items-center">
-                    <i class="fas fa-sign-in-alt mr-1"></i>
-                    Already have an account? Login
+                <span class="mx-2 text-gray-300">|</span>
+                <a href="../login user/login.php" class="text-sm text-gray-500 hover:text-indigo-500">
+                    Already have an account? Login <i class="fas fa-sign-in-alt ml-1"></i>
                 </a>
+            </div>
         </div>
-    </div>
     </div>
 
     <script>
-        // Make step indicators clickable
         document.addEventListener('DOMContentLoaded', function() {
-            // Add click events to step indicators
-            document.querySelectorAll('.step').forEach(function(step) {
-                step.addEventListener('click', function() {
-                    const stepNum = parseInt(this.getAttribute('data-step'));
-                    const currentStep = parseInt(document.querySelector('.form-step.active').id.replace('step', ''));
-                    
-                    // Only allow clicking on completed steps or the next available step
-                    if (stepNum < currentStep || (stepNum === currentStep + 1 && validateStep(currentStep))) {
-                        // Hide current step
-                        document.getElementById('step' + currentStep).classList.remove('active');
-                        
-                        // Show clicked step
-                        document.getElementById('step' + stepNum).classList.add('active');
-                        
-                        // Update progress
-                        updateProgress(stepNum);
-                        
-                        // Scroll to top
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Add validation styles
+            const style = document.createElement('style');
+            style.textContent = `
+                .input-field.error input,
+                .input-field.error select,
+                .input-field.error textarea {
+                    border-color: #ef4444;
+                    background-color: #fef2f2;
+                }
+                .error-message {
+                    color: #ef4444;
+                    font-size: 0.75rem;
+                    margin-top: 0.25rem;
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Function to update progress
+            function updateProgress(step) {
+                const progress = document.getElementById('registration-progress');
+                const percentage = (step === 1) ? '50%' : '100%';
+                progress.style.width = percentage;
+
+                // Update step indicators
+                document.querySelectorAll('.step').forEach((el, index) => {
+                    if (index + 1 === step) {
+                        el.classList.add('active');
+                    } else {
+                        el.classList.remove('active');
                     }
                 });
+            }
+
+            // Function to show/hide steps
+            function showStep(step) {
+                document.querySelectorAll('.form-step').forEach(el => {
+                    el.classList.remove('active');
+                });
+                document.getElementById('step' + step).classList.add('active');
+                updateProgress(step);
+            }
+
+            // Validation function for required fields
+            function validateStepFields(stepNumber) {
+                const step = document.getElementById('step' + stepNumber);
+                const requiredFields = step.querySelectorAll('input[required], select[required], textarea[required]');
+                let isValid = true;
+                let emptyFields = [];
+
+                requiredFields.forEach(field => {
+                    const inputField = field.closest('.input-field');
+                    const errorMessage = inputField.querySelector('.error-message') || document.createElement('div');
+                    
+                    if (!errorMessage.classList.contains('error-message')) {
+                        errorMessage.className = 'error-message';
+                        inputField.appendChild(errorMessage);
+                    }
+
+                    // Clear previous error state
+                    inputField.classList.remove('error');
+                    errorMessage.style.display = 'none';
+
+                    // Validate empty fields
+                    if (!field.value.trim()) {
+                        isValid = false;
+                        inputField.classList.add('error');
+                        errorMessage.textContent = 'This field is required';
+                        errorMessage.style.display = 'block';
+                        const label = inputField.querySelector('label');
+                        emptyFields.push(label ? label.textContent : field.name);
+                    }
+
+                    // Additional validation for specific fields
+                    if (field.type === 'email' && field.value.trim()) {
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        if (!emailRegex.test(field.value)) {
+                            isValid = false;
+                            inputField.classList.add('error');
+                            errorMessage.textContent = 'Please enter a valid email address';
+                            errorMessage.style.display = 'block';
+                        }
+                    }
+
+                    if (field.id === 'phone_number_input' && field.value.trim()) {
+                        if (field.value.length !== 9) {
+                            isValid = false;
+                            inputField.classList.add('error');
+                            errorMessage.textContent = 'Phone number must be 9 digits';
+                            errorMessage.style.display = 'block';
+                        }
+                    }
+
+                    // Password validation in step 2
+                    if (stepNumber === 2) {
+                        if (field.id === 'password' && field.value.length < 8) {
+                            isValid = false;
+                            inputField.classList.add('error');
+                            errorMessage.textContent = 'Password must be at least 8 characters';
+                            errorMessage.style.display = 'block';
+                        }
+                        if (field.id === 'confirm_password') {
+                            const password = document.getElementById('password').value;
+                            if (field.value !== password) {
+                                isValid = false;
+                                inputField.classList.add('error');
+                                errorMessage.textContent = 'Passwords do not match';
+                                errorMessage.style.display = 'block';
+                            }
+                        }
+                    }
+                });
+
+                if (!isValid && emptyFields.length > 0) {
+                    Swal.fire({
+                        title: 'Required Fields Empty',
+                        html: 'Please fill in the following fields:<br><br>' + emptyFields.join('<br>'),
+                        icon: 'warning',
+                        confirmButtonColor: '#3b82f6'
+                    });
+                }
+
+                return isValid;
+            }
+
+            // Navigation functions
+            function nextStep(current, next) {
+                if (validateStepFields(current)) {
+                    showStep(next);
+                }
+            }
+
+            function prevStep(current, prev) {
+                showStep(prev);
+            }
+
+            // Date of birth and age calculation
+            const dobInput = document.getElementById('date_of_birth');
+            const ageInput = document.getElementById('age');
+
+            // Set max date to 18 years ago
+            const today = new Date();
+            const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+            dobInput.max = maxDate.toISOString().split('T')[0];
+
+            function calculateAge(birthDate) {
+                const today = new Date();
+                const dob = new Date(birthDate);
+                let age = today.getFullYear() - dob.getFullYear();
+                const m = today.getMonth() - dob.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                    age--;
+                }
+                return age;
+            }
+
+            function calculateDateOfBirth(age) {
+                if (!age || age < 18 || age > 100) return '';
+                
+                const today = new Date();
+                // Set birth date to today's date minus the age in years
+                let birthYear = today.getFullYear() - age;
+                let birthDate = new Date(birthYear, today.getMonth(), today.getDate());
+                
+                // Ensure the calculated age matches the input age
+                let calculatedAge = calculateAge(birthDate);
+                if (calculatedAge > age) {
+                    // If calculated age is too high, add one year to birth year
+                    birthYear--;
+                    birthDate = new Date(birthYear, today.getMonth(), today.getDate());
+                }
+                
+                return birthDate.toISOString().split('T')[0];
+            }
+
+            // Calculate age when date of birth changes
+            dobInput.addEventListener('change', function() {
+                if (this.value) {
+                    const age = calculateAge(this.value);
+                    if (age >= 18 && age <= 100) {
+                        ageInput.value = age;
+                    } else {
+                        Swal.fire({
+                            title: 'Age Restriction',
+                            text: age < 18 ? 'You must be at least 18 years old to register.' : 'Please enter a valid age (up to 100 years).',
+                            icon: 'warning',
+                            confirmButtonColor: '#3b82f6'
+                        });
+                        this.value = '';
+                        ageInput.value = '';
+                    }
+                }
             });
-            
+
+            // Calculate date of birth when age changes
+            ageInput.addEventListener('input', function() {
+                const age = parseInt(this.value);
+                if (!isNaN(age)) {
+                    if (age >= 18 && age <= 100) {
+                        const dob = calculateDateOfBirth(age);
+                        if (dob) {
+                            dobInput.value = dob;
+                            // Remove any error styling
+                            const inputField = this.closest('.input-field');
+                            inputField.classList.remove('error');
+                            const errorMessage = inputField.querySelector('.error-message');
+                            if (errorMessage) {
+                                errorMessage.style.display = 'none';
+                            }
+                        }
+                    } else {
+                        Swal.fire({
+                            title: age < 18 ? 'Age Restriction' : 'Invalid Age',
+                            text: age < 18 ? 'You must be at least 18 years old to register.' : 'Please enter an age between 18 and 100.',
+                            icon: 'warning',
+                            confirmButtonColor: '#3b82f6'
+                        });
+                        this.value = '';
+                        dobInput.value = '';
+                    }
+                    } else {
+                    dobInput.value = '';
+                }
+            });
+
+            // Handle "Other" options
+            function setupOtherField(selectId, otherId) {
+                const select = document.getElementById(selectId);
+                const otherInput = document.getElementById(otherId);
+                
+                if (!select || !otherInput) return;
+
+                // Show/hide other input when select changes
+                select.addEventListener('change', function() {
+                    if (this.value === 'Other') {
+                        otherInput.style.display = 'block';
+                        otherInput.classList.remove('hidden');
+                        otherInput.required = true;
+                        otherInput.value = ''; // Clear previous value
+                        setTimeout(() => otherInput.focus(), 0); // Focus the input
+                } else {
+                        otherInput.style.display = 'none';
+                        otherInput.classList.add('hidden');
+                        otherInput.required = false;
+                        otherInput.value = '';
+                    }
+                });
+
+                // Check initial state
+                if (select.value === 'Other') {
+                    otherInput.style.display = 'block';
+                    otherInput.classList.remove('hidden');
+                    otherInput.required = true;
+                }
+            }
+
+            // Setup all "Other" fields
+            setupOtherField('suffix', 'other_suffix');
+            setupOtherField('gender', 'other_gender');
+            setupOtherField('nationality', 'other_nationality');
+
+            // Form submission handling
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Validate all steps before submission
+                if (!validateStepFields(1) || !validateStepFields(2)) {
+                    return;
+                }
+
+                // Handle "Other" options before submission
+                ['suffix', 'gender', 'nationality'].forEach(field => {
+                    const select = document.getElementById(field);
+                    const otherInput = document.getElementById(`other_${field}`);
+                    if (select && otherInput && select.value === 'Other') {
+                        const otherValue = otherInput.value.trim();
+                        if (otherValue) {
+                            select.value = otherValue;
+                        }
+                    }
+                });
+
+                // Continue with form submission
+                            const formData = new FormData(this);
+                formData.append('form_submitted', 'true');
+
+                fetch(form.action, {
+                                method: 'POST',
+                                body: formData
+                            })
+                .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire({
+                                        title: 'Registration Successful!',
+                            text: 'Welcome to Carles Tourism!',
+                                        icon: 'success',
+                            confirmButtonColor: '#3b82f6',
+                            confirmButtonText: 'Continue to Dashboard'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                window.location.href = '../../../Dashboards/User Dashboard/userdashboard.php';
+                                        }
+                                    });
+                                } else {
+                                    Swal.fire({
+                            title: 'Error!',
+                            text: data.message,
+                                        icon: 'error',
+                            confirmButtonColor: '#3b82f6',
+                            confirmButtonText: 'OK'
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                Swal.fire({
+                        title: 'Error!',
+                        text: 'An error occurred. Please try again.',
+                                    icon: 'error',
+                        confirmButtonColor: '#3b82f6',
+                        confirmButtonText: 'OK'
+                                });
+                            });
+            });
+
+            // Add click event listeners to continue buttons
+            document.querySelectorAll('.btn-next').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const currentStep = parseInt(this.closest('.form-step').id.replace('step', ''));
+                    const nextStepNum = currentStep + 1;
+                    nextStep(currentStep, nextStepNum);
+                });
+            });
+
+            // Add click event listeners to back buttons
+            document.querySelectorAll('.btn-prev').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const currentStep = parseInt(this.closest('.form-step').id.replace('step', ''));
+                    const prevStepNum = currentStep - 1;
+                    prevStep(currentStep, prevStepNum);
+                });
+            });
+
             // Initialize steps visibility
             updateProgress(1);
-        });
-        
-        // Validate the current step
-        function validateStep(stepNum) {
-            if (stepNum === 1) {
-                // Validate personal info
-                const firstName = document.getElementById('first_name').value.trim();
-                const lastName = document.getElementById('last_name').value.trim();
-                const email = document.getElementById('email').value.trim();
-                const phoneInput = document.getElementById('phone_number_input').value.trim();
-                const dob = document.getElementById('date_of_birth').value;
-                const age = document.getElementById('age').value;
-                const gender = document.getElementById('gender').value;
-                const address = document.getElementById('address').value.trim();
-                
-                if (!firstName || !lastName || !email || !phoneInput || !dob || !age || !gender || !address) {
-                    showError('Please fill in all required fields before proceeding.');
-                    return false;
-                }
-                
-                // Email validation
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(email)) {
-                    showError('Please enter a valid email address.');
-                    return false;
-                }
-                
-                // Phone validation
-                if (phoneInput.length < 9) {
-                    showError('Please enter a valid phone number.');
-                    return false;
-                }
-                
-                // Update the full phone number
-                updatePhoneNumber();
-                
-                // Age validation
-                if (parseInt(age) < 18) {
-                    showError('You must be at least 18 years old to register.');
-                    return false;
-                }
-                
-                return true;
-            }
-            
-            return true; // Other steps don't need validation (boat info is optional)
-        }
-        
-        // Simple flag to track if a form submission is in progress
-        let isSubmitting = false;
-        
-        // Update progress bar and step indicators
-        function updateProgress(stepNum) {
-            const totalSteps = 3;
-            const progressPercent = ((stepNum - 1) / (totalSteps - 1)) * 100;
-            document.getElementById('registration-progress').style.width = progressPercent + '%';
-            
-            // Update step indicators
-            document.querySelectorAll('.step').forEach(function(step) {
-                const stepNumber = parseInt(step.getAttribute('data-step'));
-                step.classList.remove('active', 'completed');
-                
-                if (stepNumber === stepNum) {
-                    step.classList.add('active');
-                } else if (stepNumber < stepNum) {
-                    step.classList.add('completed');
-                    const circle = step.querySelector('.step-circle');
-                    circle.innerHTML = '<i class="fas fa-check"></i>';
-                } else {
-                    const circle = step.querySelector('.step-circle');
-                    circle.innerHTML = stepNumber;
-                }
-            });
-        }
-
-        // Display error message
-        function showError(message) {
-            const errorBox = document.getElementById('error-message');
-            const errorText = document.getElementById('error-text');
-            errorText.textContent = message;
-            errorBox.classList.remove('hidden');
-            
-            // Auto-hide after 5 seconds
-            setTimeout(() => {
-                errorBox.classList.add('hidden');
-            }, 5000);
-            
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // Switch between steps
-        function nextStep(currentStep, nextStep) {
-            // Validate current step
-            if (currentStep === 1) {
-                if (!validateStep(1)) {
-                    return false;
-                }
-            } else if (currentStep === 2) {
-                // Boat info is optional, no validation required
-            }
-            
-            // Hide current step
-            document.getElementById('step' + currentStep).classList.remove('active');
-            
-            // Show next step
-            document.getElementById('step' + nextStep).classList.add('active');
-            
-            // Update progress
-            updateProgress(nextStep);
-            
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            return true;
-        }
-
-        function prevStep(currentStep, prevStep) {
-            // Hide current step
-            document.getElementById('step' + currentStep).classList.remove('active');
-            
-            // Show previous step
-            document.getElementById('step' + prevStep).classList.add('active');
-            
-            // Update progress
-            updateProgress(prevStep);
-            
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // Calculate age from date of birth
-        document.getElementById('date_of_birth').addEventListener('change', function() {
-            const dob = new Date(this.value);
-            const today = new Date();
-            let age = today.getFullYear() - dob.getFullYear();
-            const monthDiff = today.getMonth() - dob.getMonth();
-            
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
-                age--;
-            }
-            
-            document.getElementById('age').value = age;
-        });
-        
-        // Handle phone number format
-        function updatePhoneNumber() {
-            const prefix = document.getElementById('phone_prefix').value;
-            const input = document.getElementById('phone_number_input').value.replace(/\D/g, '');
-            
-            // Remove the first digit if it's 0 and prefix is +63
-            let phoneDigits = input;
-            if (prefix === '+63' && input.startsWith('0')) {
-                phoneDigits = input.substring(1);
-            }
-            
-            // Combine prefix and number
-            const fullNumber = prefix + phoneDigits;
-            document.getElementById('full_phone_number').value = fullNumber;
-            
-            return fullNumber;
-        }
-        
-        // Set up event listeners for phone number
-        document.getElementById('phone_prefix').addEventListener('change', updatePhoneNumber);
-        document.getElementById('phone_number_input').addEventListener('input', updatePhoneNumber);
-        
-        // Initialize the phone number field
-        updatePhoneNumber();
-
-        // Fallback for direct form submission without AJAX
-        // This adds a query parameter that will show if form was directly submitted
-        if (window.location.search.includes('form_submitted=true')) {
-            // Check URL for error or success messages
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('error')) {
-                showError(decodeURIComponent(urlParams.get('error')));
-            } else if (urlParams.has('success')) {
-                Swal.fire({
-                    title: 'Registration Successful!',
-                    text: decodeURIComponent(urlParams.get('success')),
-                    icon: 'success',
-                    confirmButtonColor: '#4f46e5',
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = '../login user/login.php';
-                    }
-                });
-            }
-        }
-
-        // Form submission handling
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            // Only prevent default if we haven't already started submitting
-            if (!isSubmitting) {
-                e.preventDefault();
-                
-                // Make sure the phone number is formatted correctly
-                updatePhoneNumber();
-                
-                // Validate password step
-                const password = document.getElementById('password').value;
-                const confirmPassword = document.getElementById('confirm_password').value;
-                
-                if (!password || !confirmPassword) {
-                    showError('Please enter a password and confirm it.');
-                    return false;
-                }
-                
-                if (password !== confirmPassword) {
-                    showError('Passwords do not match.');
-                    return false;
-                }
-                
-                if (password.length < 8) {
-                    showError('Password must be at least 8 characters long.');
-                    return false;
-                }
-                
-                // Show loading state
-                const submitBtn = document.getElementById('submit-btn');
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
-                
-                // Set the flag that we're submitting
-                isSubmitting = true;
-                
-                // Add a hidden field to indicate this is a direct submission
-                const formSubmittedInput = document.createElement('input');
-                formSubmittedInput.type = 'hidden';
-                formSubmittedInput.name = 'form_submitted';
-                formSubmittedInput.value = 'true';
-                this.appendChild(formSubmittedInput);
-                
-                // Submit the form directly
-                    setTimeout(() => {
-                    this.submit();
-                    }, 500);
-            }
         });
     </script>
 </body>

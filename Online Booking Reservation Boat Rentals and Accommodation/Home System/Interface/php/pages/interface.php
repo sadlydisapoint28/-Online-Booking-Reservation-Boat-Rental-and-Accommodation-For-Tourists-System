@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Check if user is coming from loading screen
 if (!isset($_GET['loaded']) && !isset($_SERVER['HTTP_REFERER'])) {
     header("Location: ../../Loading-Screen/loading.html");
@@ -6,8 +6,7 @@ if (!isset($_GET['loaded']) && !isset($_SERVER['HTTP_REFERER'])) {
 }
 
 require_once('../config/connect.php');
-// Hindi na muna gagamitin ang existing header
-// include '../../../php/includes/header.php';
+
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -24,1406 +23,8 @@ require_once('../config/connect.php');
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../../css/interface.css">
-    <!-- Inline styles for section backgrounds -->
-    <style>
-        :root {
-            --color-primary: #3282b8;
-            --color-primary-dark: #2673a8;
-            --color-primary-rgb: 50, 130, 184;
-            --color-secondary: #102030;
-            --color-success: #28a745;
-            --color-danger: #dc3545;
-            --color-warning: #ffc107;
-            --color-text: #ffffff;
-            --color-text-muted: rgba(255, 255, 255, 0.7);
-            --color-background: #000000;
-        }
-        
-        /* Fix parallax scroll and background overlap issues */
-        .background-image-container {
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background-image: url('../../img/background system.jpg');
-            background-size: cover; 
-            background-position: center; 
-            background-repeat: no-repeat; 
-            z-index: -10;
-            transition: opacity 0.5s ease;
-            visibility: visible;
-        }
-        
-        /* Improved section handling */
-        .section-bg-sequence-1 {
-            position: relative;
-            z-index: 1;
-            background-color: transparent !important;
-        }
-        
-        .section-bg-sequence-2 {
-            position: relative;
-            z-index: 2;
-            background-color: #102030 !important;
-        }
-        
-        .booking-section-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('../../img/bcground2.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            z-index: -9;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            visibility: hidden;
-        }
-        
-        /* Make booking section have proper stacking context */
-        .booking-form-section {
-            position: relative;
-            z-index: 3;
-            background: transparent !important;
-            padding: 80px 0;
-        }
-        
-        /* Ensure booking section has a proper contrast with background */
-        .booking-form-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.8); /* Darker overlay for better contrast */
-            z-index: -1;
-        }
-        
-        /* Improved form styles for better visibility */
-        .booking-form-section .section-header {
-            color: #ffffff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-            margin-bottom: 40px;
-        }
-        
-        .booking-form-section .section-header h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-        
-        /* Updated styles to center the booking form */
-        .booking-form-section .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
-        
-        .booking-form-container {
-            position: relative;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        
-        /* Override any conflicting styles */
-        .booking-form {
-            width: 100% !important;
-            max-width: 100% !important;
-            display: block !important;
-        }
-        
-        /* Ensure form steps display properly */
-        .form-step {
-            width: 100%;
-            max-width: 100%;
-        }
-        
-        .booking-form {
-            display: flex;
-            flex-wrap: nowrap;
-            width: max-content;
-            padding: 0 10px;
-        }
-        
-        .booking-form .form-row {
-            display: flex;
-            margin-bottom: 20px;
-            gap: 20px;
-        }
-        
-        .booking-form .form-group {
-            flex: 1;
-        }
-        
-        .booking-form label {
-            display: block;
-            margin-bottom: 8px;
-            color: #ffffff;
-            font-weight: 500;
-            font-size: 1rem;
-        }
-        
-        .booking-form input,
-        .booking-form select,
-        .booking-form textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            background-color: rgba(255, 255, 255, 0.95);
-            color: #000;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .booking-form input:focus,
-        .booking-form select:focus,
-        .booking-form textarea:focus {
-            outline: none;
-            border-color: #3282b8;
-            box-shadow: 0 0 0 3px rgba(50, 130, 184, 0.4);
-            background-color: #fff;
-        }
-        
-        .booking-form .form-section h3 {
-            color: #ffffff;
-            margin-top: 30px;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-            font-size: 1.4rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-        }
-        
-        .booking-form .form-text {
-            display: block;
-            margin-top: 5px;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.85rem;
-        }
-        
-        /* Override Bootstrap's default form-select styling */
-        .booking-form select.form-select {
-            background-image: none;
-        }
-        
-        /* Add more specificity to ensure our styles take precedence */
-        .booking-form-section .booking-form-container .booking-form select {
-            cursor: pointer !important;
-            -webkit-appearance: none !important;
-            -moz-appearance: none !important;
-            appearance: none !important;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
-            background-repeat: no-repeat !important;
-            background-position: right 12px center !important;
-            background-size: 16px !important;
-            padding-right: 40px !important;
-        }
-        
-        /* Remove default arrow in IE10+ */
-        .booking-form select::-ms-expand {
-            display: none;
-        }
-        
-        .booking-form-section .booking-form-container .booking-form select:focus {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%233282b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
-        }
-        
-        .booking-form .services-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .booking-form .service-option {
-            flex-basis: calc(50% - 15px);
-            background-color: rgba(255, 255, 255, 0.15);
-            padding: 15px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .booking-form .service-option:hover {
-            background-color: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-        
-        .booking-form .service-option label {
-            color: #ffffff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-        }
-        
-        .booking-form .service-price {
-            color: #3acfff;
-            font-weight: 700;
-            background-color: rgba(0, 0, 0, 0.2);
-            padding: 4px 8px;
-            border-radius: 4px;
-        }
-        
-        .booking-form .full-width {
-            width: 100%;
-            margin-top: 20px;
-        }
-        
-        .booking-form .form-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-            gap: 15px;
-        }
-        
-        .booking-form .form-actions button {
-            padding: 14px 28px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.1rem;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-        
-        .booking-form .btn-outline {
-            background-color: transparent;
-            border: 2px solid #3282b8;
-            color: #ffffff;
-        }
-        
-        .booking-form .btn-outline:hover {
-            background-color: rgba(50, 130, 184, 0.1);
-        }
-        
-        .booking-form .btn-primary {
-            background-color: #3282b8;
-            border: none;
-            color: #ffffff;
-        }
-        
-        .booking-form .btn-primary:hover {
-            background-color: #2673a8;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .booking-form .terms-link {
-            color: #3282b8;
-            text-decoration: underline;
-        }
-        
-        .booking-summary {
-            background-color: rgba(50, 130, 184, 0.1);
-            padding: 25px;
-            border-radius: 10px;
-            border-left: 4px solid #3282b8;
-            margin-top: 30px;
-        }
-        
-        .booking-summary h3 {
-            color: #ffffff;
-            margin-bottom: 15px;
-        }
-        
-        .booking-summary .summary-content {
-            color: #ffffff;
-        }
-        
-        @media (max-width: 768px) {
-            .booking-form .form-row {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .booking-form .service-option {
-                flex-basis: 100%;
-            }
-        }
-        
-        /* Improved checkbox styling */
-        .booking-form input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
-            cursor: pointer;
-            accent-color: #3282b8;
-        }
-        
-        .booking-form .checkbox-container {
-            display: flex;
-            align-items: center;
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 8px;
-        }
-        
-        .booking-form .checkbox-container label {
-            margin-bottom: 0;
-            display: flex;
-            align-items: center;
-        }
-        
-        /* Custom select styling to fix arrow issues */
-        .booking-form-section .custom-select {
-            -webkit-appearance: none !important;
-            -moz-appearance: none !important;
-            appearance: none !important;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E") !important;
-            background-repeat: no-repeat !important;
-            background-position: calc(100% - 12px) center !important;
-            background-size: 12px !important;
-            padding-right: 35px !important;
-            cursor: pointer !important;
-            color: white !important;
-            background-color: rgba(255, 255, 255, 0.15) !important;
-            border: 1px solid rgba(255, 255, 255, 0.3) !important;
-        }
-        
-        /* Hide browser's default arrow */
-        .booking-form-section select::-ms-expand {
-            display: none;
-        }
-        
-        /* Hide default arrow in Firefox */
-        .booking-form-section .custom-select {
-            text-indent: 0.01px;
-            text-overflow: '';
-        }
-        
-        /* Fix select option text color */
-        .booking-form-section .custom-select option {
-            background-color: #333;
-            color: white;
-        }
-        
-        /* Clear transitions for body state */
-        body.booking-section-active .background-image-container {
-            opacity: 0 !important;
-            visibility: hidden !important;
-        }
-        
-        body.booking-section-active .booking-section-background {
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-        
-        /* Animation for scroll indicator */
-        @keyframes pulse {
-            0% { opacity: 0.6; transform: scale(0.95); }
-            50% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0.6; transform: scale(0.95); }
-        }
-        
-        /* Style the scrollbar for the booking form container */
-        .booking-form-container::-webkit-scrollbar {
-            height: 8px;
-        }
-        
-        .booking-form-container::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-        }
-        
-        .booking-form-container::-webkit-scrollbar-thumb {
-            background: rgba(50, 130, 184, 0.5);
-            border-radius: 4px;
-        }
-        
-        .booking-form-container::-webkit-scrollbar-thumb:hover {
-            background: rgba(50, 130, 184, 0.7);
-        }
-        
-        /* Add navigation buttons to move between form steps */
-        .form-nav-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            width: 100%;
-            padding: 0 10px;
-        }
-        
-        .form-nav-button {
-            background-color: rgba(50, 130, 184, 0.2);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-        
-        .form-nav-button:hover {
-            background-color: rgba(50, 130, 184, 0.5);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-        
-        .form-nav-button:disabled {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.3);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        /* Step indicator dots */
-        .step-indicators {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 20px;
-        }
-        
-        .step-dot {
-            width: 10px;
-            height: 10px;
-            background-color: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .step-dot.active {
-            background-color: #3282b8;
-            transform: scale(1.2);
-        }
-        
-        /* Booking form navigation styling */
-        .nav-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 1rem;
-            width: 100%;
-        }
-        
-        .prev-step, .next-step {
-            background-color: var(--color-primary);
-            color: white;
-            border: none;
-            border-radius: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .prev-step:before {
-            content: "â†";
-        }
-        
-        .next-step:after {
-            content: "â†’";
-        }
-        
-        .prev-step:hover, .next-step:hover {
-            background-color: var(--color-primary-dark);
-            transform: translateY(-2px);
-        }
-        
-        .prev-step:disabled, .next-step:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .step-indicators {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin: 1rem 0;
-        }
-        
-        .step-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: #e0e0e0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .step-dot.active {
-            background-color: var(--color-primary);
-            transform: scale(1.2);
-        }
-        
-        .scroll-indicator {
-            color: var(--color-text);
-            text-align: center;
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
-            animation: pulse 1.5s infinite;
-            transition: opacity 0.5s ease;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
-        }
-        
-        /* Mobile swipe hint */
-        .swipe-hint {
-            display: none;
-            padding: 0.5rem;
-            background-color: rgba(var(--color-primary-rgb), 0.1);
-            border-radius: 0.5rem;
-            text-align: center;
-            margin-bottom: 1rem;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-        
-        .swipe-hint i {
-            animation: swipeAnim 1.5s infinite;
-        }
-        
-        @keyframes swipeAnim {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(10px); }
-        }
-        
-        @media (max-width: 768px) {
-            .swipe-hint {
-                display: flex;
-            }
-        }
-
-        /* Updated booking form styles for proper step navigation */
-        .booking-form-container {
-            position: relative;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 15px;
-            padding: 30px 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            max-width: 100%;
-        }
-
-        /* Step numbers styling */
-        .step-numbers {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
-            position: relative;
-            z-index: 5;
-        }
-
-        .step-numbers:after {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 40px;
-            right: 40px;
-            height: 2px;
-            background-color: rgba(255,255,255,0.2);
-            z-index: -1;
-        }
-
-        .step-number {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .step-number > div {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: rgba(255,255,255,0.3);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-bottom: 8px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        .step-number > span {
-            color: white;
-            font-size: 0.8rem;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .step-number.active > div {
-            background-color: var(--color-primary);
-            transform: scale(1.1);
-        }
-
-        .step-number.active > span {
-            color: var(--color-primary);
-            font-weight: bold;
-        }
-
-        /* Tab content styles */
-        .tab-content {
-            min-height: 400px;
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .tab-pane {
-            display: none;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            background-color: rgba(0, 0, 0, 0.4);
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .tab-pane.active,
-        .tab-pane[style*="display: block"] {
-            display: block;
-            opacity: 1;
-        }
-
-        .tab-pane h3 {
-            color: #ffffff;
-            margin-bottom: 20px;
-            font-size: 1.4rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-            padding-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Form element styles */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: white;
-            font-weight: 500;
-        }
-
-        .form-group input, 
-        .form-group select, 
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background-color: rgba(255, 255, 255, 0.15);
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus, 
-        .form-group select:focus, 
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--color-primary);
-            box-shadow: 0 0 0 2px rgba(50, 130, 184, 0.3);
-            background-color: rgba(255, 255, 255, 0.25);
-        }
-
-        /* For date and select inputs to be more visible */
-        .form-group input[type="date"] {
-            color-scheme: dark;
-        }
-
-        .form-group select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: calc(100% - 12px) center;
-            padding-right: 35px !important;
-        }
-
-        .form-text {
-            display: block;
-            margin-top: 5px;
-            color: var(--color-text-muted);
-            font-size: 0.85rem;
-        }
-
-        .service-option {
-            margin-bottom: 15px;
-            background-color: rgba(255, 255, 255, 0.15);
-            padding: 15px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .service-option:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .checkbox-container {
-            margin-bottom: 25px;
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 8px;
-        }
-
-        .form-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            gap: 15px;
-        }
-
-        .booking-summary {
-            background-color: rgba(50, 130, 184, 0.1);
-            padding: 25px;
-            border-radius: 10px;
-            border-left: 4px solid #3282b8;
-            margin-top: 25px;
-        }
-
-        /* Button styles */
-        .btn {
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 2px solid var(--color-primary);
-            color: var(--color-primary);
-        }
-
-        .btn-outline:hover {
-            background-color: rgba(50, 130, 184, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .btn-primary {
-            background-color: var(--color-primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--color-primary-dark, #2673a8);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-        }
-
-        /* Navigation buttons */
-        .nav-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 25px;
-            width: 100%;
-        }
-
-        .prev-step, .next-step {
-            padding: 12px 25px;
-            background-color: var(--color-primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-
-        .prev-step:hover, .next-step:hover {
-            background-color: var(--color-primary-dark, #2673a8);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-        }
-
-        .prev-step i, .next-step i {
-            transition: transform 0.3s ease;
-        }
-
-        .prev-step:hover i {
-            transform: translateX(-3px);
-        }
-
-        .next-step:hover i {
-            transform: translateX(3px);
-        }
-
-        .prev-step:disabled {
-            background-color: rgba(255,255,255,0.2);
-            color: rgba(255,255,255,0.5);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        /* Progress bar */
-        .form-progress {
-            margin-top: 20px;
-            background-color: rgba(255,255,255,0.2);
-            height: 6px;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            width: 20%;
-            height: 100%;
-            background-color: var(--color-primary);
-            transition: width 0.5s ease;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .step-numbers {
-                gap: 10px;
-                justify-content: flex-start;
-                padding-bottom: 10px;
-                overflow-x: auto;
-            }
-            
-            .step-number {
-                min-width: 60px;
-            }
-            
-            .step-numbers:after {
-                left: 20px;
-                right: 20px;
-            }
-            
-            .tab-pane {
-                padding: 15px;
-            }
-            
-            .prev-step, .next-step {
-                padding: 10px 15px;
-            }
-        }
-
-        /* Fixed booking form layout */
-        .booking-form-container {
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        /* Step indicators row */
-        .step-indicators-row {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            margin-bottom: 30px;
-            padding: 0 10px;
-        }
-
-        /* Line connecting steps */
-        .step-indicators-row:after {
-            content: '';
-            position: absolute;
-            top: 25px;
-            left: 30px;
-            right: 30px;
-            height: 2px;
-            background-color: rgba(255, 255, 255, 0.2);
-            z-index: 1;
-        }
-
-        /* Individual step indicators */
-        .step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            z-index: 2;
-        }
-
-        .step-circle {
-            width: 50px;
-            height: 50px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .step.active .step-circle {
-            background-color: var(--color-primary);
-            transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(50, 130, 184, 0.5);
-        }
-
-        .step-label {
-            color: white;
-            font-size: 0.85rem;
-            text-align: center;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .step.active .step-label {
-            color: var(--color-primary);
-            font-weight: bold;
-        }
-
-        .step.completed .step-circle {
-            background-color: var(--color-success);
-        }
-
-        .step.completed .step-circle:before {
-            content: 'âœ“';
-            font-weight: bold;
-        }
-
-        /* Form steps */
-        .form-step {
-            display: none;
-            background-color: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 20px;
-            transition: opacity 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .form-step.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .form-step h3 {
-            color: #ffffff;
-            margin-bottom: 20px;
-            font-size: 1.4rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            padding-bottom: 10px;
-        }
-
-        /* Form navigation */
-        .form-navigation {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-        .btn-prev, .btn-next {
-            background-color: var(--color-primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 20px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-prev:hover, .btn-next:hover {
-            background-color: var(--color-primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .btn-prev:disabled {
-            background-color: rgba(255, 255, 255, 0.2);
-            color: rgba(255, 255, 255, 0.5);
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .progress-container {
-            flex: 1;
-            height: 6px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
-            margin: 0 15px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background-color: var(--color-primary);
-            width: 20%;
-            transition: width 0.5s ease;
-        }
-
-        /* Form fields and elements */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: white;
-            font-weight: 500;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background-color: rgba(255, 255, 255, 0.15);
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--color-primary);
-            background-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 0 3px rgba(50, 130, 184, 0.3);
-        }
-
-        /* For date inputs */
-        .form-group input[type="date"] {
-            color-scheme: dark;
-        }
-
-        /* For select dropdowns */
-        .form-group select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            padding-right: 35px;
-        }
-
-        .form-text {
-            display: block;
-            margin-top: 5px;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.85rem;
-        }
-
-        /* Service options */
-        .service-option {
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .service-option:hover {
-            background-color: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .service-option label {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 0;
-            cursor: pointer;
-            font-weight: normal;
-        }
-
-        .service-price {
-            color: #3acfff;
-            font-weight: 600;
-            background-color: rgba(0, 0, 0, 0.3);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.9rem;
-        }
-
-        /* Checkbox container */
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        /* Improved checkbox styling */
-        input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
-            cursor: pointer;
-            accent-color: var(--color-primary);
-        }
-
-        /* Booking summary */
-        .booking-summary {
-            background-color: rgba(50, 130, 184, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--color-primary);
-        }
-
-        .booking-summary h4 {
-            color: white;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-        }
-
-        .summary-content {
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .summary-placeholder {
-            color: rgba(255, 255, 255, 0.6);
-            font-style: italic;
-        }
-
-        /* Form actions */
-        .form-actions {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-        }
-
-        .btn {
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 120px;
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 2px solid var(--color-primary);
-            color: white;
-        }
-
-        .btn-outline:hover {
-            background-color: rgba(50, 130, 184, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .btn-primary {
-            background-color: var(--color-primary);
-            border: none;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--color-primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .booking-form-container {
-                padding: 20px 15px;
-            }
-            
-            .step-indicators-row {
-                overflow-x: auto;
-                justify-content: flex-start;
-                padding-bottom: 10px;
-            }
-            
-            .step {
-                min-width: 70px;
-                margin-right: 10px;
-            }
-            
-            .step-indicators-row:after {
-                left: 20px;
-                right: 20px;
-            }
-            
-            .form-step {
-                padding: 15px;
-            }
-            
-            .form-navigation {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .progress-container {
-                width: 100%;
-                margin: 10px 0;
-            }
-            
-            .form-actions {
-                flex-direction: column;
-            }
-            
-            .btn {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .booking-form-container {
-                padding: 20px 15px;
-                max-width: 95%;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .booking-form-container {
-                max-width: 100%;
-            }
-        }
-
-        /* Animation on scroll effects */
-        .animate-on-scroll {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .animate-on-scroll.animated {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .animate-fade-in {
-            opacity: 0;
-            transition: opacity 0.8s ease;
-        }
-
-        .animate-fade-in.animated {
-            opacity: 1;
-        }
-
-        .animate-scale-in {
-            opacity: 0;
-            transform: scale(0.9);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .animate-scale-in.animated {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .delay-100 { transition-delay: 0.1s; }
-        .delay-200 { transition-delay: 0.2s; }
-        .delay-300 { transition-delay: 0.3s; }
-        .delay-400 { transition-delay: 0.4s; }
-        .delay-500 { transition-delay: 0.5s; }
-        .delay-600 { transition-delay: 0.6s; }
-
-        /* Remove our custom animation on scroll effects */
-        .animate-on-scroll,
-        .animate-fade-in,
-        .animate-scale-in {
-            /* Reset these classes so they don't affect anything */
-            opacity: initial;
-            transform: initial;
-            transition: none;
-        }
-
-        .animate-on-scroll.animated,
-        .animate-fade-in.animated,
-        .animate-scale-in.animated {
-            opacity: initial;
-            transform: initial;
-        }
-
-        .delay-100, .delay-200, .delay-300, .delay-400, .delay-500, .delay-600 {
-            transition-delay: 0s;
-        }
-
-        /* Restore original animations and ensure they work */
-        .fade-in-up {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .fade-in-up.scroll-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .delay-200 {
-            transition-delay: 0.2s;
-        }
-
-        .delay-400 {
-            transition-delay: 0.4s;
-        }
-
-        .delay-600 {
-            transition-delay: 0.6s;
-        }
-
-        .scroll-transition {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .scroll-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
+    <!-- Add Swiper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
 </head>
 <body>
     <!-- Background image div for landing page -->
@@ -1445,21 +46,185 @@ require_once('../config/connect.php');
                         <img src="../../img/timbook-carles-tourism.png" alt="Timbook Carles Tourism Logo" width="80" height="80">
                     </a>
                 </div>
+                <div class="nav-container">
                 <div class="nav-links">
                     <ul role="menubar">
                         <li role="menuitem" class="active"><a href="#" aria-current="page">HOME</a></li>
-                        <li role="menuitem"><a href="#">BOAT RENTALS</a></li>
-                        <li role="menuitem"><a href="#">ISLANDS</a></li>
-                        <li role="menuitem"><a href="#">BEACHES</a></li>
                         <li role="menuitem"><a href="#">ABOUT</a></li>
                         <li role="menuitem"><a href="#">GALLERY</a></li>
+                            
+                            <li class="nav-separator"></li>
+                            
+                            <li role="menuitem" class="nav-dropdown">
+                                <a href="#" class="nav-dropdown-toggle">BOAT RENTALS</a>
+                                <div class="nav-dropdown-menu">
+                                    <div class="nav-dropdown-item">
+                                        <a href="#"><i class="fas fa-ship"></i> Boat Types</a>
+                                        <div class="nav-submenu">
+                                            <a href="#"><i class="fas fa-anchor"></i> Small Boats (1-5 pax)</a>
+                                            <a href="#"><i class="fas fa-ship"></i> Medium Boats (6-10 pax)</a>
+                                            <a href="#"><i class="fas fa-ship"></i> Large Boats (11-20 pax)</a>
+                                            <a href="#"><i class="fas fa-ship"></i> Luxury Boats (VIP)</a>
+                                        </div>
+                                    </div>
+                                    <div class="nav-dropdown-item">
+                                        <a href="#"><i class="fas fa-map-marked-alt"></i> Tour Packages</a>
+                                        <div class="nav-submenu">
+                                            <a href="#"><i class="fas fa-umbrella-beach"></i> Island Hopping</a>
+                                            <a href="#"><i class="fas fa-sun"></i> Sunset Cruise</a>
+                                            <a href="#"><i class="fas fa-fish"></i> Fishing Tour</a>
+                                            <a href="#"><i class="fas fa-user-friends"></i> Private Tour</a>
+                                            <a href="#"><i class="fas fa-users"></i> Group Tour</a>
+                                            <a href="#"><i class="fas fa-moon"></i> Overnight Tour</a>
+                                        </div>
+                                    </div>
+                                    <div class="nav-dropdown-item">
+                                        <a href="#"><i class="fas fa-tags"></i> Special Offers</a>
+                                        <div class="nav-submenu">
+                                            <a href="#"><i class="fas fa-earlybirds"></i> Early Bird Discount</a>
+                                            <a href="#"><i class="fas fa-users"></i> Group Discounts</a>
+                                            <a href="#"><i class="fas fa-calendar-alt"></i> Seasonal Promos</a>
+                                            <a href="#"><i class="fas fa-box"></i> Package Deals</a>
+                                            <a href="#"><i class="fas fa-clock"></i> Last Minute Deals</a>
+                                        </div>
+                                    </div>
+                                    <div class="nav-dropdown-item">
+                                        <a href="#"><i class="fas fa-calendar-check"></i> Booking Info</a>
+                                        <div class="nav-submenu">
+                                            <a href="#"><i class="fas fa-book"></i> How to Book</a>
+                                            <a href="#"><i class="fas fa-credit-card"></i> Payment Methods</a>
+                                            <a href="#"><i class="fas fa-times-circle"></i> Cancellation Policy</a>
+                                            <a href="#"><i class="fas fa-file-contract"></i> Terms & Conditions</a>
+                                            <a href="#"><i class="fas fa-question-circle"></i> FAQ</a>
+                                        </div>
+                                    </div>
+                                    <div class="nav-dropdown-item">
+                                        <a href="#"><i class="fas fa-shield-alt"></i> Safety & Guidelines</a>
+                                        <div class="nav-submenu">
+                                            <a href="#"><i class="fas fa-exclamation-triangle"></i> Safety Rules</a>
+                                            <a href="#"><i class="fas fa-toolbox"></i> Equipment Provided</a>
+                                            <a href="#"><i class="fas fa-cloud-sun"></i> Weather Policy</a>
+                                            <a href="#"><i class="fas fa-phone-alt"></i> Emergency Contacts</a>
+                                            <a href="#"><i class="fas fa-file-medical"></i> Insurance Info</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li role="menuitem" class="nav-dropdown">
+                                <a href="#" class="nav-dropdown-toggle">ISLANDS</a>
+                                <div class="nav-dropdown-menu">
+                                    <div class="nav-dropdown-item">
+                                        <a href="#"><i class="fas fa-map-marker-alt"></i>Gigantes Islands</a>
+                                        <div class="nav-submenu">
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Cabugao Gamay</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Antonia Island</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Bantigue Island</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Tangke Lagoon</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Pawikan Cave</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Gigantes Norte</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Gigantes Sur</a>
+                                        </div>
+                                    </div>
+                                    <div class="nav-dropdown-item">
+                                        <a href="#"><i class="fas fa-map-marker-alt"></i>Sicogon Island</a>
+                                        <div class="nav-submenu">
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Sicogon Beach</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Sicogon Peak</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Mangrove Forest</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Local Villages</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Hidden Coves</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Viewing Decks</a>
+                                        </div>
+                                    </div>
+                                    <div class="nav-dropdown-item">
+                                        <a href="#"><i class="fas fa-route"></i>Tour Routes</a>
+                                        <div class="nav-submenu">
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Gigantes Island Hopping</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Sicogon Island Tour</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Combined Island Tour</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Custom Island Route</a>
+                                        </div>
+                                    </div>
+                                    <div class="nav-dropdown-item">
+                                        <a href="#"><i class="fas fa-info-circle"></i>Travel Info</a>
+                                        <div class="nav-submenu">
+                                            <a href="#"><i class="fas fa-chevron-right"></i>From Iloilo City</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>From Roxas City</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>From Estancia</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Travel Requirements</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Boat Schedules</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li role="menuitem" class="nav-dropdown">
+                                <a href="#" class="nav-dropdown-toggle">BEACHES</a>
+                                <div class="nav-dropdown-menu">
+                                    <div class="nav-dropdown-item">
+                                        <a href="#"><i class="fas fa-umbrella-beach"></i>Popular Beaches</a>
+                                        <div class="nav-submenu">
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Sicogon Beach</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Tangke Beach</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Cabugao Gamay Beach</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Bantigue Sandbar</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Antonia Beach</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Calagnaan Beach</a>
+                                        </div>
+                                    </div>
+                                    <div class="nav-dropdown-item">
+                                        <a href="#"><i class="fas fa-swimming-pool"></i>Beach Activities</a>
+                                        <div class="nav-submenu">
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Swimming</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Snorkeling</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Beach Camping</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Sunset Watching</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Beach Photography</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Beach Volleyball</a>
+                                        </div>
+                                    </div>
+                                    <div class="nav-dropdown-item">
+                                        <a href="#"><i class="fas fa-building"></i>Beach Facilities</a>
+                                        <div class="nav-submenu">
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Beach Resorts</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Beach Cottages</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Restaurants</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Restrooms</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Parking Areas</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>First Aid Stations</a>
+                                        </div>
+                                    </div>
+                                    <div class="nav-dropdown-item">
+                                        <a href="#"><i class="fas fa-shield-alt"></i>Beach Safety</a>
+                                        <div class="nav-submenu">
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Lifeguard Services</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Weather Updates</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Emergency Contacts</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Safety Guidelines</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Beach Rules</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Tide Information</a>
+                                        </div>
+                                    </div>
+                                    <div class="nav-dropdown-item">
+                                        <a href="#"><i class="fas fa-directions"></i>Beach Access</a>
+                                        <div class="nav-submenu">
+                                            <a href="#"><i class="fas fa-chevron-right"></i>How to Get There</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Entrance Fees</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Operating Hours</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Best Time to Visit</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Transportation Options</a>
+                                            <a href="#"><i class="fas fa-chevron-right"></i>Parking Information</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
                     </ul>
+                    </div>
                 </div>
                 <div class="nav-right">
                     <div class="secondary-nav">
-                        <a href="#" class="contact-link">CONTACT US</a>
-                        <a href="#" class="book-link">BOOK NOW</a>
-                        <a href="http://localhost/Online%20Booking%20Reservation%20Boat%20Rentals%20and%20Accommodation/Home%20System/Interface/Admin%20and%20User%20Loginup/loginup_admin.php" class="login-link">LOGIN</a>
+                        <a href="#" class="contact-link"><i class="fas fa-envelope"></i>CONTACT US</a>
+                        <a href="#" class="book-link"><i class="fas fa-calendar-check"></i>BOOK NOW</a>
+                        <a href="#" class="login-link"><i class="fas fa-user"></i>LOGIN</a>
                     </div>
                     <div class="social-icons" aria-label="Social media links">
                         <a href="#" aria-label="Information"><i class="fas fa-info-circle" aria-hidden="true"></i></a>
@@ -1486,7 +251,7 @@ require_once('../config/connect.php');
                 <div class="mobile-secondary-nav">
                     <a href="#" class="contact-link">CONTACT US</a>
                     <a href="#" class="book-link">BOOK NOW</a>
-                    <a href="http://localhost/Online%20Booking%20Reservation%20Boat%20Rentals%20and%20Accommodation/Home%20System/Interface/Admin%20and%20User%20Loginup/loginup_admin.php" class="login-link">LOGIN</a>
+                    <a href="../../Admin and User Loginup/loginup_admin.php" class="login-link">LOGIN</a>
                 </div>
                 <div class="mobile-social-icons">
                     <a href="#" aria-label="Information"><i class="fas fa-info-circle" aria-hidden="true"></i></a>
@@ -1500,7 +265,7 @@ require_once('../config/connect.php');
 
 <!-- Hero Section -->
     <main id="main-content">
-        <section class="hero-section section-bg-sequence-1" aria-label="Main banner">
+        <section class="hero-section" aria-label="Main banner">
                 <div class="hero-content">
                     <div class="container">
                         <div class="row align-items-center">
@@ -1593,7 +358,7 @@ require_once('../config/connect.php');
     </main>
 
     <!-- How We Work Section -->
-    <section id="how-we-work" class="how-we-work-section section-bg-sequence-2" style="background-color: #102030;">
+    <section id="how-we-work" class="how-we-work-section" style="background-color: #102030;">
         <div class="container">
             <div class="section-header text-center fade-in-up">
                 <h2 class="section-title">How We Work</h2>
@@ -1699,203 +464,13 @@ require_once('../config/connect.php');
                     </div>
                 </div>
             </div>
-            
-            <div class="cta-container text-center mt-4 fade-in-up delay-500">
-                <p class="mb-3">Have questions about our policies? Feel free to contact us!</p>
-                <a href="#contact" class="btn btn-outline">Contact Us</a>
-            </div>
         </div>
     </section>
 
-    <!-- Booking Form Section -->
-    <section id="booking-form" class="booking-form-section">
-    <div class="container">
-            <div class="section-header fade-in-up">
-                <h2>Book Your Boat</h2>
-                <p>Complete the form below to start your reservation process</p>
-            </div>
-            
-            <!-- Simplified booking form with fixed layout -->
-            <div class="booking-form-container fade-in-up delay-200">
-                <!-- Step indicators -->
-                <div class="step-indicators-row fade-in-up delay-300">
-                    <div class="step active" data-step="1">
-                        <div class="step-circle">1</div>
-                        <div class="step-label">Date & Time</div>
-                    </div>
-                    <div class="step" data-step="2">
-                        <div class="step-circle">2</div>
-                        <div class="step-label">Boat Details</div>
-                    </div>
-                    <div class="step" data-step="3">
-                        <div class="step-circle">3</div>
-                        <div class="step-label">Services</div>
-                </div>
-                    <div class="step" data-step="4">
-                        <div class="step-circle">4</div>
-                        <div class="step-label">Contact</div>
-                    </div>
-                    <div class="step" data-step="5">
-                        <div class="step-circle">5</div>
-                        <div class="step-label">Complete</div>
-                    </div>
-                </div>
-                
-                <!-- Form content -->
-                <form id="boat-booking-form">
-                    <!-- Step 1: Date & Time -->
-                    <div class="form-step active" id="step1">
-                        <h3>1. Select Date & Time</h3>
-                        <div class="form-group">
-                            <label for="tripDate"><i class="fas fa-calendar"></i> Trip Date</label>
-                            <input type="date" id="tripDate" name="tripDate" required min="<?php echo date('Y-m-d'); ?>" max="<?php echo date('Y-m-d', strtotime('+1 year')); ?>">
-                            <small class="form-text">Please select a date within the next year</small>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="tripTime"><i class="fas fa-clock"></i> Trip Time</label>
-                            <select id="tripTime" name="tripTime" required>
-                                <option value="">Select time</option>
-                                <option value="morning">Morning (8:00 AM)</option>
-                                <option value="midday">Midday (11:00 AM)</option>
-                                <option value="afternoon">Afternoon (2:00 PM)</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <!-- Step 2: Boat Details -->
-                    <div class="form-step" id="step2">
-                        <h3>2. Boat Details</h3>
-                        <div class="form-group">
-                            <label for="boatType"><i class="fas fa-ship"></i> Boat Type</label>
-                            <select id="boatType" name="boatType" required>
-                                <option value="">Select boat</option>
-                                <option value="small">Small Boat (5-8 persons)</option>
-                                <option value="medium">Medium Boat (10-15 persons)</option>
-                                <option value="large">Large Boat (18-25 persons)</option>
-                                <option value="premium">Premium Boat (10-12 persons)</option>
-                                <option value="speed">Speed Boat (6-8 persons)</option>
-                                <option value="yacht">Day Yacht (up to 20 persons)</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="passengers"><i class="fas fa-users"></i> Number of Passengers</label>
-                            <input type="number" id="passengers" name="passengers" min="1" max="30" required>
-                            <small class="form-text">Enter the number of people in your group (1-30)</small>
-                    </div>
-                    
-                        <div class="form-group">
-                            <label for="duration"><i class="fas fa-hourglass-half"></i> Duration</label>
-                            <select id="duration" name="duration" required>
-                                <option value="">Select duration</option>
-                                <option value="halfday">Half Day (4 hours)</option>
-                                <option value="fullday">Full Day (8 hours)</option>
-                                <option value="custom">Custom Duration</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <!-- Step 3: Additional Services -->
-                    <div class="form-step" id="step3">
-                        <h3>3. Additional Services</h3>
-                            <div class="service-option">
-                                <input type="checkbox" id="tourGuide" name="services[]" value="tourGuide">
-                            <label for="tourGuide">Tour Guide <span class="service-price">+ â‚±500</span></label>
-                            </div>
-                            
-                            <div class="service-option">
-                                <input type="checkbox" id="lunchPackage" name="services[]" value="lunchPackage">
-                            <label for="lunchPackage">Lunch Package <span class="service-price">+ â‚±300 per person</span></label>
-                            </div>
-                            
-                            <div class="service-option">
-                                <input type="checkbox" id="snorkelingGear" name="services[]" value="snorkelingGear">
-                            <label for="snorkelingGear">Snorkeling Gear <span class="service-price">+ â‚±150 per set</span></label>
-                            </div>
-                            
-                            <div class="service-option">
-                                <input type="checkbox" id="photographer" name="services[]" value="photographer">
-                            <label for="photographer">Photographer <span class="service-price">+ â‚±1,500</span></label>
-                            </div>
-                            
-                            <div class="service-option">
-                                <input type="checkbox" id="karaoke" name="services[]" value="karaoke">
-                            <label for="karaoke">Karaoke Set <span class="service-price">+ â‚±800</span></label>
-                            </div>
-                            
-                            <div class="service-option">
-                                <input type="checkbox" id="icebox" name="services[]" value="icebox">
-                            <label for="icebox">Ice Box with Ice <span class="service-price">+ â‚±200</span></label>
-                        </div>
-                    </div>
-                    
-                    <!-- Step 4: Contact Information -->
-                    <div class="form-step" id="step4">
-                        <h3>4. Contact Information</h3>
-                            <div class="form-group">
-                                <label for="fullName"><i class="fas fa-user"></i> Full Name</label>
-                                <input type="text" id="fullName" name="fullName" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
-                                <input type="email" id="email" name="email" required>
-                        </div>
-                        
-                            <div class="form-group">
-                                <label for="phone"><i class="fas fa-phone"></i> Phone Number</label>
-                                <input type="tel" id="phone" name="phone" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="nationality"><i class="fas fa-globe"></i> Nationality</label>
-                                <input type="text" id="nationality" name="nationality">
-                        </div>
-                    </div>
-                    
-                    <!-- Step 5: Complete Booking -->
-                    <div class="form-step" id="step5">
-                        <h3>5. Complete Booking</h3>
-                        <div class="form-group">
-                            <label for="specialRequests"><i class="fas fa-comment"></i> Special Requests</label>
-                        <textarea id="specialRequests" name="specialRequests" rows="3"></textarea>
-                    </div>
-                    
-                        <div class="checkbox-container">
-                            <input type="checkbox" id="termsAgreed" name="termsAgreed" required>
-                            <label for="termsAgreed">I agree to the <a href="#" class="terms-link">Terms and Conditions</a> and <a href="#" class="terms-link">Privacy Policy</a></label>
-                        </div>
-                        
-                        <div class="booking-summary">
-                            <h4>Booking Summary</h4>
-                            <div id="summaryContent" class="summary-content">
-                                <p class="summary-placeholder">Complete the form to see your booking summary</p>
-                        </div>
-                    </div>
-                    
-                    <div class="form-actions">
-                            <button type="button" class="btn btn-outline">Calculate Price</button>
-                            <button type="submit" class="btn btn-primary">Book Now</button>
-                        </div>
-                    </div>
-                </form>
-                
-                <!-- Navigation buttons -->
-                <div class="form-navigation fade-in-up delay-400">
-                    <button type="button" class="btn-prev" disabled>
-                        <i class="fas fa-arrow-left"></i> Previous
-                    </button>
-                    <div class="progress-container">
-                        <div class="progress-bar"></div>
-                </div>
-                    <button type="button" class="btn-next">
-                        Next <i class="fas fa-arrow-right"></i>
-                    </button>
-            </div>
-        </div>
-    </div>
-</section>
+    <!-- Next section -->
+    <section id="next-section">
+        <!-- Add your next section content here -->
+    </section>
 
     <footer class="visually-hidden">
         <p>&copy; <?php echo date('Y'); ?> Timbook Carles Tourism. All rights reserved.</p>
@@ -1916,12 +491,39 @@ require_once('../config/connect.php');
     
             // Mobile menu toggle
             const menuToggle = document.querySelector('.mobile-menu-toggle');
-            const mobileMenu = document.querySelector('.mobile-menu');
+            const mobileMenu = document.querySelector('#mobile-menu');
+            const body = document.body;
             
             if (menuToggle && mobileMenu) {
                 menuToggle.addEventListener('click', function() {
-                    menuToggle.classList.toggle('active');
+                    const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+                    
+                    // Toggle menu state
+                    menuToggle.setAttribute('aria-expanded', !isExpanded);
                     mobileMenu.classList.toggle('active');
+                    menuToggle.classList.toggle('active');
+                    
+                    // Prevent body scrolling when menu is open
+                    body.style.overflow = isExpanded ? 'auto' : 'hidden';
+                    
+                    // Set aria-hidden attribute
+                    mobileMenu.setAttribute('aria-hidden', isExpanded);
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (!mobileMenu.contains(event.target) && 
+                        !menuToggle.contains(event.target) && 
+                        mobileMenu.classList.contains('active')) {
+                        menuToggle.click();
+                    }
+                });
+
+                // Close menu on escape key
+                document.addEventListener('keydown', function(event) {
+                    if (event.key === 'Escape' && mobileMenu.classList.contains('active')) {
+                        menuToggle.click();
+                    }
                 });
             }
             
@@ -2151,16 +753,11 @@ function setupBookingForm() {
         });
     });
     
-    // Basic validation function
+    // Basic validation function - Uncomment and update validation
     function validateStep(stepIndex) {
         const currentFormStep = formSteps[stepIndex];
         if (!currentFormStep) return true;
         
-        // For quick testing, disabling validation temporarily
-        return true;
-        
-        // Uncomment for real validation:
-        /*
         const requiredFields = currentFormStep.querySelectorAll('[required]');
         let isValid = true;
         
@@ -2198,22 +795,54 @@ function setupBookingForm() {
         });
         
         return isValid;
-        */
     }
     
-    // Handle form submission
+    // Handle form submission with proper error handling
     if (form) {
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
             
+            try {
             // Get all form data
             const formData = new FormData(form);
             
-            // Here you would typically send the data to the server
-            console.log('Form submission:', Object.fromEntries(formData));
-            
-            // For now, just show a success message
-            alert('Booking successfully submitted!');
+                // Send data to server
+                const response = await fetch('process_booking.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Show success message
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Booking Successful!',
+                        text: 'Your booking has been submitted successfully.',
+                        confirmButtonColor: '#3282b8'
+                    }).then(() => {
+                        // Redirect to confirmation page or reset form
+                        window.location.href = 'booking_confirmation.php?id=' + result.booking_id;
+                    });
+                } else {
+                    // Show error message
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Booking Failed',
+                        text: result.message || 'There was an error processing your booking. Please try again.',
+                        confirmButtonColor: '#3282b8'
+                    });
+                }
+            } catch (error) {
+                console.error('Booking error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'System Error',
+                    text: 'There was a system error. Please try again later.',
+                    confirmButtonColor: '#3282b8'
+                });
+            }
         });
     }
     
@@ -2248,13 +877,132 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 100);
 });
 
+// Initialize Bootstrap dropdowns
+var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
+var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+    return new bootstrap.Dropdown(dropdownToggleEl)
+});
+
+// Custom Dropdown Menu Script
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the dropdown elements
+    const boatRentalsDropdown = document.querySelector('.nav-item.dropdown');
+    const dropdownToggle = boatRentalsDropdown.querySelector('.dropdown-toggle');
+    const dropdownMenu = boatRentalsDropdown.querySelector('.dropdown-menu');
+    
+    // Initialize state
+    let isOpen = false;
+    
+    // Toggle dropdown on click
+    dropdownToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (isOpen) {
+            dropdownMenu.classList.remove('show');
+            dropdownToggle.classList.remove('active');
+            isOpen = false;
+        } else {
+            dropdownMenu.classList.add('show');
+            dropdownToggle.classList.add('active');
+            isOpen = true;
+        }
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!boatRentalsDropdown.contains(e.target)) {
+            dropdownMenu.classList.remove('show');
+            dropdownToggle.classList.remove('active');
+            isOpen = false;
+        }
+    });
+    
+    // Handle submenu hover
+    const submenus = document.querySelectorAll('.dropdown-submenu');
+    submenus.forEach(function(submenu) {
+        const submenuToggle = submenu.querySelector('.dropdown-item');
+        const submenuDropdown = submenu.querySelector('.dropdown-menu');
+        
+        submenu.addEventListener('mouseenter', function() {
+            if (submenuDropdown) {
+                submenuDropdown.classList.add('show');
+            }
+        });
+        
+        submenu.addEventListener('mouseleave', function() {
+            if (submenuDropdown) {
+                submenuDropdown.classList.remove('show');
+            }
+        });
+    });
+});
+
+// Mobile menu toggle
+var mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+var mobileMenu = document.querySelector('.mobile-menu');
+
+if (mobileMenuToggle && mobileMenu) {
+    mobileMenuToggle.addEventListener('click', function() {
+        this.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
+    });
+}
 </script>
+
+    <!-- Navigation Dropdown Script -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get all dropdown elements
+        const navDropdowns = document.querySelectorAll('.nav-dropdown');
+        
+        navDropdowns.forEach(navDropdown => {
+            const dropdownToggle = navDropdown.querySelector('.nav-dropdown-toggle');
+            
+            // Toggle dropdown on click
+            dropdownToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Close other dropdowns
+                navDropdowns.forEach(otherDropdown => {
+                    if (otherDropdown !== navDropdown) {
+                        otherDropdown.classList.remove('active');
+                    }
+                });
+                
+                // Toggle current dropdown
+                navDropdown.classList.toggle('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!navDropdown.contains(e.target)) {
+                    navDropdown.classList.remove('active');
+                }
+            });
+            
+            // Handle submenu hover
+            const dropdownItems = navDropdown.querySelectorAll('.nav-dropdown-item');
+            dropdownItems.forEach(item => {
+                const submenu = item.querySelector('.nav-submenu');
+                if (submenu) {
+                    item.addEventListener('mouseenter', function() {
+                        dropdownItems.forEach(otherItem => {
+                            if (otherItem !== item) {
+                                otherItem.querySelector('.nav-submenu')?.classList.remove('active');
+                            }
+                        });
+                        submenu.classList.add('active');
+                    });
+                    
+                    item.addEventListener('mouseleave', function() {
+                        submenu.classList.remove('active');
+                    });
+                }
+            });
+        });
+    });
+    </script>
 </body>
 </html>
-
-
-
-
-
-
-

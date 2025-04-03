@@ -100,7 +100,7 @@ $security = new Security($pdo);
     <div class="w-full max-w-4xl bg-white rounded-xl shadow-lg overflow-hidden p-6 relative z-10 border border-blue-100" id="main-container">
         <!-- Header with Logo -->
         <div class="text-center mb-6">
-            <img src="../img/timbook-carles-tourism.png" alt="Carles Tourism Logo" class="h-24 mx-auto mb-2">
+            <img src="../img/timbook-carles-tourism.png" alt="Carles Tourism Logo" class="h-24 mx-auto mb-2" onerror="this.src='../img/default-logo.png'">
             <h1 class="text-3xl font-bold text-blue-800">Welcome to Carles Tourism</h1>
             <p class="text-blue-600">Discover the beauty of Isla de Gigantes</p>
         </div>
@@ -113,7 +113,7 @@ $security = new Security($pdo);
                 <!-- User Card -->
                 <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 flex flex-col">
                     <div class="h-48 bg-blue-500 relative overflow-hidden rounded-t-lg">
-                        <img src="../img/gigantes.png" alt="User experience" class="w-full h-full object-cover">
+                        <img src="../img/gigantes.png" alt="User experience" class="w-full h-full object-cover" onerror="this.src='../img/default-user-banner.jpg'">
                         <div class="absolute inset-0 bg-gradient-to-t from-blue-900 to-transparent opacity-60"></div>
                         <i class="fas fa-ship absolute bottom-4 right-4 text-white text-4xl"></i>
                     </div>
@@ -145,17 +145,17 @@ $security = new Security($pdo);
                             </li>
                         </ul>
                         
-                        <button onclick="showUserLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 mt-auto">
+                        <a href="../php/pages/login user/login.php" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 mt-auto">
                             <i class="fas fa-sign-in-alt"></i>
                             Continue as User
-                        </button>
+                        </a>
                     </div>
                 </div>
 
                 <!-- Admin Card -->
                 <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 flex flex-col">
                     <div class="h-48 bg-indigo-600 relative overflow-hidden rounded-t-lg">
-                        <img src="../img/background system.jpg" alt="Admin dashboard" class="w-full h-full object-cover">
+                        <img src="../img/background system.jpg" alt="Admin dashboard" class="w-full h-full object-cover" onerror="this.src='../img/default-admin-banner.jpg'">
                         <div class="absolute inset-0 bg-gradient-to-t from-indigo-900 to-transparent opacity-60"></div>
                         <i class="fas fa-user-shield absolute bottom-4 right-4 text-white text-4xl"></i>
                     </div>
@@ -187,10 +187,10 @@ $security = new Security($pdo);
                             </li>
                         </ul>
                         
-                        <button onclick="showAdminLogin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 mt-auto">
+                        <a href="../php/pages/login admin/login.php" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 mt-auto">
                             <i class="fas fa-sign-in-alt"></i>
                             Continue as Administrator
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -198,115 +198,10 @@ $security = new Security($pdo);
             <!-- Footer -->
             <div class="mt-6 text-center text-gray-500 text-sm">
                 <p>© 2025 Carles Tourism | All Rights Reserved</p>
-                <div class="flex justify-center gap-4 mt-2">
-                    <a href="#" class="text-gray-400 hover:text-blue-500"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-blue-500"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="text-gray-400 hover:text-blue-500"><i class="fab fa-twitter"></i></a>
-                </div>
             </div>
         </div>
     </div>
 
-    <script>
-        function showUserLogin() {
-            window.location.href = '../php/pages/login user/login.php';
-        }
-
-        function showAdminLogin() {
-            window.location.href = '../php/pages/login admin/login.php';
-        }
-    </script>
-
-    <!-- Handle login form submission -->
-    <?php
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login-user'])) {
-        // Validate CSRF token
-        if (!$security->validateToken($_POST['csrf_token'])) {
-            $_SESSION['error'] = "Invalid token. Please try again.";
-            header("Location: " . $_SERVER['PHP_SELF']);
-            exit();
-        }
-
-        // Validate input
-        $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-        $password = $_POST['password'] ?? '';
-
-        if (!$email) {
-            $_SESSION['error'] = "Invalid email format.";
-            header("Location: " . $_SERVER['PHP_SELF']);
-            exit();
-        }
-
-        // Rate limiting
-        if ($security->checkLoginAttempts($_SERVER['REMOTE_ADDR'])) {
-            // Try to login
-            $result = $auth->loginUser($email, $password);
-            
-            if ($result['success']) {
-                // Reset login attempts on success
-                $security->resetLoginAttempts($_SERVER['REMOTE_ADDR']);
-                
-                // Redirect to user dashboard
-                header("Location: /Online%20Booking%20Reservation%20Boat%20Rentals%20and%20Accommodation/Home%20System/Interface/Dashboards/User%20Dashboard/userdashboard.php");
-                exit();
-            } else {
-                // Increment failed attempts
-                $security->incrementLoginAttempts($_SERVER['REMOTE_ADDR']);
-                $_SESSION['error'] = $result['message'];
-                header("Location: " . $_SERVER['PHP_SELF']);
-                exit();
-            }
-        } else {
-            $_SESSION['error'] = "Too many failed login attempts. Please try again later.";
-            header("Location: " . $_SERVER['PHP_SELF']);
-            exit();
-        }
-    }
-
-    // Handle admin login form submission
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login-admin'])) {
-        // Validate CSRF token
-        if (!$security->validateToken($_POST['csrf_token'])) {
-            $_SESSION['error'] = "Invalid token. Please try again.";
-            header("Location: " . $_SERVER['PHP_SELF']);
-            exit();
-        }
-
-        // Validate input
-        $email = filter_input(INPUT_POST, 'admin-email', FILTER_VALIDATE_EMAIL);
-        $password = $_POST['admin-password'] ?? '';
-
-        if (!$email) {
-            $_SESSION['error'] = "Invalid email format.";
-            header("Location: " . $_SERVER['PHP_SELF']);
-            exit();
-        }
-
-        // Rate limiting
-        if ($security->checkLoginAttempts($_SERVER['REMOTE_ADDR'])) {
-            // Try to login
-            $result = $auth->loginAdmin($email, $password);
-            
-            if ($result['success']) {
-                // Reset login attempts on success
-                $security->resetLoginAttempts($_SERVER['REMOTE_ADDR']);
-                
-                // Redirect to admin dashboard
-                header("Location: /Online%20Booking%20Reservation%20Boat%20Rentals%20and%20Accommodation/Home%20System/Interface/php/pages/admin/admin.php");
-                exit();
-            } else {
-                // Increment failed attempts
-                $security->incrementLoginAttempts($_SERVER['REMOTE_ADDR']);
-                $_SESSION['error'] = $result['message'];
-                header("Location: " . $_SERVER['PHP_SELF']);
-                exit();
-            }
-        } else {
-            $_SESSION['error'] = "Too many failed login attempts. Please try again later.";
-            header("Location: " . $_SERVER['PHP_SELF']);
-            exit();
-        }
-    }
-    ?>
+    <script src="loginup_admin.js"></script>
 </body>
 </html> 
