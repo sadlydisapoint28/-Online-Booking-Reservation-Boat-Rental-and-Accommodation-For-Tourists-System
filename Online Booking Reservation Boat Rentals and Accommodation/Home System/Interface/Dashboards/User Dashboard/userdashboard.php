@@ -3,18 +3,8 @@
 session_start();
 
 // Include auth and security classes
-require_once '../../../../php/classes/Auth.php';
-require_once '../../../../php/classes/Security.php';
-
-// Create auth instance
-$auth = new Auth();
-$security = new Security();
-
-// Check if user is logged in
-$auth->requireLogin();
-
-// Get user ID from session
-$user_id = $_SESSION['user_id'] ?? 0;
+require_once '../../php/classes/Auth.php';
+require_once '../../php/classes/Security.php';
 
 // Initialize database connection
 try {
@@ -37,10 +27,44 @@ try {
     die("Could not connect to the database. Please try again later.");
 }
 
+// Create auth instance with database connection
+$auth = new Auth($pdo);
+$security = new Security();
+
+// Check if user is logged in
+$auth->requireLogin();
+
+// Get user ID from session
+$user_id = $_SESSION['user_id'] ?? 0;
+
+// Check if user is an admin and redirect to admin dashboard
+$stmt = $pdo->prepare("SELECT user_type FROM users WHERE user_id = ?");
+$stmt->execute([$user_id]);
+$user_type = $stmt->fetchColumn();
+
+if ($user_type === 'admin') {
+    header("Location: Admin%20Dashboard/admin/dashboard.php");
+    exit();
+}
+
 // Get user data
-$stmt = $pdo->prepare("SELECT * FROM users WHERE user_id = ?");
+$stmt = $pdo->prepare("SELECT * FROM users WHERE user_id = ? AND user_type = 'customer'");
 $stmt->execute([$user_id]);
 $user = $stmt->fetch();
+
+// If user not found in users table, check customers table
+if (!$user) {
+    $stmt = $pdo->prepare("SELECT * FROM customers WHERE id = ?");
+    $stmt->execute([$user_id]);
+    $user = $stmt->fetch();
+    
+    if ($user) {
+        // Convert customer data to match user format
+        $user['user_id'] = $user['id'];
+        $user['full_name'] = $user['name'];
+        $user['user_type'] = $user['type'];
+    }
+}
 
 // Get available boats
 $stmt = $pdo->prepare("
@@ -53,11 +77,11 @@ $available_boats = $stmt->fetchAll();
 
 // Get user's upcoming bookings
 $stmt = $pdo->prepare("
-    SELECT b.*, bt.boat_name, bt.image_url, bt.price_per_day as price, bt.capacity 
+    SELECT b.*, bt.boat_name, bt.price_per_hour as price, bt.capacity 
     FROM bookings b 
-    JOIN boats bt ON b.boat_id = bt.boat_id 
-    WHERE b.user_id = ? AND b.check_in_date >= CURDATE()
-    ORDER BY b.check_in_date ASC
+    JOIN boats bt ON b.boat_id = bt.id 
+    WHERE b.customer_id = ? AND b.booking_date >= CURDATE()
+    ORDER BY b.booking_date ASC
     LIMIT 5
 ");
 $stmt->execute([$user_id]);
@@ -65,11 +89,11 @@ $upcoming_bookings = $stmt->fetchAll();
 
 // Get user's past bookings
 $stmt = $pdo->prepare("
-    SELECT b.*, bt.boat_name, bt.image_url, bt.price_per_day as price 
+    SELECT b.*, bt.boat_name, bt.price_per_hour as price 
     FROM bookings b 
-    JOIN boats bt ON b.boat_id = bt.boat_id 
-    WHERE b.user_id = ? AND b.check_in_date < CURDATE()
-    ORDER BY b.check_in_date DESC
+    JOIN boats bt ON b.boat_id = bt.id 
+    WHERE b.customer_id = ? AND b.booking_date < CURDATE()
+    ORDER BY b.booking_date DESC
     LIMIT 5
 ");
 $stmt->execute([$user_id]);
@@ -79,20 +103,20 @@ $past_bookings = $stmt->fetchAll();
 $stmt = $pdo->prepare("
     SELECT b.*, bt.boat_name
     FROM bookings b 
-    JOIN boats bt ON b.boat_id = bt.boat_id 
-    WHERE b.user_id = ?
-    ORDER BY b.check_in_date ASC
+    JOIN boats bt ON b.boat_id = bt.id 
+    WHERE b.customer_id = ?
+    ORDER BY b.booking_date ASC
 ");
 $stmt->execute([$user_id]);
 $calendar_bookings = $stmt->fetchAll();
 
 // Get active reservations (boats currently reserved by the user)
 $stmt = $pdo->prepare("
-    SELECT b.*, bt.boat_name, bt.image_url, bt.price_per_day as price, bt.capacity 
+    SELECT b.*, bt.boat_name, bt.price_per_hour as price, bt.capacity 
     FROM bookings b 
-    JOIN boats bt ON b.boat_id = bt.boat_id 
-    WHERE b.user_id = ? AND b.booking_status = 'confirmed'
-    ORDER BY b.check_in_date ASC
+    JOIN boats bt ON b.boat_id = bt.id 
+    WHERE b.customer_id = ? AND b.status = 'confirmed'
+    ORDER BY b.booking_date ASC
 ");
 $stmt->execute([$user_id]);
 $active_reservations = $stmt->fetchAll();
@@ -101,15 +125,15 @@ $active_reservations = $stmt->fetchAll();
 $calendar_events = [];
 foreach ($calendar_bookings as $booking) {
     $calendar_events[] = [
-        'id' => $booking['booking_id'],
+        'id' => $booking['id'],
         'title' => $booking['boat_name'],
-        'start' => $booking['check_in_date'],
-        'end' => $booking['check_out_date'],
-        'status' => $booking['booking_status'],
+        'start' => $booking['booking_date'],
+        'end' => date('Y-m-d', strtotime($booking['booking_date'] . ' +1 day')),
+        'status' => $booking['status'],
         'allDay' => true,
-        'className' => $booking['booking_status'] === 'completed' ? 'bg-green-500' : 
-                      ($booking['booking_status'] === 'pending' ? 'bg-yellow-500' : 
-                       ($booking['booking_status'] === 'confirmed' ? 'bg-blue-500' : 'bg-red-500'))
+        'className' => $booking['status'] === 'completed' ? 'bg-green-500' : 
+                      ($booking['status'] === 'pending' ? 'bg-yellow-500' : 
+                       ($booking['status'] === 'confirmed' ? 'bg-blue-500' : 'bg-red-500'))
     ];
 }
 $calendar_events_json = json_encode($calendar_events);
@@ -261,12 +285,13 @@ $calendar_events_json = json_encode($calendar_events);
         <div class="sidebar bg-blue-600 text-white w-64 flex-shrink-0">
             <div class="p-4">
                 <div class="flex items-center space-x-4">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=<?php echo $user['username']; ?>" 
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=<?php echo $user['email'] ?? 'user'; ?>" 
                          alt="Profile" 
                          class="w-12 h-12 rounded-full">
                     <div>
-                        <h2 class="text-xl font-semibold"><?php echo htmlspecialchars($user['full_name']); ?></h2>
-                        <p class="text-sm text-blue-200"><?php echo htmlspecialchars($user['email']); ?></p>
+                        <h2 class="text-xl font-semibold"><?php echo htmlspecialchars($user['full_name'] ?? $user['name'] ?? 'User'); ?></h2>
+                        <p class="text-sm text-blue-200"><?php echo htmlspecialchars($user['email'] ?? 'No email'); ?></p>
+                        <p class="text-xs text-blue-300"><?php echo ucfirst($user['user_type'] ?? 'Customer'); ?></p>
                     </div>
                 </div>
             </div>
@@ -316,7 +341,10 @@ $calendar_events_json = json_encode($calendar_events);
                         <button id="sidebar-toggle" class="text-gray-500 hover:text-gray-700">
                             <i class="fas fa-bars"></i>
                         </button>
-                        <h1 class="text-2xl font-semibold text-gray-800">Welcome, <?php echo htmlspecialchars($user['full_name']); ?>!</h1>
+                        <h1 class="text-2xl font-semibold text-gray-800">Welcome, <?php echo htmlspecialchars($user['full_name'] ?? $user['name'] ?? 'User'); ?>!</h1>
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full <?php echo ($user['user_type'] ?? '') === 'vip' ? 'bg-purple-100 text-purple-800' : (($user['user_type'] ?? '') === 'group' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'); ?>">
+                            <?php echo ucfirst($user['user_type'] ?? 'Regular'); ?> Customer
+                        </span>
                     </div>
                     <div class="flex items-center space-x-6">
                         <!-- Theme Toggle -->
@@ -336,7 +364,7 @@ $calendar_events_json = json_encode($calendar_events);
                                 <div id="calendar-day" class="text-2xl font-bold text-blue-600"></div>
                                 <div id="calendar-month" class="text-sm text-gray-600"></div>
                             </div>
-        </div>
+                        </div>
 
                         <!-- Notifications -->
                         <button class="text-gray-500 hover:text-gray-700 relative">
@@ -397,18 +425,18 @@ $calendar_events_json = json_encode($calendar_events);
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
                             <?php foreach ($available_boats as $boat): ?>
                             <div class="boat-card bg-white rounded-lg shadow overflow-hidden">
-                                <img src="<?php echo htmlspecialchars($boat['image_url']); ?>" 
-                                     alt="<?php echo htmlspecialchars($boat['name']); ?>"
-                                     class="w-full h-48 object-cover">
+                                <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                                    <i class="fas fa-ship text-4xl text-gray-400"></i>
+                                </div>
                                 <div class="p-4">
-                                    <h3 class="font-semibold text-gray-800"><?php echo htmlspecialchars($boat['name']); ?></h3>
-                                    <p class="text-sm text-gray-600 mt-1"><?php echo htmlspecialchars($boat['description']); ?></p>
+                                    <h3 class="font-semibold text-gray-800"><?php echo htmlspecialchars($boat['boat_name'] ?? 'Unnamed Boat'); ?></h3>
+                                    <p class="text-sm text-gray-600 mt-1"><?php echo htmlspecialchars($boat['description'] ?? 'No description available'); ?></p>
                                     <div class="mt-4 flex items-center justify-between">
                                         <div class="flex items-center">
                                             <i class="fas fa-users text-gray-500 mr-2"></i>
-                                            <span class="text-sm text-gray-600">Capacity: <?php echo $boat['capacity']; ?> persons</span>
+                                            <span class="text-sm text-gray-600">Capacity: <?php echo $boat['capacity'] ?? 0; ?> persons</span>
                                         </div>
-                                        <span class="text-lg font-semibold text-blue-600">$<?php echo number_format($boat['price'], 2); ?></span>
+                                        <span class="text-lg font-semibold text-blue-600">$<?php echo number_format($boat['price_per_hour'] ?? 0, 2); ?></span>
                                     </div>
                                     <a href="#book-boat" data-boat-id="<?php echo $boat['id']; ?>" class="book-now-btn mt-4 block w-full bg-blue-600 text-white text-center py-2 rounded-lg hover:bg-blue-700 transition duration-300">
                                         Book Now
@@ -437,46 +465,52 @@ $calendar_events_json = json_encode($calendar_events);
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
+                                    <?php if (empty($upcoming_bookings)): ?>
+                                    <tr>
+                                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">No upcoming bookings found</td>
+                                    </tr>
+                                    <?php else: ?>
                                     <?php foreach ($upcoming_bookings as $booking): ?>
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
-                                                <div class="flex-shrink-0 h-10 w-10">
-                                                    <img class="h-10 w-10 rounded-full" src="<?php echo htmlspecialchars($booking['image_url']); ?>" alt="">
+                                                <div class="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
+                                                    <i class="fas fa-ship text-gray-400"></i>
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900">
-                                                        <?php echo htmlspecialchars($booking['boat_name']); ?>
+                                                        <?php echo htmlspecialchars($booking['boat_name'] ?? 'Unknown Boat'); ?>
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900">
-                                                <?php echo date('M d, Y', strtotime($booking['check_in_date'])); ?>
+                                                <?php echo date('M d, Y', strtotime($booking['booking_date'] ?? 'now')); ?>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900">
-                                                $<?php echo number_format($booking['price'], 2); ?>
+                                                $<?php echo number_format($booking['total_amount'] ?? 0, 2); ?>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                                <?php echo $booking['booking_status'] === 'completed' ? 'bg-green-100 text-green-800' : 
-                                                    ($booking['booking_status'] === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                                                <?php echo ($booking['status'] ?? '') === 'completed' ? 'bg-green-100 text-green-800' : 
+                                                    (($booking['status'] ?? '') === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
                                                     'bg-red-100 text-red-800'); ?>">
-                                                <?php echo ucfirst($booking['booking_status']); ?>
+                                                <?php echo ucfirst($booking['status'] ?? 'Unknown'); ?>
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <a href="#" class="text-blue-600 hover:text-blue-900 mr-3">View Details</a>
-                                            <?php if ($booking['booking_status'] === 'pending'): ?>
+                                            <?php if (($booking['status'] ?? '') === 'pending'): ?>
                                             <a href="#" class="text-red-600 hover:text-red-900">Cancel</a>
                                             <?php endif; ?>
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>
@@ -720,7 +754,7 @@ $calendar_events_json = json_encode($calendar_events);
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900">
-                                                <?php echo date('M d, Y', strtotime($booking['check_in_date'])); ?>
+                                                <?php echo date('M d, Y', strtotime($booking['booking_date'])); ?>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
@@ -730,15 +764,15 @@ $calendar_events_json = json_encode($calendar_events);
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                                <?php echo $booking['booking_status'] === 'completed' ? 'bg-green-100 text-green-800' : 
-                                                    ($booking['booking_status'] === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                                                <?php echo $booking['status'] === 'completed' ? 'bg-green-100 text-green-800' : 
+                                                    ($booking['status'] === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
                                                     'bg-red-100 text-red-800'); ?>">
-                                                <?php echo ucfirst($booking['booking_status']); ?>
+                                                <?php echo ucfirst($booking['status']); ?>
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <a href="#" class="text-blue-600 hover:text-blue-900 mr-3">View Details</a>
-                                            <?php if ($booking['booking_status'] === 'pending'): ?>
+                                            <?php if ($booking['status'] === 'pending'): ?>
                                             <a href="#" class="text-red-600 hover:text-red-900">Cancel</a>
                                             <?php endif; ?>
                                         </td>
@@ -761,45 +795,51 @@ $calendar_events_json = json_encode($calendar_events);
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
+                                    <?php if (empty($past_bookings)): ?>
+                                    <tr>
+                                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">No past bookings found</td>
+                                    </tr>
+                                    <?php else: ?>
                                     <?php foreach ($past_bookings as $booking): ?>
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
-                                                <div class="flex-shrink-0 h-10 w-10">
-                                                    <img class="h-10 w-10 rounded-full" src="<?php echo htmlspecialchars($booking['image_url']); ?>" alt="">
+                                                <div class="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
+                                                    <i class="fas fa-ship text-gray-400"></i>
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900">
-                                                        <?php echo htmlspecialchars($booking['boat_name']); ?>
+                                                        <?php echo htmlspecialchars($booking['boat_name'] ?? 'Unknown Boat'); ?>
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900">
-                                                <?php echo date('M d, Y', strtotime($booking['check_in_date'])); ?>
+                                                <?php echo date('M d, Y', strtotime($booking['booking_date'] ?? 'now')); ?>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm text-gray-900">
-                                                $<?php echo number_format($booking['price'], 2); ?>
+                                                $<?php echo number_format($booking['total_amount'] ?? 0, 2); ?>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                                <?php echo $booking['booking_status'] === 'completed' ? 'bg-green-100 text-green-800' : 
+                                                <?php echo ($booking['status'] ?? '') === 'completed' ? 'bg-green-100 text-green-800' : 
                                                     'bg-red-100 text-red-800'; ?>">
-                                                <?php echo ucfirst($booking['booking_status']); ?>
+                                                <?php echo ucfirst($booking['status'] ?? 'Unknown'); ?>
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                             <a href="#" class="text-blue-600 hover:text-blue-900 mr-3">View Details</a>
-                                            <?php if ($booking['booking_status'] === 'completed'): ?>
+                                            <?php if (($booking['status'] ?? '') === 'completed'): ?>
                                             <a href="#" class="text-green-600 hover:text-green-900">Leave Review</a>
                                             <?php endif; ?>
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>

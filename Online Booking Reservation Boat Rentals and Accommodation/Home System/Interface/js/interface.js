@@ -506,7 +506,7 @@ function updateBookingSummary() {
     if (!boatType || !passengers || !duration || !summaryContent) return;
     
     if (!boatType.value || !passengers.value || !duration.value) {
-        summaryContent.innerHTML = '<p class="error-message">Mangyaring punan ang lahat ng kinakailangang field</p>';
+        summaryContent.innerHTML = '<p class="error-message"></p>';
         return;
     }
     

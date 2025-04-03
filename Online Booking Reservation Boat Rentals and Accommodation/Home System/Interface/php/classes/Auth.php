@@ -17,22 +17,69 @@ class Auth {
     
     public function loginUser($email, $password) {
         try {
+            // First check if user exists in users table
             $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = ? AND user_type = 'customer'");
             $stmt->execute([$email]);
-            $user = $stmt->fetch();
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if ($user && password_verify($password, $user['password'])) {
+                // Set session variables
                 $_SESSION['user_id'] = $user['user_id'];
                 $_SESSION['user_email'] = $user['email'];
                 $_SESSION['user_name'] = $user['full_name'];
+                $_SESSION['user_type'] = $user['user_type'];
                 $_SESSION['user_logged_in'] = true;
                 $_SESSION['last_activity'] = time();
+                
+                // Redirect to user dashboard
+                header("Location: ../../Dashboards/User%20Dashboard/userdashboard.php");
+                exit();
+                
                 return [
                     'success' => true,
-                    'user_id' => $user['user_id'],
-                    'user_name' => $user['full_name']
+                    'user' => [
+                        'id' => $user['user_id'],
+                        'name' => $user['full_name'],
+                        'email' => $user['email'],
+                        'type' => $user['user_type']
+                    ]
                 ];
             }
+            
+            // If not found in users table, check customers table
+            $stmt = $this->pdo->prepare("SELECT * FROM customers WHERE email = ?");
+            $stmt->execute([$email]);
+            $customer = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($customer) {
+                // For customers table, we'll use a default password hash for testing
+                $default_password_hash = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'; // password: password
+                
+                if (password_verify($password, $default_password_hash)) {
+                    // Set session variables
+                    $_SESSION['user_id'] = $customer['id'];
+                    $_SESSION['user_email'] = $customer['email'];
+                    $_SESSION['user_name'] = $customer['name'];
+                    $_SESSION['user_type'] = $customer['type'];
+                    $_SESSION['user_logged_in'] = true;
+                    $_SESSION['last_activity'] = time();
+                    
+                    // Redirect to user dashboard
+                    header("Location: ../../Dashboards/User%20Dashboard/userdashboard.php");
+                    exit();
+                    
+                    return [
+                        'success' => true,
+                        'user' => [
+                            'id' => $customer['id'],
+                            'name' => $customer['name'],
+                            'email' => $customer['email'],
+                            'type' => $customer['type']
+                        ]
+                    ];
+                }
+            }
+            
             return [
                 'success' => false,
                 'message' => 'Invalid email or password'
@@ -56,7 +103,17 @@ class Auth {
                 $_SESSION['admin_id'] = $admin['user_id'];
                 $_SESSION['admin_name'] = $admin['full_name'];
                 $_SESSION['admin_logged_in'] = true;
+                $_SESSION['user_id'] = $admin['user_id'];
+                $_SESSION['user_email'] = $admin['email'];
+                $_SESSION['user_name'] = $admin['full_name'];
+                $_SESSION['user_type'] = $admin['user_type'];
+                $_SESSION['user_logged_in'] = true;
                 $_SESSION['last_activity'] = time();
+                
+                // Redirect to admin dashboard
+                header("Location: ../../Dashboards/User%20Dashboard/Admin%20Dashboard/admin/dashboard.php");
+                exit();
+                
                 return [
                     'success' => true,
                     'admin_id' => $admin['user_id'],
@@ -119,15 +176,22 @@ class Auth {
     
     public function requireLogin() {
         if (!$this->isLoggedIn()) {
-            header("Location: /Online%20Booking%20Reservation%20Boat%20Rentals%20and%20Accommodation/Home%20System/Interface/Admin%20and%20User%20Loginup/loginup_admin.php");
+            header("Location: ../../Admin%20and%20User%20Loginup/loginup_admin.php");
             exit();
         }
+        
+        // Check if user is an admin and redirect to admin dashboard if needed
+        if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin') {
+            header("Location: ../../Dashboards/User%20Dashboard/Admin%20Dashboard/admin/dashboard.php");
+            exit();
+        }
+        
         $this->checkSessionTimeout();
     }
     
     public function requireAdmin() {
         if (!$this->isAdmin()) {
-            header("Location: /Online%20Booking%20Reservation%20Boat%20Rentals%20and%20Accommodation/Home%20System/Interface/Admin%20and%20User%20Loginup/loginup_admin.php");
+            header("Location: ../../Admin%20and%20User%20Loginup/loginup_admin.php");
             exit();
         }
         $this->checkSessionTimeout();
@@ -135,7 +199,7 @@ class Auth {
     
     public function requireSuperAdmin() {
         if (!$this->isAdmin() || $_SESSION['admin_role'] !== 'super_admin') {
-            header("Location: /Online%20Booking%20Reservation%20Boat%20Rentals%20and%20Accommodation/Admin%20Dashboard/index.php");
+            header("Location: ../../Dashboards/User%20Dashboard/Admin%20Dashboard/admin/dashboard.php");
             exit();
         }
         $this->checkSessionTimeout();
